@@ -1,0 +1,206 @@
+= Llemmy tutorial
+:toc: left
+:imagesdir: images
+:root-dir: ../../../..
+:dir-source: ../../main/java
+:dir-resources: ../../main/resources
+:dir-source-test: ../../test/java
+:dir-ollama: ../../../../models/ollama
+:doc-url: https://codion.is/doc/{codion-version}
+
+https://github.com/codion-is/llemmy[Llemmy Demo on GitHub]
+
+image::llemmy.png[]
+
+NOTE: For the Gradle build configuration see <<#_build, Build>> section.
+
+This tutorial assumes you have at least skimmed the {doc-url}/manual/manual.html#_domain_model[Domain model] part of the Codion manual.
+
+Each section of the tutorial below is based on a single table and has the following subsections:
+
+SQL:: The underlying table DDL.
+Domain:: The domain model specification for an entity based on the table.
+Model:: The application model components associated with the entity (if any).
+UI:: The application UI components associated with the entity.
+
+== Chat Log
+
+=== SQL
+
+[source,sql,options="nowrap"]
+----
+include::{dir-resources}/create_schema.sql[tags=**]
+----
+
+=== Domain model
+
+The domain model is created by extending the *DefaultDomain* class and defining a *DomainType* constant identifying the domain model.
+
+In the constructor we call methods each adding a single Entity definition to the domain model.
+The *Domain* subsections below continue the Llemmy class.
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=llemmy]
+----
+
+.Display full Llemmy domain model class
+[%collapsible]
+====
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=**]
+----
+====
+
+==== API
+
+We start by creating a `ChatLog` interface and defining the domain API constants for the table and its columns, providing the table and column names as parameters.
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_log_api]
+----
+
+==== Implementation
+
+We then define an Entity along with its columns based on the domain API constants, configuring each for persistance and presentation.
+
+We use the `StringFactory.builder()` method to build a `Function<Entity, String>` instance which provides the `toString()` implementation for entities of this type.
+
+We also specify a default `OrderBy` clause to use when selecting entities of this type.
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_log_impl]
+----
+
+==== Unit test
+
+[source,java,options="nowrap"]
+----
+include::{dir-source-test}/is/codion/demos/llemmy/domain/LlemmyTest.java[lines=19..-1]
+----
+
+==== ChatLogModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/ChatLogModel.java[lines=19..-1]
+----
+
+==== ChatLogPanel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogPanel.java[lines=19..-1]
+----
+
+==== ChatLogEditModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/ChatLogEditModel.java[lines=19..-1]
+----
+
+==== ChatLogEditPanel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogEditPanel.java[lines=19..-1]
+----
+
+==== ChatLogTableModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/ChatLogTableModel.java[lines=19..-1]
+----
+
+==== ChatLogTablePanel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogTablePanel.java[lines=19..-1]
+----
+
+=== LlemmyAppModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/LlemmyAppModel.java[lines=19..-1]
+----
+
+=== LlemmyAppPanel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/LlemmyAppPanel.java[lines=19..-1]
+----
+
+== Ollama
+
+=== Ollama Model Runner
+
+Uses https://github.com/testcontainers/testcontainers-java[testcontainers] to download and run the latest local orca-mini Ollama model  (langchain4j/ollama-orca-mini:latest, ~2GB).
+
+[source,java,options="nowrap"]
+----
+include::{dir-ollama}/model/src/main/java/is/codion/demo/llemmy/ollama/model/Runner.java[lines=19..-1]
+----
+
+[source,bash,options="nowrap"]
+----
+gradlew ollama-model:run
+----
+
+== Ollama Llemmy Runner
+
+Runs the Llemmy application configured for the local Ollama model
+
+[source,java,options="nowrap"]
+----
+include::{dir-ollama}/llemmy/src/main/java/is/codion/demo/llemmy/ollama/Runner.java[lines=19..-1]
+----
+
+[source,bash,options="nowrap"]
+----
+gradlew llemmy-ollama:run
+----
+
+== Module Info
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/module-info.java[lines=19..-1]
+----
+
+[#_build]
+== Build
+
+.settings.gradle
+[%collapsible]
+====
+[source,kotlin,options="nowrap"]
+----
+include::{root-dir}/settings.gradle[]
+----
+====
+
+.build.gradle.kts
+[%collapsible]
+====
+[source,kotlin,options="nowrap"]
+----
+include::{root-dir}/build.gradle.kts[]
+----
+====
+
+./llemmy/build.gradle.kts
+[%collapsible]
+====
+[source,kotlin,options="nowrap"]
+----
+include::{root-dir}/llemmy/build.gradle.kts[]
+----
+====

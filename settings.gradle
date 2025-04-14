@@ -1,0 +1,49 @@
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "0.9.0"
+}
+
+rootProject.name = "llemmy"
+
+include "llemmy"
+include "llemmy-ollama"
+project(":llemmy-ollama").projectDir = file("models/ollama/llemmy")
+include "ollama-model"
+project(":ollama-model").projectDir = file("models/ollama/model")
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+    versionCatalogs {
+        libs {
+            version("codion", "0.18.34")
+            version("langchain4j", "1.0.0-beta3")
+            version("flatlaf", "3.6")
+            version("flatlaf.inter", "4.1")
+            version("h2", "2.3.232")
+            version("jackson", "2.17.3")
+
+            library("codion-dbms-h2", "is.codion", "codion-dbms-h2").versionRef("codion")
+            library("codion-swing-common-ui", "is.codion", "codion-swing-common-ui").versionRef("codion")
+            library("codion-framework-domain-test", "is.codion", "codion-framework-domain-test").versionRef("codion")
+            library("codion-framework-db-local", "is.codion", "codion-framework-db-local").versionRef("codion")
+            library("codion-swing-framework-ui", "is.codion", "codion-swing-framework-ui").versionRef("codion")
+            library("codion-plugin-logback-proxy", "is.codion", "codion-plugin-logback-proxy").versionRef("codion")
+            library("codion-plugin-flatlaf", "is.codion", "codion-plugin-flatlaf").versionRef("codion")
+            library("codion-plugin-flatlaf-intellij-themes", "is.codion", "codion-plugin-flatlaf-intellij-themes").versionRef("codion")
+            library("flatlaf-extras", "com.formdev", "flatlaf-extras").versionRef("flatlaf")
+            library("flatlaf-fonts-inter", "com.formdev", "flatlaf-fonts-inter").versionRef("flatlaf.inter")
+            library("jackson-databind", "com.fasterxml.jackson.core", "jackson-databind").versionRef("jackson")
+
+            library("langchain4j", "dev.langchain4j", "langchain4j").versionRef("langchain4j")
+            library("langchain4j-core", "dev.langchain4j", "langchain4j-core").versionRef("langchain4j")
+
+            library("langchain4j-ollama", "dev.langchain4j", "langchain4j-ollama").versionRef("langchain4j")
+            library("langchain4j-http-client", "dev.langchain4j", "langchain4j-http-client").versionRef("langchain4j")
+            library("langchain4j-http-client-jdk", "dev.langchain4j", "langchain4j-http-client-jdk").versionRef("langchain4j")
+
+            library("h2", "com.h2database", "h2").versionRef("h2")
+        }
+    }
+}

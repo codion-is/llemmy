@@ -1,0 +1,7 @@
+extraJavaModuleInfo {
+    automaticModule("dev.langchain4j:langchain4j", "dev.langchain4j")
+    automaticModule("dev.langchain4j:langchain4j-core", "dev.langchain4j.core")
+    automaticModule("dev.langchain4j:langchain4j-ollama", "dev.langchain4j.ollama")
+    automaticModule("dev.langchain4j:langchain4j-http-client", "dev.langchain4j.http.client")
+    automaticModule("dev.langchain4j:langchain4j-http-client-jdk", "dev.langchain4j.http.client.jdk")
+}

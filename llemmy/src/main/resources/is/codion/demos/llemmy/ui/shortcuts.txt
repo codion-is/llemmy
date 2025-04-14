@@ -1,0 +1,24 @@
+Alt-0            Model
+Alt-1            Prompt
+Alt-2            Attachments
+Alt-3            Chat
+Alt-4            History
+Alt-5            Look & Feel
+Alt-6            Help
+
+Ctrl-Alt-E       Prompt Window
+
+Model
+Alt-C            Clear
+Alt-S            Send
+
+Prompt
+Ctrl-Enter       Send
+Ctrl-Up/Down     History
+
+Attachments
+Insert           Add
+Delete           Remove
+
+History
+Delete           Delete
