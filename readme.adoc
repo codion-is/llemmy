@@ -63,3 +63,22 @@ gradlew llemmy-ollama:run
 gradlew llemmy-ollama:jlink
 gradlew llemmy-ollama:jpackage
 ----
+
+== OpenAI Application
+
+=== Run
+
+Runs the Llemmy application configured for OpenAI models
+
+[source,shell]
+----
+gradlew llemmy-openai:run
+----
+
+=== Package
+
+[source,shell]
+----
+gradlew llemmy-openai:jlink
+gradlew llemmy-openai:jpackage
+----

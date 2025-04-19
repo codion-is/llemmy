@@ -6,6 +6,7 @@
 :dir-resources: ../../main/resources
 :dir-source-test: ../../test/java
 :dir-ollama: ../../../../models/ollama
+:dir-openai: ../../../../models/openai
 :doc-url: https://codion.is/doc/{codion-version}
 
 https://github.com/codion-is/llemmy[Llemmy Demo on GitHub]
@@ -154,13 +155,29 @@ include::{dir-ollama}/model/src/main/java/is/codion/demo/llemmy/ollama/model/Run
 gradlew ollama-model:run
 ----
 
-== Ollama Llemmy Runner
+=== Ollama Llemmy
 
 Runs the Llemmy application configured for the local Ollama model
 
 [source,java,options="nowrap"]
 ----
 include::{dir-ollama}/llemmy/src/main/java/is/codion/demo/llemmy/ollama/Runner.java[lines=19..-1]
+----
+
+[source,bash,options="nowrap"]
+----
+gradlew llemmy-ollama:run
+----
+
+== OpenAI
+
+=== OpenAI Llemmy
+
+Runs the Llemmy application configured for the OpenAI models
+
+[source,java,options="nowrap"]
+----
+include::{dir-openai}/llemmy/src/main/java/is/codion/demo/llemmy/openai/Runner.java[lines=19..-1]
 ----
 
 [source,bash,options="nowrap"]

@@ -9,6 +9,8 @@ include "llemmy-ollama"
 project(":llemmy-ollama").projectDir = file("models/ollama/llemmy")
 include "ollama-model"
 project(":ollama-model").projectDir = file("models/ollama/model")
+include "llemmy-openai"
+project(":llemmy-openai").projectDir = file("models/openai/llemmy")
 
 dependencyResolutionManagement {
     repositories {
@@ -40,6 +42,7 @@ dependencyResolutionManagement {
             library("langchain4j-core", "dev.langchain4j", "langchain4j-core").versionRef("langchain4j")
 
             library("langchain4j-ollama", "dev.langchain4j", "langchain4j-ollama").versionRef("langchain4j")
+            library("langchain4j-open-ai", "dev.langchain4j", "langchain4j-open-ai").versionRef("langchain4j")
             library("langchain4j-http-client", "dev.langchain4j", "langchain4j-http-client").versionRef("langchain4j")
             library("langchain4j-http-client-jdk", "dev.langchain4j", "langchain4j-http-client-jdk").versionRef("langchain4j")
 
