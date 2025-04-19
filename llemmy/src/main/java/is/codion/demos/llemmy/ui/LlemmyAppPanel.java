@@ -67,7 +67,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 	@Override
 	protected Optional<Controls> createViewMenuControls() {
 		return Optional.of(Controls.builder()
-						.name(FrameworkMessages.view())
+						.caption(FrameworkMessages.view())
 						.mnemonic(FrameworkMessages.viewMnemonic())
 						.control(createAlwaysOnTopControl())
 						.build());
@@ -78,11 +78,11 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 		State helpVisible = ((ChatLogPanel) entityPanel(ChatLog.TYPE)).helpVisible();
 
 		return Optional.of(Controls.builder()
-						.name("Help")
+						.caption("Help")
 						.mnemonic('H')
 						.control(Control.builder()
 										.toggle(helpVisible)
-										.name("Help")
+										.caption("Help")
 										.build())
 						.separator()
 						.control(createLogControls())

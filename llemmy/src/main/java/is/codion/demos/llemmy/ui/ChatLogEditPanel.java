@@ -170,7 +170,7 @@ public final class ChatLogEditPanel extends EntityEditPanel {
 	private Control createClearControl() {
 		return Control.builder()
 						.command(editModel.prompt()::clear)
-						.name("Clear")
+						.caption("Clear")
 						.mnemonic('C')
 						// Only enabled when the model is ready
 						.enabled(editModel.ready())
@@ -180,7 +180,7 @@ public final class ChatLogEditPanel extends EntityEditPanel {
 	private Control createSendControl() {
 		return Control.builder()
 						.command(editModel::send)
-						.name("Send")
+						.caption("Send")
 						.mnemonic('S')
 						// Only enabled when the model is ready
 						.enabled(editModel.ready())
