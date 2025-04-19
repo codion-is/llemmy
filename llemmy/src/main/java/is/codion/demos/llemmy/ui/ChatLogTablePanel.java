@@ -86,8 +86,8 @@ public final class ChatLogTablePanel extends EntityTablePanel {
 		setLayout(borderLayout());
 		add(splitPane()
 						.continuousLayout(true)
-						.resizeWeight(0.75)
 						.oneTouchExpandable(true)
+						.resizeWeight(0.75)
 						.leftComponent(borderLayoutPanel()
 										.border(createTitledBorder("Chat"))
 										.centerComponent(scrollPane(chatPane).build())
@@ -96,7 +96,6 @@ public final class ChatLogTablePanel extends EntityTablePanel {
 										.border(createTitledBorder("History"))
 										.centerComponent(tableComponent)
 										.build())
-						.resizeWeight(0.75)
 						.build(), BorderLayout.CENTER);
 	}
 

@@ -41,6 +41,7 @@ import static is.codion.framework.domain.entity.OrderBy.descending;
 // tag::llemmy[]
 public final class Llemmy extends DomainModel {
 
+	// Identifies this domain model
 	public static final DomainType DOMAIN = domainType(Llemmy.class);
 
 	public Llemmy() {
@@ -51,13 +52,18 @@ public final class Llemmy extends DomainModel {
 
 	// tag::chat_log_api[]
 	public interface ChatLog {
+		// Identifies this entity type
 		EntityType TYPE = DOMAIN.entityType("llemmy.chat_log");
 
+		// Primary key column
 		Column<Integer> ID = TYPE.integerColumn("id");
+		// Maps automatically to a native UUID H2 column
 		Column<UUID> SESSION = TYPE.column("session", UUID.class);
 		Column<String> NAME = TYPE.stringColumn("name");
+		// Column based on an Enum
 		Column<ChatMessageType> MESSAGE_TYPE = TYPE.column("message_type", ChatMessageType.class);
 		Column<LocalDateTime> TIMESTAMP = TYPE.localDateTimeColumn("timestamp");
+		// Derived from TIMESTAMP, not a table column
 		Attribute<LocalTime> TIME = TYPE.localTimeAttribute("time");
 		Column<String> MESSAGE = TYPE.stringColumn("message");
 		Column<String> STACK_TRACE = TYPE.stringColumn("stack_trace");
@@ -65,6 +71,7 @@ public final class Llemmy extends DomainModel {
 		Column<Integer> OUTPUT_TOKENS = TYPE.integerColumn("output_tokens");
 		Column<Integer> TOTAL_TOKENS = TYPE.integerColumn("total_tokens");
 		Column<String> JSON = TYPE.stringColumn("json");
+		// For implementing soft-delete
 		Column<Boolean> DELETED = TYPE.booleanColumn("deleted");
 	}
 	// end::chat_log_api[]
@@ -92,6 +99,9 @@ public final class Llemmy extends DomainModel {
 														.caption("Name"),
 										ChatLog.MESSAGE_TYPE.define()
 														.column()
+														// Specify that the enum is represented by an underlying
+														// String column and provide a converter for converting
+														// between the enum and the underlying column value
 														.columnClass(String.class, new MessageTypeConverter())
 														.caption("Type"),
 										ChatLog.MESSAGE.define()
@@ -119,6 +129,7 @@ public final class Llemmy extends DomainModel {
 														.defaultValue(false)
 														.columnHasDefaultValue(true))
 						.keyGenerator(identity())
+						// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
 						.stringFactory(StringFactory.builder()
 										.value(ChatLog.TIME)
 										.text(" @ ")

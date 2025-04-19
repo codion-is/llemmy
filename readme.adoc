@@ -16,7 +16,7 @@ gradlew llemmy:asciidoctor
 ...and browse the tutorial here:
 [source]
 ----
-app/build/docs/asciidoc/llemmy.html
+llemmy/build/docs/asciidoc/llemmy.html
 ----
 
 == Build Llemmy
@@ -45,7 +45,7 @@ gradlew ollama-model:jlink
 gradlew ollama-model:jpackage
 ----
 
-== Ollama Application
+== Llemmy Ollama
 
 === Run
 
@@ -64,7 +64,7 @@ gradlew llemmy-ollama:jlink
 gradlew llemmy-ollama:jpackage
 ----
 
-== OpenAI Application
+== Llemmy OpenAI
 
 === Run
 
