@@ -62,10 +62,10 @@ public final class ChatLogEditPanel extends EntityEditPanel {
 
 	// The mime types available for attachments
 	private static final List<String> SUPPORTED_MIME_TYPES = List.of(
-					ChatLogEditModel.TEXT_PLAIN,
-					ChatLogEditModel.IMAGE_PNG,
+					ChatLogEditModel.PDF,
 					ChatLogEditModel.IMAGE_JPEG,
-					ChatLogEditModel.PDF);
+					ChatLogEditModel.IMAGE_PNG,
+					ChatLogEditModel.TEXT_PLAIN);
 
 	private final ChatLogEditModel editModel;
 

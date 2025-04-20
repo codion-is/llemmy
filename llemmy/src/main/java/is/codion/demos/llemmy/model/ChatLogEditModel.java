@@ -83,6 +83,7 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 	public static final String IMAGE_JPEG = "image/jpeg";
 	public static final String PDF = "application/pdf";
 
+	private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 	private static final String USER = getProperty("user.name");
 	private static final String SYSTEM = "System";
 
@@ -262,18 +263,18 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 	private static Attachment createAttachment(Path path, String mimeType) {
 		return switch (mimeType) {
 			case IMAGE_PNG, IMAGE_JPEG -> new Attachment(path,
-							ImageContent.from(String.valueOf(toBase64Bytes(path)), mimeType));
+							ImageContent.from(toBase64Bytes(path), mimeType));
 			case TEXT_PLAIN -> new Attachment(path,
-							TextFileContent.from(String.valueOf(toBase64Bytes(path)), mimeType));
+							TextFileContent.from(toBase64Bytes(path), mimeType));
 			case PDF -> new Attachment(path,
-							PdfFileContent.from(String.valueOf(toBase64Bytes(path)), mimeType));
+							PdfFileContent.from(toBase64Bytes(path), mimeType));
 			default -> throw new IllegalArgumentException("Unsupported mime type: " + mimeType);
 		};
 	}
 
-	private static byte[] toBase64Bytes(Path attachment) {
+	private static String toBase64Bytes(Path attachment) {
 		try {
-			return Base64.getEncoder().encode(readAllBytes(attachment));
+			return BASE64_ENCODER.encodeToString(readAllBytes(attachment));
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
