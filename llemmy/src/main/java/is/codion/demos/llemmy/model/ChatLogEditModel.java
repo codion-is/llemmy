@@ -360,15 +360,17 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 		@Override
 		public Entity execute() {
 			ChatLanguageModel languageModel = languageModel();
+			LocalDateTime started = LocalDateTime.now();
 			try {
-				return insert(languageModel.provider().name(), languageModel.chat(userMessage));
+				return insert(languageModel.provider().name(), languageModel.chat(userMessage),
+								(int) Duration.between(started, LocalDateTime.now()).toMillis());
 			}
 			catch (Exception e) {
 				return insert(e);
 			}
 		}
 
-		private Entity insert(String name, ChatResponse response) {
+		private Entity insert(String name, ChatResponse response, int responseMs) {
 			TokenUsage tokenUsage = response.metadata().tokenUsage();
 
 			return connection().insertSelect(entities().builder(ChatLog.TYPE)
@@ -377,6 +379,7 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 							.with(ChatLog.NAME, name)
 							.with(ChatLog.TIMESTAMP, LocalDateTime.now())
 							.with(ChatLog.MESSAGE, response.aiMessage().text())
+							.with(ChatLog.RESPONSE_MS, responseMs)
 							.with(ChatLog.JSON, messageToJson(response.aiMessage()))
 							.with(ChatLog.INPUT_TOKENS, tokenUsage.inputTokenCount())
 							.with(ChatLog.OUTPUT_TOKENS, tokenUsage.outputTokenCount())

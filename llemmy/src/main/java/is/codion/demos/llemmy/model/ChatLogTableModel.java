@@ -27,6 +27,8 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 
 import java.util.List;
 
+import static dev.langchain4j.data.message.ChatMessageType.USER;
+
 /**
  * Manages the chat log history.
  */
@@ -48,6 +50,11 @@ public final class ChatLogTableModel extends SwingEntityTableModel {
 
 	private void onSelection(Entity chatLog) {
 		ChatLogEditModel editModel = (ChatLogEditModel) editModel();
-		editModel.prompt().set(chatLog == null ? null : chatLog.get(ChatLog.MESSAGE));
+		if (chatLog == null) {
+			editModel.prompt().clear();
+		}
+		else if (chatLog.get(ChatLog.MESSAGE_TYPE) == USER) {
+			editModel.prompt().set(chatLog.get(ChatLog.MESSAGE));
+		}
 	}
 }

@@ -8,6 +8,7 @@ create table llemmy.chat_log (
     message_type varchar(25) not null,
     message text,
     stack_trace text,
+    response_ms integer,
     input_tokens integer,
     output_tokens integer,
     total_tokens integer,

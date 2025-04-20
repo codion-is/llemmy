@@ -67,6 +67,7 @@ public final class Llemmy extends DomainModel {
 		Attribute<LocalTime> TIME = TYPE.localTimeAttribute("time");
 		Column<String> MESSAGE = TYPE.stringColumn("message");
 		Column<String> STACK_TRACE = TYPE.stringColumn("stack_trace");
+		Column<Integer> RESPONSE_MS = TYPE.integerColumn("response_ms");
 		Column<Integer> INPUT_TOKENS = TYPE.integerColumn("input_tokens");
 		Column<Integer> OUTPUT_TOKENS = TYPE.integerColumn("output_tokens");
 		Column<Integer> TOTAL_TOKENS = TYPE.integerColumn("total_tokens");
@@ -110,6 +111,10 @@ public final class Llemmy extends DomainModel {
 										ChatLog.STACK_TRACE.define()
 														.column()
 														.caption("Stack trace"),
+										ChatLog.RESPONSE_MS.define()
+														.column()
+														.numberFormatGrouping(true)
+														.caption("ms."),
 										ChatLog.INPUT_TOKENS.define()
 														.column()
 														.caption("Input tokens"),
