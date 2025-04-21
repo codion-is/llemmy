@@ -379,7 +379,7 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 							.with(ChatLog.NAME, name)
 							.with(ChatLog.TIMESTAMP, LocalDateTime.now())
 							.with(ChatLog.MESSAGE, response.aiMessage().text())
-							.with(ChatLog.RESPONSE_MS, responseMs)
+							.with(ChatLog.DURATION, Duration.ofMillis(responseMs))
 							.with(ChatLog.JSON, messageToJson(response.aiMessage()))
 							.with(ChatLog.INPUT_TOKENS, tokenUsage.inputTokenCount())
 							.with(ChatLog.OUTPUT_TOKENS, tokenUsage.outputTokenCount())

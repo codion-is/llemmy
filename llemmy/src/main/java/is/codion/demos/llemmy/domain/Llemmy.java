@@ -30,6 +30,7 @@ import dev.langchain4j.data.message.ChatMessageType;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public final class Llemmy extends DomainModel {
 		Attribute<LocalTime> TIME = TYPE.localTimeAttribute("time");
 		Column<String> MESSAGE = TYPE.stringColumn("message");
 		Column<String> STACK_TRACE = TYPE.stringColumn("stack_trace");
-		Column<Integer> RESPONSE_MS = TYPE.integerColumn("response_ms");
+		Column<Duration> DURATION = TYPE.column("duration", Duration.class);
 		Column<Integer> INPUT_TOKENS = TYPE.integerColumn("input_tokens");
 		Column<Integer> OUTPUT_TOKENS = TYPE.integerColumn("output_tokens");
 		Column<Integer> TOTAL_TOKENS = TYPE.integerColumn("total_tokens");
@@ -111,10 +112,10 @@ public final class Llemmy extends DomainModel {
 										ChatLog.STACK_TRACE.define()
 														.column()
 														.caption("Stack trace"),
-										ChatLog.RESPONSE_MS.define()
+										ChatLog.DURATION.define()
 														.column()
-														.numberFormatGrouping(true)
-														.caption("ms."),
+														.columnClass(Integer.class, new DurationConverter())
+														.caption("Duration"),
 										ChatLog.INPUT_TOKENS.define()
 														.column()
 														.caption("Input tokens"),
@@ -157,6 +158,19 @@ public final class Llemmy extends DomainModel {
 		@Override
 		public ChatMessageType fromColumnValue(String columnValue) throws SQLException {
 			return ChatMessageType.valueOf(columnValue);
+		}
+	}
+
+	private static class DurationConverter implements Converter<Duration, Integer> {
+
+		@Override
+		public Integer toColumnValue(Duration duration, Statement statement) throws SQLException {
+			return (int) duration.toMillis();
+		}
+
+		@Override
+		public Duration fromColumnValue(Integer millis) throws SQLException {
+			return Duration.ofMillis(millis);
 		}
 	}
 	// end::chat_log_impl[]

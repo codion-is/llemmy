@@ -27,6 +27,7 @@ import is.codion.framework.domain.test.DomainTest;
 import dev.langchain4j.data.message.ChatMessageType;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
 import java.util.UUID;
 
 final class LlemmyTest extends DomainTest {
@@ -56,6 +57,9 @@ final class LlemmyTest extends DomainTest {
 			}
 			if (attribute.equals(ChatLog.JSON)) {
 				return null;
+			}
+			if (attribute.equals(ChatLog.DURATION)) {
+				return (T) Duration.ofMillis(10);
 			}
 
 			return super.value(attribute);
