@@ -18,7 +18,7 @@
  */
 package is.codion.demo.llemmy.openai;
 
-import is.codion.demos.llemmy.ui.LlemmyAppPanel;
+import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;

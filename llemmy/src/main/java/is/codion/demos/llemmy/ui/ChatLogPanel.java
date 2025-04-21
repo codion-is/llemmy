@@ -19,6 +19,7 @@
 package is.codion.demos.llemmy.ui;
 
 import is.codion.common.state.State;
+import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
 import is.codion.demos.llemmy.model.ChatLogEditModel;
 import is.codion.demos.llemmy.model.ChatLogModel;
 import is.codion.demos.llemmy.model.ChatLogTableModel;

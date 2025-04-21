@@ -16,9 +16,11 @@
  *
  * Copyright (c) 2025, Björn Darri Sigurðsson.
  */
-package is.codion.demos.llemmy.model;
+package is.codion.demos.llemmy.app.model;
 
 import is.codion.common.version.Version;
+import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
+import is.codion.demos.llemmy.model.ChatLogModel;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.swing.framework.model.SwingEntityApplicationModel;
 
@@ -27,7 +29,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import java.util.List;
 
 /**
- * @see is.codion.demos.llemmy.ui.LlemmyAppPanel
+ * @see LlemmyAppPanel
  */
 public final class LlemmyAppModel extends SwingEntityApplicationModel {
 

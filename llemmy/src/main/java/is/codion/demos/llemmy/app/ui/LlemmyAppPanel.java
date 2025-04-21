@@ -16,15 +16,16 @@
  *
  * Copyright (c) 2025, Björn Darri Sigurðsson.
  */
-package is.codion.demos.llemmy.ui;
+package is.codion.demos.llemmy.app.ui;
 
 import is.codion.common.db.database.Database;
 import is.codion.common.state.State;
 import is.codion.common.user.User;
+import is.codion.demos.llemmy.app.model.LlemmyAppModel;
 import is.codion.demos.llemmy.domain.Llemmy;
 import is.codion.demos.llemmy.domain.Llemmy.ChatLog;
 import is.codion.demos.llemmy.model.ChatLogModel;
-import is.codion.demos.llemmy.model.LlemmyAppModel;
+import is.codion.demos.llemmy.ui.ChatLogPanel;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.db.local.LocalEntityConnectionProvider;
 import is.codion.framework.i18n.FrameworkMessages;
@@ -95,7 +96,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 	private static EntityConnectionProvider createConnectionProvider(User user) {
 		return LocalEntityConnectionProvider.builder()
 						.database(Database.instance())
-						.domainType(Llemmy.DOMAIN)
+						.domain(new Llemmy())
 						.user(user)
 						.build();
 	}
