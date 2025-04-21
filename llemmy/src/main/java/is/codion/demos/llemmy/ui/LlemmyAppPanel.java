@@ -45,6 +45,7 @@ import javax.swing.JComponent;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import static is.codion.common.user.User.user;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
@@ -116,7 +117,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 		}
 	}
 
-	public static void start(List<ChatLanguageModel> languageModels) {
+	public static void start(Supplier<List<ChatLanguageModel>> languageModels) {
 		FlatInspector.install( "ctrl shift alt X" );
 		FlatInterFont.install();
 		FlatLaf.setPreferredFontFamily(FlatInterFont.FAMILY);
@@ -133,7 +134,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 						.user(user("sa"))
 						.connectionProvider(LlemmyAppPanel::createConnectionProvider)
 						.applicationModel(connectionProvider ->
-										new LlemmyAppModel(languageModels, connectionProvider))
+										new LlemmyAppModel(languageModels.get(), connectionProvider))
 						.displayStartupDialog(false)
 						.defaultLookAndFeel(Dracula.class)
 						.start();

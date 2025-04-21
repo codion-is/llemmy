@@ -19,22 +19,39 @@
 package is.codion.demo.llemmy.openai;
 
 import is.codion.demos.llemmy.ui.LlemmyAppPanel;
+import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
 
 import java.util.List;
 
+import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
+import static is.codion.swing.common.ui.component.Components.comboBox;
+import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
+
 public final class Runner {
+
+	private static final String API_KEY = System.getenv("OPENAI_API_KEY");
+
+	private static final List<OpenAiChatModelName> MODEL_NAMES =
+					List.of(OpenAiChatModelName.values());
 
 	private Runner() {}
 
 	public static void main(String[] args) {
-		List<ChatLanguageModel> models = List.of(OpenAiChatModel.builder()
-						.baseUrl("http://langchain4j.dev/demo/openai/v1")
-						.apiKey("demo")
-						.modelName("gpt-4o-mini")
-						.build());
-		LlemmyAppPanel.start(models);
+		LlemmyAppPanel.start(() -> List.of(OpenAiChatModel.builder()
+						.apiKey(API_KEY)
+						.modelName(selectModel())
+						.build()));
+	}
+
+	private static OpenAiChatModelName selectModel() {
+		return inputDialog(comboBox(FilterComboBoxModel.builder(MODEL_NAMES).build())
+						.value(GPT_4_O_MINI)
+						.preferredWidth(250)
+						.buildValue())
+						.title("Choose model")
+						.show();
 	}
 }

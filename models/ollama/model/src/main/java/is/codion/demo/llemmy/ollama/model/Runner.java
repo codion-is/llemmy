@@ -18,6 +18,7 @@
  */
 package is.codion.demo.llemmy.ollama.model;
 
+import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.laf.LookAndFeelEnabler;
 
@@ -27,13 +28,15 @@ import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import org.testcontainers.containers.GenericContainer;
 
+import java.util.List;
+
 import static com.github.dockerjava.api.model.Ports.Binding.bindPort;
 import static is.codion.swing.common.ui.Utilities.parentWindow;
 import static is.codion.swing.common.ui.Utilities.setClipboard;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
-import static is.codion.swing.common.ui.component.Components.borderLayoutPanel;
-import static is.codion.swing.common.ui.component.Components.stringField;
+import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.dialog.Dialogs.actionDialog;
+import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
 import static is.codion.swing.common.ui.laf.LookAndFeelProvider.findLookAndFeel;
 import static java.lang.String.format;
 import static javax.swing.SwingConstants.CENTER;
@@ -42,11 +45,21 @@ public final class Runner {
 
 	private static final int PORT = 11434;
 
+	private static final List<String> MODELS = List.of(
+					"llama3",
+					"llama2",
+					"mistral",
+					"codellama",
+					"phi",
+					"orca-mini",
+					"tinyllama",
+					"ollama-test");
+
 	private Runner() {}
 
 	public static void main(String[] args) {
 		findLookAndFeel(FlatDarkLaf.class).ifPresent(LookAndFeelEnabler::enable);
-		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + "orca-mini" + ":latest")
+		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + selectModel() + ":latest")
 						.withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(new HostConfig()
 										.withPortBindings(new PortBinding(bindPort(PORT), new ExposedPort(PORT)))))) {
 			ollama.start();
@@ -59,6 +72,9 @@ public final class Runner {
 							.build();
 			actionDialog(borderLayoutPanel()
 							.border(emptyBorder())
+							.northComponent(label(ollama.getDockerImageName())
+											.horizontalAlignment(CENTER)
+											.build())
 							.centerComponent(baseUrlField)
 							.build())
 							.title("Ollama")
@@ -75,5 +91,14 @@ public final class Runner {
 							.show();
 			ollama.stop();
 		}
+	}
+
+	private static String selectModel() {
+		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
+										.value("orca-mini")
+										.preferredWidth(250)
+										.buildValue())
+						.title("Choose model")
+						.show();
 	}
 }

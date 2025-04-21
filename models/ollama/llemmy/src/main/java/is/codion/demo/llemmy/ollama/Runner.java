@@ -19,21 +19,42 @@
 package is.codion.demo.llemmy.ollama;
 
 import is.codion.demos.llemmy.ui.LlemmyAppPanel;
+import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
 import java.util.List;
 
+import static is.codion.swing.common.ui.component.Components.comboBox;
+import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
+
 public final class Runner {
+
+	private static final List<String> MODELS = List.of(
+					"llama3",
+					"llama2",
+					"mistral",
+					"codellama",
+					"phi",
+					"orca-mini",
+					"tinyllama",
+					"ollama-test");
 
 	private Runner() {}
 
 	public static void main(String[] args) {
-		List<ChatLanguageModel> models = List.of(OllamaChatModel.builder()
+		LlemmyAppPanel.start(() -> List.of(OllamaChatModel.builder()
 						.baseUrl("http://localhost:11434")
-						.modelName("orca-mini")
-						.build());
-		LlemmyAppPanel.start(models);
+						.modelName(selectModel())
+						.build()));
+	}
+
+	private static String selectModel() {
+		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
+										.value("orca-mini")
+										.preferredWidth(250)
+										.buildValue())
+						.title("Choose model")
+						.show();
 	}
 }

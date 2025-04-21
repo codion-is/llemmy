@@ -20,6 +20,7 @@
  * Llemmy openai app.
  */
 module is.codion.demo.llemmy.openai {
+	requires is.codion.swing.common.ui;
 	requires is.codion.demos.llemmy.ui;
 	requires dev.langchain4j.openai;
 	requires dev.langchain4j.core;

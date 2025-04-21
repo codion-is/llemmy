@@ -20,6 +20,7 @@
  * Llemmy ollama app.
  */
 module is.codion.demo.llemmy.ollama {
+	requires is.codion.swing.common.ui;
 	requires is.codion.demos.llemmy.ui;
 	requires dev.langchain4j.ollama;
 	requires dev.langchain4j.core;
