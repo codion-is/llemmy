@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":llemmy-ollama"))
     implementation(libs.codion.swing.common.ui)
     implementation(libs.codion.plugin.flatlaf)
 

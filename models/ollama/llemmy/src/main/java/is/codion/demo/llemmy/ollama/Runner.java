@@ -19,24 +19,23 @@
 package is.codion.demo.llemmy.ollama;
 
 import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
-import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
 import java.util.List;
 
-import static is.codion.swing.common.ui.component.Components.comboBox;
-import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
+import static is.codion.demos.llemmy.app.ui.LlemmyAppPanel.selectModelName;
 
 public final class Runner {
 
-	private static final List<String> MODELS = List.of(
+	public static final String ORCA_MINI = "orca-mini";
+	public static final List<String> MODELS = List.of(
+					ORCA_MINI,
 					"llama3",
 					"llama2",
 					"mistral",
 					"codellama",
 					"phi",
-					"orca-mini",
 					"tinyllama",
 					"ollama-test");
 
@@ -45,16 +44,7 @@ public final class Runner {
 	public static void main(String[] args) {
 		LlemmyAppPanel.start(() -> List.of(OllamaChatModel.builder()
 						.baseUrl("http://localhost:11434")
-						.modelName(selectModel())
+						.modelName(selectModelName(MODELS, ORCA_MINI))
 						.build()));
-	}
-
-	private static String selectModel() {
-		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
-										.value("orca-mini")
-										.preferredWidth(250)
-										.buildValue())
-						.title("Choose model")
-						.show();
 	}
 }

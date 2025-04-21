@@ -28,9 +28,9 @@ import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PortBinding;
 import org.testcontainers.containers.GenericContainer;
 
-import java.util.List;
-
 import static com.github.dockerjava.api.model.Ports.Binding.bindPort;
+import static is.codion.demo.llemmy.ollama.Runner.MODELS;
+import static is.codion.demo.llemmy.ollama.Runner.ORCA_MINI;
 import static is.codion.swing.common.ui.Utilities.parentWindow;
 import static is.codion.swing.common.ui.Utilities.setClipboard;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
@@ -44,16 +44,6 @@ import static javax.swing.SwingConstants.CENTER;
 public final class Runner {
 
 	private static final int PORT = 11434;
-
-	private static final List<String> MODELS = List.of(
-					"llama3",
-					"llama2",
-					"mistral",
-					"codellama",
-					"phi",
-					"orca-mini",
-					"tinyllama",
-					"ollama-test");
 
 	private Runner() {}
 
@@ -95,10 +85,10 @@ public final class Runner {
 
 	private static String selectModel() {
 		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
-										.value("orca-mini")
+										.value(ORCA_MINI)
 										.preferredWidth(250)
 										.buildValue())
-						.title("Choose model")
+						.title("Select model")
 						.show();
 	}
 }

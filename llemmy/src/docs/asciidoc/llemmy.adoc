@@ -129,14 +129,14 @@ include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogTablePanel.java[lines=19.
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/LlemmyAppModel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/app/model/LlemmyAppModel.java[lines=19..-1]
 ----
 
 === LlemmyAppPanel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/LlemmyAppPanel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/app/ui/LlemmyAppPanel.java[lines=19..-1]
 ----
 
 == Ollama

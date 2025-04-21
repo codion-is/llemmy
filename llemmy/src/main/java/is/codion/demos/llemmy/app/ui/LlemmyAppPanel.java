@@ -30,6 +30,7 @@ import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.db.local.LocalEntityConnectionProvider;
 import is.codion.framework.i18n.FrameworkMessages;
 import is.codion.plugin.flatlaf.intellij.themes.dracula.Dracula;
+import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.ui.component.table.FilterTableCellRenderer;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.control.Controls;
@@ -51,6 +52,8 @@ import java.util.function.Supplier;
 import static is.codion.common.user.User.user;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
 import static is.codion.swing.common.ui.component.Components.borderLayoutPanel;
+import static is.codion.swing.common.ui.component.Components.comboBox;
+import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
 import static is.codion.swing.framework.ui.EntityTablePanel.ColumnSelection.MENU;
 import static is.codion.swing.framework.ui.ReferentialIntegrityErrorHandling.DISPLAY_DEPENDENCIES;
 import static javax.swing.SwingConstants.LEADING;
@@ -64,6 +67,15 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 		super(applicationModel,
 						List.of(new ChatLogPanel((ChatLogModel) applicationModel.entityModels().get(ChatLog.TYPE))), List.of(),
 						LlemmyApplicationLayout::new);
+	}
+
+	public static String selectModelName(List<String> modelNames, String defaultName) {
+		return inputDialog(comboBox(FilterComboBoxModel.builder(modelNames).build())
+						.value(defaultName)
+						.preferredWidth(250)
+						.buildValue())
+						.title("Select model")
+						.show();
 	}
 
 	@Override
@@ -119,7 +131,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 	}
 
 	public static void start(Supplier<List<ChatLanguageModel>> languageModels) {
-		FlatInspector.install( "ctrl shift alt X" );
+		FlatInspector.install("ctrl shift alt X");
 		FlatInterFont.install();
 		FlatLaf.setPreferredFontFamily(FlatInterFont.FAMILY);
 		FlatLaf.setPreferredLightFontFamily(FlatInterFont.FAMILY_LIGHT);
