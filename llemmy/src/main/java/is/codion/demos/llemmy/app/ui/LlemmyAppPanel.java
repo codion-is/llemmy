@@ -23,9 +23,9 @@ import is.codion.common.state.State;
 import is.codion.common.user.User;
 import is.codion.demos.llemmy.app.model.LlemmyAppModel;
 import is.codion.demos.llemmy.domain.Llemmy;
-import is.codion.demos.llemmy.domain.Llemmy.ChatLog;
-import is.codion.demos.llemmy.model.ChatLogModel;
-import is.codion.demos.llemmy.ui.ChatLogPanel;
+import is.codion.demos.llemmy.domain.Llemmy.Chat;
+import is.codion.demos.llemmy.model.ChatModel;
+import is.codion.demos.llemmy.ui.ChatPanel;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.db.local.LocalEntityConnectionProvider;
 import is.codion.framework.i18n.FrameworkMessages;
@@ -65,7 +65,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 
 	public LlemmyAppPanel(LlemmyAppModel applicationModel) {
 		super(applicationModel,
-						List.of(new ChatLogPanel((ChatLogModel) applicationModel.entityModels().get(ChatLog.TYPE))), List.of(),
+						List.of(new ChatPanel((ChatModel) applicationModel.entityModels().get(Chat.TYPE))), List.of(),
 						LlemmyApplicationLayout::new);
 	}
 
@@ -89,7 +89,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 
 	@Override
 	protected Optional<Controls> createHelpMenuControls() {
-		State helpVisible = ((ChatLogPanel) entityPanel(ChatLog.TYPE)).helpVisible();
+		State helpVisible = ((ChatPanel) entityPanel(Chat.TYPE)).helpVisible();
 
 		return Optional.of(Controls.builder()
 						.caption("Help")
@@ -124,7 +124,7 @@ public final class LlemmyAppPanel extends EntityApplicationPanel<LlemmyAppModel>
 		@Override
 		public JComponent layout() {
 			return borderLayoutPanel()
-							.centerComponent(applicationPanel.entityPanel(ChatLog.TYPE).initialize())
+							.centerComponent(applicationPanel.entityPanel(Chat.TYPE).initialize())
 							.border(emptyBorder())
 							.build();
 		}

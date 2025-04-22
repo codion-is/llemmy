@@ -24,7 +24,8 @@ import is.codion.common.scheduler.TaskScheduler;
 import is.codion.common.state.ObservableState;
 import is.codion.common.state.State;
 import is.codion.common.value.Value;
-import is.codion.demos.llemmy.domain.Llemmy.ChatLog;
+import is.codion.demos.llemmy.domain.Llemmy.Chat;
+import is.codion.demos.llemmy.ui.ChatEditPanel;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
@@ -73,9 +74,9 @@ import static java.util.stream.Collectors.joining;
 
 /**
  * Manages the state and the business logic for chatting with a language model.
- * @see is.codion.demos.llemmy.ui.ChatLogEditPanel
+ * @see ChatEditPanel
  */
-public final class ChatLogEditModel extends SwingEntityEditModel {
+public final class ChatEditModel extends SwingEntityEditModel {
 
 	// The mime types available for attachments
 	public static final String IMAGE_PNG = "image/png";
@@ -122,8 +123,8 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 					.consumer(value -> promptEmpty.set(value.trim().isEmpty()))
 					.build();
 
-	public ChatLogEditModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
-		super(ChatLog.TYPE, connectionProvider);
+	public ChatEditModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
+		super(Chat.TYPE, connectionProvider);
 		if (languageModels.isEmpty()) {
 			throw new IllegalArgumentException("No language model(s) provided");
 		}
@@ -220,7 +221,7 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 	}
 
 	private Entity setDeleted(Entity entity) {
-		entity.put(ChatLog.DELETED, true);
+		entity.put(Chat.DELETED, true);
 
 		return entity;
 	}
@@ -243,7 +244,7 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 						.onException(chat::fail)
 						// Propagate the resulting task
 						// to the next async send method
-						.onResult(ChatLogEditModel::send)
+						.onResult(ChatEditModel::send)
 						.execute();
 	}
 
@@ -312,13 +313,13 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 		}
 
 		private Entity insert(UserMessage message) {
-			return connection().insertSelect(entities().builder(ChatLog.TYPE)
-							.with(ChatLog.MESSAGE_TYPE, ChatMessageType.USER)
-							.with(ChatLog.SESSION, session)
-							.with(ChatLog.NAME, USER)
-							.with(ChatLog.TIMESTAMP, LocalDateTime.now())
-							.with(ChatLog.MESSAGE, messageText(message))
-							.with(ChatLog.JSON, messageToJson(message))
+			return connection().insertSelect(entities().builder(Chat.TYPE)
+							.with(Chat.MESSAGE_TYPE, ChatMessageType.USER)
+							.with(Chat.SESSION, session)
+							.with(Chat.NAME, USER)
+							.with(Chat.TIMESTAMP, LocalDateTime.now())
+							.with(Chat.MESSAGE, messageText(message))
+							.with(Chat.JSON, messageToJson(message))
 							.build());
 		}
 
@@ -363,38 +364,38 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 			LocalDateTime started = LocalDateTime.now();
 			try {
 				return insert(languageModel.provider().name(), languageModel.chat(userMessage),
-								(int) Duration.between(started, LocalDateTime.now()).toMillis());
+								Duration.between(started, LocalDateTime.now()));
 			}
 			catch (Exception e) {
 				return insert(e);
 			}
 		}
 
-		private Entity insert(String name, ChatResponse response, int responseMs) {
+		private Entity insert(String name, ChatResponse response, Duration responseTime) {
 			TokenUsage tokenUsage = response.metadata().tokenUsage();
 
-			return connection().insertSelect(entities().builder(ChatLog.TYPE)
-							.with(ChatLog.MESSAGE_TYPE, ChatMessageType.AI)
-							.with(ChatLog.SESSION, session)
-							.with(ChatLog.NAME, name)
-							.with(ChatLog.TIMESTAMP, LocalDateTime.now())
-							.with(ChatLog.MESSAGE, response.aiMessage().text())
-							.with(ChatLog.DURATION, Duration.ofMillis(responseMs))
-							.with(ChatLog.JSON, messageToJson(response.aiMessage()))
-							.with(ChatLog.INPUT_TOKENS, tokenUsage.inputTokenCount())
-							.with(ChatLog.OUTPUT_TOKENS, tokenUsage.outputTokenCount())
-							.with(ChatLog.TOTAL_TOKENS, tokenUsage.totalTokenCount())
+			return connection().insertSelect(entities().builder(Chat.TYPE)
+							.with(Chat.MESSAGE_TYPE, ChatMessageType.AI)
+							.with(Chat.SESSION, session)
+							.with(Chat.NAME, name)
+							.with(Chat.TIMESTAMP, LocalDateTime.now())
+							.with(Chat.MESSAGE, response.aiMessage().text())
+							.with(Chat.RESPONSE_TIME, responseTime)
+							.with(Chat.JSON, messageToJson(response.aiMessage()))
+							.with(Chat.INPUT_TOKENS, tokenUsage.inputTokenCount())
+							.with(Chat.OUTPUT_TOKENS, tokenUsage.outputTokenCount())
+							.with(Chat.TOTAL_TOKENS, tokenUsage.totalTokenCount())
 							.build());
 		}
 
 		private Entity insert(Exception exception) {
-			return connection().insertSelect(entities().builder(ChatLog.TYPE)
-							.with(ChatLog.MESSAGE_TYPE, ChatMessageType.SYSTEM)
-							.with(ChatLog.SESSION, session)
-							.with(ChatLog.NAME, SYSTEM)
-							.with(ChatLog.TIMESTAMP, LocalDateTime.now())
-							.with(ChatLog.MESSAGE, exception.getMessage())
-							.with(ChatLog.STACK_TRACE, stackTrace(exception))
+			return connection().insertSelect(entities().builder(Chat.TYPE)
+							.with(Chat.MESSAGE_TYPE, ChatMessageType.SYSTEM)
+							.with(Chat.SESSION, session)
+							.with(Chat.NAME, SYSTEM)
+							.with(Chat.TIMESTAMP, LocalDateTime.now())
+							.with(Chat.MESSAGE, exception.getMessage())
+							.with(Chat.STACK_TRACE, stackTrace(exception))
 							.build());
 		}
 
@@ -416,7 +417,7 @@ public final class ChatLogEditModel extends SwingEntityEditModel {
 			processing.set(false);
 			elapsed.clear();
 			started.clear();
-			error.set(SYSTEM.equals(entity.get(ChatLog.NAME)));
+			error.set(SYSTEM.equals(entity.get(Chat.NAME)));
 			notifyAfterInsert(List.of(entity));
 		}
 	}

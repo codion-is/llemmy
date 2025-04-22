@@ -20,9 +20,9 @@ package is.codion.demos.llemmy.ui;
 
 import is.codion.common.state.State;
 import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
-import is.codion.demos.llemmy.model.ChatLogEditModel;
-import is.codion.demos.llemmy.model.ChatLogModel;
-import is.codion.demos.llemmy.model.ChatLogTableModel;
+import is.codion.demos.llemmy.model.ChatEditModel;
+import is.codion.demos.llemmy.model.ChatModel;
+import is.codion.demos.llemmy.model.ChatTableModel;
 import is.codion.swing.common.ui.Utilities;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.key.KeyEvents;
@@ -48,21 +48,21 @@ import static java.awt.event.KeyEvent.*;
 import static java.util.stream.Collectors.joining;
 
 /**
- * Combines the {@link ChatLogEditPanel} for the chat prompt interface
- * and {@link ChatLogTablePanel} for the chat text and history.
- * @see ChatLogModel
+ * Combines the {@link ChatEditPanel} for the chat prompt interface
+ * and {@link ChatTablePanel} for the chat text and history.
+ * @see ChatModel
  */
-public final class ChatLogPanel extends EntityPanel {
+public final class ChatPanel extends EntityPanel {
 
 	private final HelpPanel helpPanel = new HelpPanel();
 	private final State helpVisible = State.builder()
 					.consumer(this::onHelpVisibleChanged)
 					.build();
 
-	public ChatLogPanel(ChatLogModel model) {
+	public ChatPanel(ChatModel model) {
 		super(model,
-						new ChatLogEditPanel((ChatLogEditModel) model.editModel()),
-						new ChatLogTablePanel((ChatLogTableModel) model.tableModel()),
+						new ChatEditPanel((ChatEditModel) model.editModel()),
+						new ChatTablePanel((ChatTableModel) model.tableModel()),
 						config -> config
 										// Skip the default CRUD operation controls
 										.includeControls(false)
@@ -91,9 +91,9 @@ public final class ChatLogPanel extends EntityPanel {
 		// Note that calling addKeyEvent() assures that the key event is
 		// added to this base panel and to the edit panel as well,
 		// since that may be displayed in another window.
-		ChatLogEditModel editModel = (ChatLogEditModel) editModel();
-		ChatLogEditPanel editPanel = (ChatLogEditPanel) editPanel();
-		ChatLogTablePanel tablePanel = (ChatLogTablePanel) tablePanel();
+		ChatEditModel editModel = (ChatEditModel) editModel();
+		ChatEditPanel editPanel = (ChatEditPanel) editPanel();
+		ChatTablePanel tablePanel = (ChatTablePanel) tablePanel();
 		// Set the base parameters, the modifier and the condition
 		KeyEvents.Builder keyEvent = KeyEvents.builder()
 						.modifiers(ALT_DOWN_MASK)

@@ -25,9 +25,9 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 
 import java.util.List;
 
-public final class ChatLogModel extends SwingEntityModel {
+public final class ChatModel extends SwingEntityModel {
 
-	public ChatLogModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
-		super(new ChatLogTableModel(languageModels, connectionProvider));
+	public ChatModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
+		super(new ChatTableModel(languageModels, connectionProvider));
 	}
 }

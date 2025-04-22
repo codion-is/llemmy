@@ -18,9 +18,9 @@
  */
 package is.codion.demos.llemmy.ui;
 
-import is.codion.demos.llemmy.domain.Llemmy.ChatLog;
-import is.codion.demos.llemmy.model.ChatLogEditModel;
-import is.codion.demos.llemmy.model.ChatLogTableModel;
+import is.codion.demos.llemmy.domain.Llemmy.Chat;
+import is.codion.demos.llemmy.model.ChatEditModel;
+import is.codion.demos.llemmy.model.ChatTableModel;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.framework.domain.entity.attribute.Attribute;
 import is.codion.swing.common.ui.component.table.FilterTable;
@@ -47,9 +47,9 @@ import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.UIManager.getColor;
 
 /**
- * @see ChatLogTableModel
+ * @see ChatTableModel
  */
-public final class ChatLogTablePanel extends EntityTablePanel {
+public final class ChatTablePanel extends EntityTablePanel {
 
 	private final JTextPane chatPane = textPane()
 					.editable(false)
@@ -58,13 +58,13 @@ public final class ChatLogTablePanel extends EntityTablePanel {
 	private final Style userStyle = document.addStyle("user", null);
 	private final Style systemStyle = document.addStyle("system", null);
 
-	public ChatLogTablePanel(ChatLogTableModel tableModel) {
+	public ChatTablePanel(ChatTableModel tableModel) {
 		super(tableModel, config -> config
 						.includeConditions(false)
 						.includeFilters(true)
 						.includeSouthPanel(false)
 						.editable(attributes ->
-										attributes.remove(ChatLog.SESSION)));
+										attributes.remove(Chat.SESSION)));
 		tableModel.items().visible().addListener(this::refreshChat);
 		tableModel.selection().items().addListener(this::refreshChat);
 		configureTable();
@@ -130,7 +130,7 @@ public final class ChatLogTablePanel extends EntityTablePanel {
 						tableModel().selection().items().get();
 		chatPane.setText("");
 		chatLogs.stream()
-						.sorted(comparing(chatLog -> chatLog.get(ChatLog.TIMESTAMP)))
+						.sorted(comparing(chatLog -> chatLog.get(Chat.TIMESTAMP)))
 						.forEach(this::addToChatDocument);
 	}
 
@@ -144,7 +144,7 @@ public final class ChatLogTablePanel extends EntityTablePanel {
 	}
 
 	private AttributeSet style(Entity chatLog) {
-		return switch (chatLog.get(ChatLog.MESSAGE_TYPE)) {
+		return switch (chatLog.get(Chat.MESSAGE_TYPE)) {
 			case USER -> userStyle;
 			case SYSTEM -> systemStyle;
 			default -> null;
@@ -153,15 +153,15 @@ public final class ChatLogTablePanel extends EntityTablePanel {
 
 	private void configureTable() {
 		FilterTable<Entity, Attribute<?>> table = table();
-		ChatLogEditModel editModel = (ChatLogEditModel) tableModel().editModel();
+		ChatEditModel editModel = (ChatEditModel) tableModel().editModel();
 		// Disable the table while the model is processing
 		linkToEnabledState(editModel.processing().not(), table);
 		// Set some minimum table column widths
-		table.columnModel().column(ChatLog.TIMESTAMP).setMinWidth(170);
-		table.columnModel().column(ChatLog.MESSAGE_TYPE).setMinWidth(100);
-		table.columnModel().column(ChatLog.NAME).setMinWidth(120);
+		table.columnModel().column(Chat.TIMESTAMP).setMinWidth(170);
+		table.columnModel().column(Chat.MESSAGE_TYPE).setMinWidth(100);
+		table.columnModel().column(Chat.NAME).setMinWidth(120);
 		// Set the default visible columns
-		table.columnModel().visible().set(ChatLog.TIMESTAMP, ChatLog.MESSAGE_TYPE, ChatLog.NAME);
+		table.columnModel().visible().set(Chat.TIMESTAMP, Chat.MESSAGE_TYPE, Chat.NAME);
 		// and the column auto resize mode
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		// We hardcoded the sorting in ChatLogTableModel

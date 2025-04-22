@@ -18,7 +18,7 @@
  */
 package is.codion.demos.llemmy.model;
 
-import is.codion.demos.llemmy.domain.Llemmy.ChatLog;
+import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.swing.framework.model.SwingEntityTableModel;
@@ -32,29 +32,29 @@ import static dev.langchain4j.data.message.ChatMessageType.USER;
 /**
  * Manages the chat log history.
  */
-public final class ChatLogTableModel extends SwingEntityTableModel {
+public final class ChatTableModel extends SwingEntityTableModel {
 
-	public ChatLogTableModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
-		super(new ChatLogEditModel(languageModels, connectionProvider));
-		ChatLogEditModel editModel = (ChatLogEditModel) editModel();
+	public ChatTableModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
+		super(new ChatEditModel(languageModels, connectionProvider));
+		ChatEditModel editModel = (ChatEditModel) editModel();
 		// Include only chat logs from our session
-		queryModel().condition().get(ChatLog.SESSION).set().equalTo(editModel.session());
+		queryModel().condition().get(Chat.SESSION).set().equalTo(editModel.session());
 		// We implement soft delete (see ChatLogEditModel), so include
 		// only chat log history records not marked as deleted
-		queryModel().condition().get(ChatLog.DELETED).set().equalTo(false);
+		queryModel().condition().get(Chat.DELETED).set().equalTo(false);
 		// Hardcode the history sorting to the latest at top
-		sort().descending(ChatLog.TIMESTAMP);
+		sort().descending(Chat.TIMESTAMP);
 		// Display the message in the prompt when a history record is selected
 		selection().item().addConsumer(this::onSelection);
 	}
 
 	private void onSelection(Entity chatLog) {
-		ChatLogEditModel editModel = (ChatLogEditModel) editModel();
+		ChatEditModel editModel = (ChatEditModel) editModel();
 		if (chatLog == null) {
 			editModel.prompt().clear();
 		}
-		else if (chatLog.get(ChatLog.MESSAGE_TYPE) == USER) {
-			editModel.prompt().set(chatLog.get(ChatLog.MESSAGE));
+		else if (chatLog.get(Chat.MESSAGE_TYPE) == USER) {
+			editModel.prompt().set(chatLog.get(Chat.MESSAGE));
 		}
 	}
 }

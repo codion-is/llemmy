@@ -19,7 +19,8 @@
 package is.codion.demos.llemmy.ui;
 
 import is.codion.common.item.Item;
-import is.codion.demos.llemmy.model.ChatLogEditModel;
+import is.codion.demos.llemmy.model.ChatEditModel;
+import is.codion.demos.llemmy.model.ChatEditModel.Attachment;
 import is.codion.swing.common.ui.Utilities;
 import is.codion.swing.common.ui.component.Components;
 import is.codion.swing.common.ui.control.Control;
@@ -56,23 +57,23 @@ import static javax.swing.SwingUtilities.invokeLater;
 
 /**
  * Manages the UI for chatting with a language model.
- * @see ChatLogEditModel
+ * @see ChatEditModel
  */
-public final class ChatLogEditPanel extends EntityEditPanel {
+public final class ChatEditPanel extends EntityEditPanel {
 
 	// The mime types available for attachments
 	private static final List<String> SUPPORTED_MIME_TYPES = List.of(
-					ChatLogEditModel.PDF,
-					ChatLogEditModel.IMAGE_JPEG,
-					ChatLogEditModel.IMAGE_PNG,
-					ChatLogEditModel.TEXT_PLAIN);
+					ChatEditModel.PDF,
+					ChatEditModel.IMAGE_JPEG,
+					ChatEditModel.IMAGE_PNG,
+					ChatEditModel.TEXT_PLAIN);
 
-	private final ChatLogEditModel editModel;
+	private final ChatEditModel editModel;
 
 	private final JPanel languageModelPanel;
 	private final JComboBox<Item<ChatLanguageModel>> languageModelComboBox;
 	private final JTextArea promptTextArea;
-	private final JList<ChatLogEditModel.Attachment> attachmentsList;
+	private final JList<Attachment> attachmentsList;
 	private final JScrollPane attachmentsScrollPane;
 	private final JScrollPane promptScrollPane;
 	private final JProgressBar progressBar;
@@ -81,7 +82,7 @@ public final class ChatLogEditPanel extends EntityEditPanel {
 	private final JComboBox<Item<LookAndFeelEnabler>> lookAndFeelComboBox =
 					LookAndFeelComboBox.builder().build();
 
-	public ChatLogEditPanel(ChatLogEditModel editModel) {
+	public ChatEditPanel(ChatEditModel editModel) {
 		super(editModel);
 		this.editModel = editModel;
 		this.languageModelComboBox = createLanguageModelComboBox();
@@ -210,7 +211,7 @@ public final class ChatLogEditPanel extends EntityEditPanel {
 						.build();
 	}
 
-	private JList<ChatLogEditModel.Attachment> createAttachmentsList() {
+	private JList<Attachment> createAttachmentsList() {
 		return Components.list(editModel.attachments())
 						// The List value is based on the items in
 						// the list, as opposed to the selected items.
@@ -257,10 +258,10 @@ public final class ChatLogEditPanel extends EntityEditPanel {
 
 	private static FileFilter fileFilter(String mimeType) {
 		return switch (mimeType) {
-			case ChatLogEditModel.IMAGE_PNG -> new FileNameExtensionFilter("PNG", "png");
-			case ChatLogEditModel.IMAGE_JPEG -> new FileNameExtensionFilter("JPEG", "jpg", "jpeg");
-			case ChatLogEditModel.TEXT_PLAIN -> new FileNameExtensionFilter("Text", "txt", "csv");
-			case ChatLogEditModel.PDF -> new FileNameExtensionFilter("PDF", "pdf");
+			case ChatEditModel.IMAGE_PNG -> new FileNameExtensionFilter("PNG", "png");
+			case ChatEditModel.IMAGE_JPEG -> new FileNameExtensionFilter("JPEG", "jpg", "jpeg");
+			case ChatEditModel.TEXT_PLAIN -> new FileNameExtensionFilter("Text", "txt", "csv");
+			case ChatEditModel.PDF -> new FileNameExtensionFilter("PDF", "pdf");
 			default -> throw new IllegalArgumentException("Unsupported mime type: " + mimeType);
 		};
 	}

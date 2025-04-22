@@ -20,7 +20,7 @@ package is.codion.demos.llemmy.app.model;
 
 import is.codion.common.version.Version;
 import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
-import is.codion.demos.llemmy.model.ChatLogModel;
+import is.codion.demos.llemmy.model.ChatModel;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.swing.framework.model.SwingEntityApplicationModel;
 
@@ -37,6 +37,6 @@ public final class LlemmyAppModel extends SwingEntityApplicationModel {
 	public static final Version VERSION = Version.parse(LlemmyAppModel.class, "/version.properties");
 
 	public LlemmyAppModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
-		super(connectionProvider, List.of(new ChatLogModel(languageModels, connectionProvider)), VERSION);
+		super(connectionProvider, List.of(new ChatModel(languageModels, connectionProvider)), VERSION);
 	}
 }

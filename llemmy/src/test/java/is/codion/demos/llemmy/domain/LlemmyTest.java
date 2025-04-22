@@ -18,7 +18,7 @@
  */
 package is.codion.demos.llemmy.domain;
 
-import is.codion.demos.llemmy.domain.Llemmy.ChatLog;
+import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.domain.entity.attribute.Attribute;
 import is.codion.framework.domain.test.DefaultEntityFactory;
@@ -38,7 +38,7 @@ final class LlemmyTest extends DomainTest {
 
 	@Test
 	void test() {
-		test(ChatLog.TYPE);
+		test(Chat.TYPE);
 	}
 
 	private static class LlemmyEntityFactory extends DefaultEntityFactory {
@@ -49,16 +49,16 @@ final class LlemmyTest extends DomainTest {
 
 		@Override
 		protected <T> T value(Attribute<T> attribute) {
-			if (attribute.equals(ChatLog.MESSAGE_TYPE)) {
+			if (attribute.equals(Chat.MESSAGE_TYPE)) {
 				return (T) ChatMessageType.AI;
 			}
-			if (attribute.equals(ChatLog.SESSION)) {
+			if (attribute.equals(Chat.SESSION)) {
 				return (T) UUID.randomUUID();
 			}
-			if (attribute.equals(ChatLog.JSON)) {
+			if (attribute.equals(Chat.JSON)) {
 				return null;
 			}
-			if (attribute.equals(ChatLog.DURATION)) {
+			if (attribute.equals(Chat.RESPONSE_TIME)) {
 				return (T) Duration.ofMillis(10);
 			}
 

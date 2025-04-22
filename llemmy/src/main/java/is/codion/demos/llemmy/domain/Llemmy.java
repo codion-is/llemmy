@@ -51,10 +51,10 @@ public final class Llemmy extends DomainModel {
 	}
 	// end::llemmy[]
 
-	// tag::chat_log_api[]
-	public interface ChatLog {
+	// tag::chat_api[]
+	public interface Chat {
 		// Identifies this entity type
-		EntityType TYPE = DOMAIN.entityType("llemmy.chat_log");
+		EntityType TYPE = DOMAIN.entityType("llemmy.chat");
 
 		// Primary key column
 		Column<Integer> ID = TYPE.integerColumn("id");
@@ -68,7 +68,7 @@ public final class Llemmy extends DomainModel {
 		Attribute<LocalTime> TIME = TYPE.localTimeAttribute("time");
 		Column<String> MESSAGE = TYPE.stringColumn("message");
 		Column<String> STACK_TRACE = TYPE.stringColumn("stack_trace");
-		Column<Duration> DURATION = TYPE.column("duration", Duration.class);
+		Column<Duration> RESPONSE_TIME = TYPE.column("response_time", Duration.class);
 		Column<Integer> INPUT_TOKENS = TYPE.integerColumn("input_tokens");
 		Column<Integer> OUTPUT_TOKENS = TYPE.integerColumn("output_tokens");
 		Column<Integer> TOTAL_TOKENS = TYPE.integerColumn("total_tokens");
@@ -76,59 +76,59 @@ public final class Llemmy extends DomainModel {
 		// For implementing soft-delete
 		Column<Boolean> DELETED = TYPE.booleanColumn("deleted");
 	}
-	// end::chat_log_api[]
+	// end::chat_api[]
 
-	// tag::chat_log_impl[]
+	// tag::chat_impl[]
 	private void chatLog() {
-		add(ChatLog.TYPE.define(
-										ChatLog.ID.define()
+		add(Chat.TYPE.define(
+										Chat.ID.define()
 														.primaryKey(),
-										ChatLog.SESSION.define()
+										Chat.SESSION.define()
 														.column(),
-										ChatLog.TIMESTAMP.define()
+										Chat.TIMESTAMP.define()
 														.column()
 														.nullable(false)
 														.dateTimePattern("yyyy-MM-dd HH:mm:ss")
 														.caption("Time"),
-										ChatLog.TIME.define()
-														.derived(from -> from.optional(ChatLog.TIMESTAMP)
+										Chat.TIME.define()
+														.derived(from -> from.optional(Chat.TIMESTAMP)
 																		.map(LocalDateTime::toLocalTime)
-																		.orElse(null), ChatLog.TIMESTAMP)
+																		.orElse(null), Chat.TIMESTAMP)
 														.dateTimePattern("HH:mm:ss"),
-										ChatLog.NAME.define()
+										Chat.NAME.define()
 														.column()
 														.nullable(false)
 														.caption("Name"),
-										ChatLog.MESSAGE_TYPE.define()
+										Chat.MESSAGE_TYPE.define()
 														.column()
 														// Specify that the enum is represented by an underlying
 														// String column and provide a converter for converting
 														// between the enum and the underlying column value
 														.columnClass(String.class, new MessageTypeConverter())
 														.caption("Type"),
-										ChatLog.MESSAGE.define()
+										Chat.MESSAGE.define()
 														.column()
 														.caption("Message"),
-										ChatLog.STACK_TRACE.define()
+										Chat.STACK_TRACE.define()
 														.column()
 														.caption("Stack trace"),
-										ChatLog.DURATION.define()
+										Chat.RESPONSE_TIME.define()
 														.column()
 														.columnClass(Integer.class, new DurationConverter())
 														.caption("Duration"),
-										ChatLog.INPUT_TOKENS.define()
+										Chat.INPUT_TOKENS.define()
 														.column()
 														.caption("Input tokens"),
-										ChatLog.OUTPUT_TOKENS.define()
+										Chat.OUTPUT_TOKENS.define()
 														.column()
 														.caption("Output tokens"),
-										ChatLog.TOTAL_TOKENS.define()
+										Chat.TOTAL_TOKENS.define()
 														.column()
 														.caption("Total tokens"),
-										ChatLog.JSON.define()
+										Chat.JSON.define()
 														.column()
 														.caption("JSON"),
-										ChatLog.DELETED.define()
+										Chat.DELETED.define()
 														.column()
 														.nullable(false)
 														.caption("Deleted")
@@ -137,13 +137,13 @@ public final class Llemmy extends DomainModel {
 						.keyGenerator(identity())
 						// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
 						.stringFactory(StringFactory.builder()
-										.value(ChatLog.TIME)
+										.value(Chat.TIME)
 										.text(" @ ")
-										.value(ChatLog.NAME)
+										.value(Chat.NAME)
 										.text(": ")
-										.value(ChatLog.MESSAGE)
+										.value(Chat.MESSAGE)
 										.build())
-						.orderBy(descending(ChatLog.TIMESTAMP))
+						.orderBy(descending(Chat.TIMESTAMP))
 						.caption("Chat Log")
 						.build());
 	}
@@ -173,5 +173,5 @@ public final class Llemmy extends DomainModel {
 			return Duration.ofMillis(millis);
 		}
 	}
-	// end::chat_log_impl[]
+	// end::chat_impl[]
 }

@@ -24,7 +24,9 @@ Domain:: The domain model specification for an entity based on the table.
 Model:: The application model components associated with the entity (if any).
 UI:: The application UI components associated with the entity.
 
-== Chat Log
+== Chat
+
+The table the application is based on, **LLEMMY.CHAT**, which records the chats to an in-memory database.
 
 === SQL
 
@@ -56,11 +58,11 @@ include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=**]
 
 ==== API
 
-We start by creating a `ChatLog` interface and defining the domain API constants for the table and its columns, providing the table and column names as parameters.
+We start by creating a `Chat` interface and defining the domain API constants for the table and its columns, providing the table and column names as parameters.
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_log_api]
+include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_api]
 ----
 
 ==== Implementation
@@ -73,7 +75,7 @@ We also specify a default `OrderBy` clause to use when selecting entities of thi
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_log_impl]
+include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_impl]
 ----
 
 ==== Unit test
@@ -83,46 +85,46 @@ include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_log_im
 include::{dir-source-test}/is/codion/demos/llemmy/domain/LlemmyTest.java[lines=19..-1]
 ----
 
-==== ChatLogModel
+==== ChatModel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatLogModel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/model/ChatModel.java[lines=19..-1]
 ----
 
-==== ChatLogPanel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogPanel.java[lines=19..-1]
-----
-
-==== ChatLogEditModel
+==== ChatPanel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatLogEditModel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatPanel.java[lines=19..-1]
 ----
 
-==== ChatLogEditPanel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogEditPanel.java[lines=19..-1]
-----
-
-==== ChatLogTableModel
+==== ChatEditModel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatLogTableModel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/model/ChatEditModel.java[lines=19..-1]
 ----
 
-==== ChatLogTablePanel
+==== ChatEditPanel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatLogTablePanel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatEditPanel.java[lines=19..-1]
+----
+
+==== ChatTableModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/ChatTableModel.java[lines=19..-1]
+----
+
+==== ChatTablePanel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatTablePanel.java[lines=19..-1]
 ----
 
 === LlemmyAppModel
