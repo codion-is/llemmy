@@ -18,16 +18,18 @@
  */
 package is.codion.demo.llemmy.ollama;
 
-import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
+import is.codion.demos.llemmy.LlemmyApp;
 
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
 import java.util.List;
 
-import static is.codion.demos.llemmy.app.ui.LlemmyAppPanel.selectModelName;
+import static is.codion.demos.llemmy.LlemmyApp.select;
 
+// tag::runner[]
 public final class Runner {
 
+	public static final int PORT = 11434;
 	public static final String ORCA_MINI = "orca-mini";
 	public static final List<String> MODELS = List.of(
 					ORCA_MINI,
@@ -42,9 +44,10 @@ public final class Runner {
 	private Runner() {}
 
 	public static void main(String[] args) {
-		LlemmyAppPanel.start(() -> List.of(OllamaChatModel.builder()
-						.baseUrl("http://localhost:11434")
-						.modelName(selectModelName(MODELS, ORCA_MINI))
+		LlemmyApp.start(() -> List.of(OllamaChatModel.builder()
+						.baseUrl("http://localhost:" + PORT)
+						.modelName(select(MODELS, ORCA_MINI, "Select model"))
 						.build()));
 	}
 }
+// end::runner[]

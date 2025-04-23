@@ -47,7 +47,7 @@ public final class Llemmy extends DomainModel {
 
 	public Llemmy() {
 		super(DOMAIN);
-		chatLog();
+		chat();
 	}
 	// end::llemmy[]
 
@@ -79,7 +79,7 @@ public final class Llemmy extends DomainModel {
 	// end::chat_api[]
 
 	// tag::chat_impl[]
-	private void chatLog() {
+	private void chat() {
 		add(Chat.TYPE.define(
 										Chat.ID.define()
 														.primaryKey(),

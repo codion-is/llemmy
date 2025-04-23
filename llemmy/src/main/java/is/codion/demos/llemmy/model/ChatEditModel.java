@@ -72,6 +72,7 @@ import static java.util.UUID.randomUUID;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
+// tag::chat_edit_model[]
 /**
  * Manages the state and the business logic for chatting with a language model.
  * @see ChatEditPanel
@@ -123,6 +124,12 @@ public final class ChatEditModel extends SwingEntityEditModel {
 					.consumer(value -> promptEmpty.set(value.trim().isEmpty()))
 					.build();
 
+	/**
+	 * Instantiates a new {@link ChatEditModel} instance
+	 * @param languageModels the language models
+	 * @param connectionProvider the connection provider
+	 * @throws IllegalArgumentException in case {@code languageModels} is empty
+	 */
 	public ChatEditModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
 		super(Chat.TYPE, connectionProvider);
 		if (languageModels.isEmpty()) {
@@ -153,8 +160,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		attachmentsEmpty.set(false);
 	}
 
-	public void removeAttachment(Attachment content) {
-		attachments.removeElement(requireNonNull(content));
+	public void removeAttachment(Attachment attachment) {
+		attachments.removeElement(requireNonNull(attachment));
 		attachmentsEmpty.set(attachments.getSize() == 0);
 	}
 
@@ -204,11 +211,11 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		// Here we perform a couple of async operations, calling the
 		// model and inserting the results in a background thread.
 		// We assume this method gets called on the EDT.
-		ChatTask chatTask = new ChatTask();
-		// ChatTask splits the task into a couple of
+		UserMessageTask task = new UserMessageTask();
+		// UserMessageTask splits the task into a couple of
 		// background tasks and some extra methods
 		// that must be performed on the EDT.
-		send(chatTask);
+		send(task);
 	}
 
 	@Override
@@ -232,32 +239,28 @@ public final class ChatEditModel extends SwingEntityEditModel {
 						.orElse(ZERO));
 	}
 
-	private static void send(ChatTask chat) {
-		// Must be called on the Event Dispatch Thread
-		// since this affects one or more UI components
-		chat.prepare();
+	private static void send(UserMessageTask task) {
+		// On the Event Dispatch Thread
+		task.prepare();
 		// The user message is created and inserted
 		// into the database in a background thread
-		ProgressWorker.builder(chat)
-						// Must be called on the Event Dispatch Thread
-						// since this affects one or more UI components
-						.onException(chat::fail)
+		ProgressWorker.builder(task)
+						// On the Event Dispatch Thread
+						.onException(task::fail)
 						// Propagate the resulting task
 						// to the next async send method
 						.onResult(ChatEditModel::send)
 						.execute();
 	}
 
-	private static void send(ChatResponseTask response) {
-		// Must be called on the Event Dispatch Thread
-		// since this affects one or more UI components
-		response.prepare();
+	private static void send(ChatResponseTask task) {
+		// On the Event Dispatch Thread
+		task.prepare();
 		// The language model is prompted and the result
 		// inserted into the database in a background thread
-		ProgressWorker.builder(response)
-						// Must be called on the Event Dispatch Thread
-						// since this affects one or more UI components
-						.onResult(response::finish)
+		ProgressWorker.builder(task)
+						// On the Event Dispatch Thread
+						.onResult(task::finish)
 						.execute();
 	}
 
@@ -290,13 +293,13 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		}
 	}
 
-	private final class ChatTask implements ResultTask<ChatResponseTask> {
+	private final class UserMessageTask implements ResultTask<ChatResponseTask> {
 
 		@Override
 		public ChatResponseTask execute() {
 			UserMessage userMessage = createMessage();
 
-			return new ChatResponseTask(insert(userMessage), userMessage);
+			return new ChatResponseTask(new Result(insert(userMessage), userMessage));
 		}
 
 		private UserMessage createMessage() {
@@ -331,7 +334,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 							.collect(joining("\n"));
 		}
 
-		// Called on the Event Dispatch Thread
+		// Must be called on the Event Dispatch Thread
+		// since this affects one or more UI components
 		private void prepare() {
 			elapsed.clear();
 			started.set(LocalDateTime.now());
@@ -339,23 +343,24 @@ public final class ChatEditModel extends SwingEntityEditModel {
 			elapsedUpdater.start();
 		}
 
-		// Called on the Event Dispatch Thread
+		// Must be called on the Event Dispatch Thread
+		// since this affects one or more UI components
 		private void fail(Exception exception) {
 			elapsedUpdater.stop();
 			processing.set(false);
 			elapsed.clear();
 			started.clear();
 		}
+
+		private record Result(Entity entity, UserMessage userMessage) {}
 	}
 
 	private final class ChatResponseTask implements ResultTask<Entity> {
 
-		private final Entity userMessageEntity;
-		private final UserMessage userMessage;
+		private final UserMessageTask.Result result;
 
-		private ChatResponseTask(Entity userMessageEntity, UserMessage userMessage) {
-			this.userMessageEntity = userMessageEntity;
-			this.userMessage = userMessage;
+		private ChatResponseTask(UserMessageTask.Result result) {
+			this.result = result;
 		}
 
 		@Override
@@ -363,7 +368,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 			ChatLanguageModel languageModel = languageModel();
 			LocalDateTime started = LocalDateTime.now();
 			try {
-				return insert(languageModel.provider().name(), languageModel.chat(userMessage),
+				return insert(languageModel.provider().name(),
+								languageModel.chat(result.userMessage()),
 								Duration.between(started, LocalDateTime.now()));
 			}
 			catch (Exception e) {
@@ -405,13 +411,15 @@ public final class ChatEditModel extends SwingEntityEditModel {
 							.orElseThrow();
 		}
 
-		// Called on the Event Dispatch Thread
+		// Must be called on the Event Dispatch Thread
+		// since this affects one or more UI components
 		private void prepare() {
 			prompt.clear();
-			notifyAfterInsert(List.of(userMessageEntity));
+			notifyAfterInsert(List.of(result.entity()));
 		}
 
-		// Called on the Event Dispatch Thread
+		// Must be called on the Event Dispatch Thread
+		// since this affects one or more UI components
 		private void finish(Entity entity) {
 			elapsedUpdater.stop();
 			processing.set(false);
@@ -429,3 +437,4 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		return writer.toString();
 	}
 }
+// end::chat_edit_model[]

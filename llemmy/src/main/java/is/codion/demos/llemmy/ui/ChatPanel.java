@@ -19,7 +19,7 @@
 package is.codion.demos.llemmy.ui;
 
 import is.codion.common.state.State;
-import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
+import is.codion.demos.llemmy.LlemmyApp;
 import is.codion.demos.llemmy.model.ChatEditModel;
 import is.codion.demos.llemmy.model.ChatModel;
 import is.codion.demos.llemmy.model.ChatTableModel;
@@ -29,7 +29,6 @@ import is.codion.swing.common.ui.key.KeyEvents;
 import is.codion.swing.framework.ui.EntityPanel;
 
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import java.awt.BorderLayout;
@@ -40,13 +39,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-import static is.codion.swing.common.ui.component.Components.*;
+import static is.codion.swing.common.ui.component.Components.scrollPane;
+import static is.codion.swing.common.ui.component.Components.textArea;
 import static is.codion.swing.common.ui.control.Control.command;
 import static is.codion.swing.common.ui.layout.Layouts.borderLayout;
 import static java.awt.event.InputEvent.ALT_DOWN_MASK;
 import static java.awt.event.KeyEvent.*;
 import static java.util.stream.Collectors.joining;
+import static javax.swing.BorderFactory.createTitledBorder;
 
+// tag::chat_panel[]
 /**
  * Combines the {@link ChatEditPanel} for the chat prompt interface
  * and {@link ChatTablePanel} for the chat text and history.
@@ -55,10 +57,14 @@ import static java.util.stream.Collectors.joining;
 public final class ChatPanel extends EntityPanel {
 
 	private final HelpPanel helpPanel = new HelpPanel();
-	private final State helpVisible = State.builder()
-					.consumer(this::onHelpVisibleChanged)
+	private final State help = State.builder()
+					.consumer(this::onHelpChanged)
 					.build();
 
+	/**
+	 * Instantiates a new {@link ChatPanel}
+	 * @param model the {@link ChatModel} on which to base the panel
+	 */
 	public ChatPanel(ChatModel model) {
 		super(model,
 						new ChatEditPanel((ChatEditModel) model.editModel()),
@@ -66,7 +72,8 @@ public final class ChatPanel extends EntityPanel {
 						config -> config
 										// Skip the default CRUD operation controls
 										.includeControls(false)
-										// No base panel needed for the edit panel
+										// No base panel needed for the edit panel since we
+										// want it to fill the whole width of the parent panel
 										.editBasePanel(editPanel -> editPanel));
 		setupKeyEvents();
 	}
@@ -74,8 +81,8 @@ public final class ChatPanel extends EntityPanel {
 	/**
 	 * @return the {@link State} controlling whether the help panel is visible
 	 */
-	public State helpVisible() {
-		return helpVisible;
+	public State help() {
+		return help;
 	}
 
 	@Override
@@ -112,7 +119,7 @@ public final class ChatPanel extends EntityPanel {
 		addKeyEvent(keyEvent.keyCode(VK_5)
 						.action(command(editPanel::requestLookAndFeelFocus)));
 		addKeyEvent(keyEvent.keyCode(VK_6)
-						.action(command(helpPanel.helpTabbedPane::requestFocus)));
+						.action(command(helpPanel.shortcuts::requestFocus)));
 		addKeyEvent(keyEvent.keyCode(VK_UP)
 						.modifiers(CTRL_DOWN_MASK)
 						.action(Control.builder()
@@ -130,7 +137,7 @@ public final class ChatPanel extends EntityPanel {
 										.build()));
 	}
 
-	private void onHelpVisibleChanged(boolean visible) {
+	private void onHelpChanged(boolean visible) {
 		if (visible) {
 			add(helpPanel, BorderLayout.EAST);
 		}
@@ -143,28 +150,26 @@ public final class ChatPanel extends EntityPanel {
 
 	private static final class HelpPanel extends JPanel {
 
-		private final JTextArea shortcutsTextArea = textArea()
-						.value(helpText("shortcuts.txt"))
+		private final JTextArea shortcuts = textArea()
+						.value(helpText())
 						.font(monospaceFont())
 						.editable(false)
-						.build();
-		private final JTabbedPane helpTabbedPane = tabbedPane()
-						.tab("Shortcuts", scrollPane(shortcutsTextArea).build())
 						.build();
 
 		private HelpPanel() {
 			super(borderLayout());
-			add(helpTabbedPane, BorderLayout.CENTER);
+			setBorder(createTitledBorder("Shortcuts"));
+			add(scrollPane(shortcuts).build(), BorderLayout.CENTER);
 		}
 
 		@Override
 		public void updateUI() {
 			super.updateUI();
-			Utilities.updateUI(helpTabbedPane, shortcutsTextArea);
+			Utilities.updateUI(shortcuts);
 		}
 
-		private static String helpText(String filename) {
-			try (InputStream inputStream = LlemmyAppPanel.class.getResourceAsStream(filename)) {
+		private static String helpText() {
+			try (InputStream inputStream = LlemmyApp.class.getResourceAsStream("shortcuts.txt")) {
 				return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
 								.lines()
 								.collect(joining("\n"));
@@ -181,3 +186,4 @@ public final class ChatPanel extends EntityPanel {
 		}
 	}
 }
+// end::chat_panel[]

@@ -25,9 +25,16 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 
 import java.util.List;
 
+// tag::chat_model[]
 public final class ChatModel extends SwingEntityModel {
 
+	/**
+	 * Instantiates a new {@link ChatModel} instance
+	 * @param languageModels the language models
+	 * @param connectionProvider the connection provider
+	 */
 	public ChatModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
 		super(new ChatTableModel(languageModels, connectionProvider));
 	}
 }
+// end::chat_model[]

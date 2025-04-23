@@ -24,7 +24,7 @@ Domain:: The domain model specification for an entity based on the table.
 Model:: The application model components associated with the entity (if any).
 UI:: The application UI components associated with the entity.
 
-== Chat
+== Llemmy
 
 The table the application is based on, **LLEMMY.CHAT**, which records the chats to an in-memory database.
 
@@ -82,74 +82,71 @@ include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_impl]
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source-test}/is/codion/demos/llemmy/domain/LlemmyTest.java[lines=19..-1]
+include::{dir-source-test}/is/codion/demos/llemmy/domain/LlemmyTest.java[tags=test]
 ----
 
-==== ChatModel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatModel.java[lines=19..-1]
-----
-
-==== ChatPanel
+=== LlemmyApp
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatPanel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/LlemmyApp.java[tags=app_panel]
 ----
 
-==== ChatEditModel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatEditModel.java[lines=19..-1]
-----
-
-==== ChatEditPanel
+=== ChatModel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatEditPanel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/model/ChatModel.java[tags=chat_model]
 ----
 
-==== ChatTableModel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatTableModel.java[lines=19..-1]
-----
-
-==== ChatTablePanel
+=== ChatPanel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatTablePanel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatPanel.java[tags=chat_panel]
 ----
 
-=== LlemmyAppModel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/app/model/LlemmyAppModel.java[lines=19..-1]
-----
-
-=== LlemmyAppPanel
+=== ChatEditModel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/app/ui/LlemmyAppPanel.java[lines=19..-1]
+include::{dir-source}/is/codion/demos/llemmy/model/ChatEditModel.java[tags=chat_edit_model]
+----
+
+=== ChatEditPanel
+
+image::chat_edit_panel.png[]
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatEditPanel.java[tags=chat_edit_panel]
+----
+
+=== ChatTableModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/ChatTableModel.java[tags=chat_table_model]
+----
+
+=== ChatTablePanel
+
+image::chat_table_panel.png[]
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/ui/ChatTablePanel.java[tags=chat_table_panel]
 ----
 
 == Ollama
 
 === Ollama Model Runner
 
-Uses https://github.com/testcontainers/testcontainers-java[testcontainers] to download and run the latest local orca-mini Ollama model  (langchain4j/ollama-orca-mini:latest, ~2GB).
+Uses https://github.com/testcontainers/testcontainers-java[testcontainers] to download and run the selected local Ollama model  (langchain4j/ollama-{selected}:latest, ~2GB).
 
 [source,java,options="nowrap"]
 ----
-include::{dir-ollama}/model/src/main/java/is/codion/demo/llemmy/ollama/model/Runner.java[lines=19..-1]
+include::{dir-ollama}/model/src/main/java/is/codion/demo/llemmy/ollama/model/Runner.java[tags=runner]
 ----
 
 [source,bash,options="nowrap"]
@@ -163,7 +160,7 @@ Runs the Llemmy application configured for the local Ollama model
 
 [source,java,options="nowrap"]
 ----
-include::{dir-ollama}/llemmy/src/main/java/is/codion/demo/llemmy/ollama/Runner.java[lines=19..-1]
+include::{dir-ollama}/llemmy/src/main/java/is/codion/demo/llemmy/ollama/Runner.java[tags=runner]
 ----
 
 [source,bash,options="nowrap"]
@@ -179,7 +176,7 @@ Runs the Llemmy application configured for the OpenAI models
 
 [source,java,options="nowrap"]
 ----
-include::{dir-openai}/llemmy/src/main/java/is/codion/demo/llemmy/openai/Runner.java[lines=19..-1]
+include::{dir-openai}/llemmy/src/main/java/is/codion/demo/llemmy/openai/Runner.java[tags=runner]
 ----
 
 [source,bash,options="nowrap"]
@@ -215,7 +212,7 @@ include::{root-dir}/build.gradle.kts[]
 ----
 ====
 
-./llemmy/build.gradle.kts
+.llemmy/build.gradle.kts
 [%collapsible]
 ====
 [source,kotlin,options="nowrap"]

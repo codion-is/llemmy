@@ -29,8 +29,7 @@ import com.github.dockerjava.api.model.PortBinding;
 import org.testcontainers.containers.GenericContainer;
 
 import static com.github.dockerjava.api.model.Ports.Binding.bindPort;
-import static is.codion.demo.llemmy.ollama.Runner.MODELS;
-import static is.codion.demo.llemmy.ollama.Runner.ORCA_MINI;
+import static is.codion.demo.llemmy.ollama.Runner.*;
 import static is.codion.swing.common.ui.Utilities.parentWindow;
 import static is.codion.swing.common.ui.Utilities.setClipboard;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
@@ -41,15 +40,14 @@ import static is.codion.swing.common.ui.laf.LookAndFeelProvider.findLookAndFeel;
 import static java.lang.String.format;
 import static javax.swing.SwingConstants.CENTER;
 
+// tag::runner[]
 public final class Runner {
-
-	private static final int PORT = 11434;
 
 	private Runner() {}
 
 	public static void main(String[] args) {
 		findLookAndFeel(FlatDarkLaf.class).ifPresent(LookAndFeelEnabler::enable);
-		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + selectModel() + ":latest")
+		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + selected() + ":latest")
 						.withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(new HostConfig()
 										.withPortBindings(new PortBinding(bindPort(PORT), new ExposedPort(PORT)))))) {
 			ollama.start();
@@ -83,7 +81,7 @@ public final class Runner {
 		}
 	}
 
-	private static String selectModel() {
+	private static String selected() {
 		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
 										.value(ORCA_MINI)
 										.preferredWidth(250)
@@ -92,3 +90,4 @@ public final class Runner {
 						.show();
 	}
 }
+// end::runner[]

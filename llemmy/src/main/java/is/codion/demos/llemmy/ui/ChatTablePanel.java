@@ -46,6 +46,7 @@ import static java.util.Comparator.comparing;
 import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.UIManager.getColor;
 
+// tag::chat_table_panel[]
 /**
  * @see ChatTableModel
  */
@@ -58,13 +59,23 @@ public final class ChatTablePanel extends EntityTablePanel {
 	private final Style userStyle = document.addStyle("user", null);
 	private final Style systemStyle = document.addStyle("system", null);
 
+	/**
+	 * Instantiates a new {@link ChatTablePanel}
+	 * @param tableModel the {@link ChatTableModel} on which to base the panel
+	 */
 	public ChatTablePanel(ChatTableModel tableModel) {
 		super(tableModel, config -> config
+						// Lets skip the query conditions
 						.includeConditions(false)
+						// but include the filters
 						.includeFilters(true)
+						// and no south panel
 						.includeSouthPanel(false)
+						// Lets not allow the Chat.SESSION value
+						// to be edited via the table popup menu
 						.editable(attributes ->
 										attributes.remove(Chat.SESSION)));
+		// Refresh the chat each time the visible items or selection changes
 		tableModel.items().visible().addListener(this::refreshChat);
 		tableModel.selection().items().addListener(this::refreshChat);
 		configureTable();
@@ -76,7 +87,7 @@ public final class ChatTablePanel extends EntityTablePanel {
 		super.updateUI();
 		if (chatPane != null) {
 			// In case the Look & Feel changed
-			// which changes the colors
+			// which affects the colors
 			refreshChat();
 		}
 	}
@@ -125,26 +136,26 @@ public final class ChatTablePanel extends EntityTablePanel {
 		configureUserStyle();
 		// We display all the chat history if the selection is empty,
 		// otherwise only the selected history
-		List<Entity> chatLogs = tableModel().selection().empty().get() ?
+		List<Entity> chats = tableModel().selection().empty().get() ?
 						tableModel().items().visible().get() :
 						tableModel().selection().items().get();
 		chatPane.setText("");
-		chatLogs.stream()
-						.sorted(comparing(chatLog -> chatLog.get(Chat.TIMESTAMP)))
+		chats.stream()
+						.sorted(comparing(chat -> chat.get(Chat.TIMESTAMP)))
 						.forEach(this::addToChatDocument);
 	}
 
-	private void addToChatDocument(Entity chatLog) {
+	private void addToChatDocument(Entity chat) {
 		try {
-			document.insertString(document.getLength(), chatLog.toString() + "\n\n", style(chatLog));
+			document.insertString(document.getLength(), chat.toString() + "\n\n", style(chat));
 		}
 		catch (BadLocationException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private AttributeSet style(Entity chatLog) {
-		return switch (chatLog.get(Chat.MESSAGE_TYPE)) {
+	private AttributeSet style(Entity chat) {
+		return switch (chat.get(Chat.MESSAGE_TYPE)) {
 			case USER -> userStyle;
 			case SYSTEM -> systemStyle;
 			default -> null;
@@ -164,7 +175,8 @@ public final class ChatTablePanel extends EntityTablePanel {
 		table.columnModel().visible().set(Chat.TIMESTAMP, Chat.MESSAGE_TYPE, Chat.NAME);
 		// and the column auto resize mode
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-		// We hardcoded the sorting in ChatLogTableModel
+		// We hardcoded the sorting in ChatTableModel
 		table.sortingEnabled().set(false);
 	}
 }
+// end::chat_table_panel[]

@@ -31,6 +31,5 @@ module is.codion.demos.llemmy.ui {
 	requires com.formdev.flatlaf.extras;
 	requires com.formdev.flatlaf.fonts.inter;
 
-	exports is.codion.demos.llemmy.app.model;
-	exports is.codion.demos.llemmy.app.ui;
+	exports is.codion.demos.llemmy;
 }

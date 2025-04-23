@@ -18,7 +18,7 @@
  */
 package is.codion.demo.llemmy.openai;
 
-import is.codion.demos.llemmy.app.ui.LlemmyAppPanel;
+import is.codion.demos.llemmy.LlemmyApp;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
@@ -28,11 +28,11 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
-import static is.codion.demos.llemmy.app.ui.LlemmyAppPanel.selectModelName;
+import static is.codion.demos.llemmy.LlemmyApp.select;
+import static is.codion.demos.llemmy.LlemmyApp.string;
 
+// tag::runner[]
 public final class Runner {
-
-	private static final String API_KEY = System.getenv("OPENAI_API_KEY");
 
 	private static final List<String> MODELS =
 					Stream.of(OpenAiChatModelName.values())
@@ -42,9 +42,10 @@ public final class Runner {
 	private Runner() {}
 
 	public static void main(String[] args) {
-		LlemmyAppPanel.start(() -> List.of(OpenAiChatModel.builder()
-						.apiKey(API_KEY)
-						.modelName(selectModelName(MODELS, GPT_4_O_MINI.toString()))
+		LlemmyApp.start(() -> List.of(OpenAiChatModel.builder()
+						.apiKey(string("OpenAI API Key"))
+						.modelName(select(MODELS, GPT_4_O_MINI.toString(), "Select model"))
 						.build()));
 	}
 }
+// end::runner[]

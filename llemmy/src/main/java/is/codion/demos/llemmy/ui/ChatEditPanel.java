@@ -55,6 +55,7 @@ import static java.lang.String.format;
 import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.SwingUtilities.invokeLater;
 
+// tag::chat_edit_panel[]
 /**
  * Manages the UI for chatting with a language model.
  * @see ChatEditModel
@@ -68,7 +69,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 					ChatEditModel.IMAGE_PNG,
 					ChatEditModel.TEXT_PLAIN);
 
-	private final ChatEditModel editModel;
+	private final ChatEditModel model;
 
 	private final JPanel languageModelPanel;
 	private final JComboBox<Item<ChatLanguageModel>> languageModelComboBox;
@@ -82,9 +83,9 @@ public final class ChatEditPanel extends EntityEditPanel {
 	private final JComboBox<Item<LookAndFeelEnabler>> lookAndFeelComboBox =
 					LookAndFeelComboBox.builder().build();
 
-	public ChatEditPanel(ChatEditModel editModel) {
-		super(editModel);
-		this.editModel = editModel;
+	public ChatEditPanel(ChatEditModel model) {
+		super(model);
+		this.model = model;
 		this.languageModelComboBox = createLanguageModelComboBox();
 		this.languageModelPanel = borderLayoutPanel()
 						.centerComponent(languageModelComboBox)
@@ -97,8 +98,8 @@ public final class ChatEditPanel extends EntityEditPanel {
 		this.attachmentsScrollPane = scrollPane(attachmentsList).build();
 		this.promptScrollPane = scrollPane(promptTextArea).build();
 		this.progressBar = createProgressBar();
-		editModel.processing().addConsumer(this::onProcessingChanged);
-		editModel.elapsed().addConsumer(this::onElapsedChanged);
+		model.processing().addConsumer(this::onProcessingChanged);
+		model.elapsed().addConsumer(this::onElapsedChanged);
 		focus().initial().set(promptTextArea);
 	}
 
@@ -170,40 +171,40 @@ public final class ChatEditPanel extends EntityEditPanel {
 
 	private Control createClearControl() {
 		return Control.builder()
-						.command(editModel.prompt()::clear)
+						.command(model.prompt()::clear)
 						.caption("Clear")
 						.mnemonic('C')
 						// Only enabled when the model is ready
-						.enabled(editModel.ready())
+						.enabled(model.ready())
 						.build();
 	}
 
 	private Control createSendControl() {
 		return Control.builder()
-						.command(editModel::send)
+						.command(model::send)
 						.caption("Send")
 						.mnemonic('S')
 						// Only enabled when the model is ready
-						.enabled(editModel.ready())
+						.enabled(model.ready())
 						.build();
 	}
 
 	private JComboBox<Item<ChatLanguageModel>> createLanguageModelComboBox() {
-		return comboBox(editModel.languageModels())
+		return comboBox(model.languageModels())
 						// Only enabled when the model is not processing
-						.enabled(editModel.processing().not())
+						.enabled(model.processing().not())
 						.preferredWidth(200)
 						.build();
 	}
 
 	private JTextArea createPromptTextArea(Control sendControl) {
-		return textArea(editModel.prompt())
+		return textArea(model.prompt())
 						.rowsColumns(5, 40)
 						.lineWrap(true)
 						.wrapStyleWord(true)
 						// Only enabled when the model is not processing
-						.enabled(editModel.processing().not())
-						.validIndicator(editModel.error().not())
+						.enabled(model.processing().not())
+						.validIndicator(model.error().not())
 						// Ctrl-Enter sends the prompt
 						.keyEvent(KeyEvents.builder(VK_ENTER)
 										.modifiers(CTRL_DOWN_MASK)
@@ -212,12 +213,12 @@ public final class ChatEditPanel extends EntityEditPanel {
 	}
 
 	private JList<Attachment> createAttachmentsList() {
-		return Components.list(editModel.attachments())
+		return Components.list(model.attachments())
 						// The List value is based on the items in
 						// the list, as opposed to the selected items.
 						.items()
 						// Only enabled when the model is not processing
-						.enabled(editModel.processing().not())
+						.enabled(model.processing().not())
 						// Insert to add attachment
 						.keyEvent(KeyEvents.builder(VK_INSERT)
 										.action(command(this::addAttachment)))
@@ -233,6 +234,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 						.owner(attachmentsList)
 						// Restricts the selection to a single item
 						.selectSingle()
+						// Returns an empty Optional in case the user cancels
 						.ifPresent(mimeType ->
 										fileSelectionDialog()
 														// Filter files by the selected mime type
@@ -241,11 +243,11 @@ public final class ChatEditPanel extends EntityEditPanel {
 														.selectFiles()
 														// Add the attachments
 														.forEach(file ->
-																		editModel.addAttachment(file.toPath(), mimeType)));
+																		model.addAttachment(file.toPath(), mimeType)));
 	}
 
 	private void removeAttachment() {
-		attachmentsList.getSelectedValuesList().forEach(editModel::removeAttachment);
+		attachmentsList.getSelectedValuesList().forEach(model::removeAttachment);
 	}
 
 	private JProgressBar createProgressBar() {
@@ -281,3 +283,4 @@ public final class ChatEditPanel extends EntityEditPanel {
 						format("%02d:%02d", elapsed.toMinutes(), elapsed.toSecondsPart())));
 	}
 }
+// end::chat_edit_panel[]

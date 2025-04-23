@@ -29,17 +29,23 @@ import java.util.List;
 
 import static dev.langchain4j.data.message.ChatMessageType.USER;
 
+// tag::chat_table_model[]
 /**
  * Manages the chat log history.
  */
 public final class ChatTableModel extends SwingEntityTableModel {
 
+	/**
+	 * Instantiates a new {@link ChatTableModel} instance
+	 * @param languageModels the language models
+	 * @param connectionProvider the connection provider
+	 */
 	public ChatTableModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
 		super(new ChatEditModel(languageModels, connectionProvider));
 		ChatEditModel editModel = (ChatEditModel) editModel();
 		// Include only chat logs from our session
 		queryModel().condition().get(Chat.SESSION).set().equalTo(editModel.session());
-		// We implement soft delete (see ChatLogEditModel), so include
+		// We implement soft delete (see ChatEditModel), so include
 		// only chat log history records not marked as deleted
 		queryModel().condition().get(Chat.DELETED).set().equalTo(false);
 		// Hardcode the history sorting to the latest at top
@@ -48,13 +54,14 @@ public final class ChatTableModel extends SwingEntityTableModel {
 		selection().item().addConsumer(this::onSelection);
 	}
 
-	private void onSelection(Entity chatLog) {
-		ChatEditModel editModel = (ChatEditModel) editModel();
-		if (chatLog == null) {
-			editModel.prompt().clear();
+	private void onSelection(Entity chat) {
+		ChatEditModel model = (ChatEditModel) editModel();
+		if (chat == null) {
+			model.prompt().clear();
 		}
-		else if (chatLog.get(Chat.MESSAGE_TYPE) == USER) {
-			editModel.prompt().set(chatLog.get(Chat.MESSAGE));
+		else if (chat.get(Chat.MESSAGE_TYPE) == USER) {
+			model.prompt().set(chat.get(Chat.MESSAGE));
 		}
 	}
 }
+// end::chat_table_model[]

@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Duration;
 import java.util.UUID;
 
+// tag::test[]
 final class LlemmyTest extends DomainTest {
 
 	public LlemmyTest() {
@@ -41,6 +42,11 @@ final class LlemmyTest extends DomainTest {
 		test(Chat.TYPE);
 	}
 
+	/**
+	 * We provide a {@link EntityFactory} since we use a few
+	 * column types for which the framework can not create
+	 * the random values required for the unit tests.
+	 */
 	private static class LlemmyEntityFactory extends DefaultEntityFactory {
 
 		private LlemmyEntityFactory(EntityConnection connection) {
@@ -66,3 +72,4 @@ final class LlemmyTest extends DomainTest {
 		}
 	}
 }
+// end::test[]

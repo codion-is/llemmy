@@ -27,8 +27,6 @@ application {
     applicationDefaultJvmArgs = listOf(
         // This app doesn't require a lot of memory
         "-Xmx64m",
-        // Specify a local JDBC connection
-        "-Dcodion.client.connectionType=local",
         // The JDBC url
         "-Dcodion.db.url=jdbc:h2:mem:h2db",
         // The database initialization script
