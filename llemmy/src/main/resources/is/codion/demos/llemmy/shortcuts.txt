@@ -1,10 +1,10 @@
-Alt-0            Model
-Alt-1            Prompt
-Alt-2            Attachments
-Alt-3            Chat
-Alt-4            History
-Alt-5            Look & Feel
-Alt-6            Help
+Alt-1            Model
+Alt-2            Look & Feel
+Alt-3            Prompt
+Alt-4            Attachments
+Alt-5            Chat
+Alt-6            History
+Alt-7            Help
 
 Ctrl-Alt-E       Prompt Window
 

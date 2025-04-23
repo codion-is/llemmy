@@ -29,10 +29,10 @@ import java.util.List;
 
 import static dev.langchain4j.data.message.ChatMessageType.USER;
 
-// tag::chat_table_model[]
 /**
  * Manages the chat log history.
  */
+// tag::chat_table_model[]
 public final class ChatTableModel extends SwingEntityTableModel {
 
 	/**

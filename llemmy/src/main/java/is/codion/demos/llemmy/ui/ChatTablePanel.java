@@ -46,10 +46,10 @@ import static java.util.Comparator.comparing;
 import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.UIManager.getColor;
 
-// tag::chat_table_panel[]
 /**
  * @see ChatTableModel
  */
+// tag::chat_table_panel[]
 public final class ChatTablePanel extends EntityTablePanel {
 
 	private final JTextPane chatPane = textPane()
@@ -168,9 +168,9 @@ public final class ChatTablePanel extends EntityTablePanel {
 		// Disable the table while the model is processing
 		enableComponents(editModel.processing().not(), table);
 		// Set some minimum table column widths
-		table.columnModel().column(Chat.TIMESTAMP).setMinWidth(170);
-		table.columnModel().column(Chat.MESSAGE_TYPE).setMinWidth(100);
-		table.columnModel().column(Chat.NAME).setMinWidth(120);
+		table.columnModel().column(Chat.TIMESTAMP).setMinWidth(160);
+		table.columnModel().column(Chat.MESSAGE_TYPE).setMinWidth(80);
+		table.columnModel().column(Chat.NAME).setMinWidth(80);
 		// Set the default visible columns
 		table.columnModel().visible().set(Chat.TIMESTAMP, Chat.MESSAGE_TYPE, Chat.NAME);
 		// and the column auto resize mode

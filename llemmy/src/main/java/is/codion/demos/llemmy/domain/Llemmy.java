@@ -135,8 +135,8 @@ public final class Llemmy extends DomainModel {
 														.defaultValue(false)
 														.columnHasDefaultValue(true))
 						.keyGenerator(identity())
-						// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
 						.stringFactory(StringFactory.builder()
+										// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
 										.value(Chat.TIME)
 										.text(" @ ")
 										.value(Chat.NAME)

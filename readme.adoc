@@ -30,7 +30,7 @@ gradlew llemmy:build
 
 === Run
 
-Uses https://github.com/testcontainers/testcontainers-java[testcontainers] to download and run the latest local orca-mini Ollama model  (langchain4j/ollama-orca-mini:latest, ~2GB).
+Uses https://github.com/testcontainers/testcontainers-java[testcontainers] to download and run a selected local Ollama model (langchain4j/ollama-\{selected\}:latest).
 
 [source,shell]
 ----

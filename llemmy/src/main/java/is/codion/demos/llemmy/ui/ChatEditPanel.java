@@ -55,11 +55,11 @@ import static java.lang.String.format;
 import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.SwingUtilities.invokeLater;
 
-// tag::chat_edit_panel[]
 /**
  * Manages the UI for chatting with a language model.
  * @see ChatEditModel
  */
+// tag::chat_edit_panel[]
 public final class ChatEditPanel extends EntityEditPanel {
 
 	// The mime types available for attachments

@@ -48,12 +48,12 @@ import static java.awt.event.KeyEvent.*;
 import static java.util.stream.Collectors.joining;
 import static javax.swing.BorderFactory.createTitledBorder;
 
-// tag::chat_panel[]
 /**
  * Combines the {@link ChatEditPanel} for the chat prompt interface
  * and {@link ChatTablePanel} for the chat text and history.
  * @see ChatModel
  */
+// tag::chat_panel[]
 public final class ChatPanel extends EntityPanel {
 
 	private final HelpPanel helpPanel = new HelpPanel();
@@ -106,19 +106,19 @@ public final class ChatPanel extends EntityPanel {
 						.modifiers(ALT_DOWN_MASK)
 						.condition(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		// Set the keycode and action and add the key event
-		addKeyEvent(keyEvent.keyCode(VK_0)
-						.action(command(editPanel::requestModelFocus)));
 		addKeyEvent(keyEvent.keyCode(VK_1)
-						.action(command(editPanel::requestPromptFocus)));
+						.action(command(editPanel::requestModelFocus)));
 		addKeyEvent(keyEvent.keyCode(VK_2)
-						.action(command(editPanel::requestAttachmentFocus)));
-		addKeyEvent(keyEvent.keyCode(VK_3)
-						.action(command(tablePanel::requestChatFocus)));
-		addKeyEvent(keyEvent.keyCode(VK_4)
-						.action(command(tablePanel::requestHistoryFocus)));
-		addKeyEvent(keyEvent.keyCode(VK_5)
 						.action(command(editPanel::requestLookAndFeelFocus)));
+		addKeyEvent(keyEvent.keyCode(VK_3)
+						.action(command(editPanel::requestPromptFocus)));
+		addKeyEvent(keyEvent.keyCode(VK_4)
+						.action(command(editPanel::requestAttachmentFocus)));
+		addKeyEvent(keyEvent.keyCode(VK_5)
+						.action(command(tablePanel::requestChatFocus)));
 		addKeyEvent(keyEvent.keyCode(VK_6)
+						.action(command(tablePanel::requestHistoryFocus)));
+		addKeyEvent(keyEvent.keyCode(VK_7)
 						.action(command(helpPanel.shortcuts::requestFocus)));
 		addKeyEvent(keyEvent.keyCode(VK_UP)
 						.modifiers(CTRL_DOWN_MASK)
@@ -151,14 +151,14 @@ public final class ChatPanel extends EntityPanel {
 	private static final class HelpPanel extends JPanel {
 
 		private final JTextArea shortcuts = textArea()
-						.value(helpText())
+						.value(shortcutsText())
 						.font(monospaceFont())
 						.editable(false)
 						.build();
 
 		private HelpPanel() {
 			super(borderLayout());
-			setBorder(createTitledBorder("Shortcuts"));
+			setBorder(createTitledBorder("Help"));
 			add(scrollPane(shortcuts).build(), BorderLayout.CENTER);
 		}
 
@@ -168,7 +168,7 @@ public final class ChatPanel extends EntityPanel {
 			Utilities.updateUI(shortcuts);
 		}
 
-		private static String helpText() {
+		private static String shortcutsText() {
 			try (InputStream inputStream = LlemmyApp.class.getResourceAsStream("shortcuts.txt")) {
 				return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
 								.lines()

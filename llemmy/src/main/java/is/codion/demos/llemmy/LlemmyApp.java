@@ -56,9 +56,8 @@ import static is.codion.swing.common.ui.component.Components.stringField;
 import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
 import static is.codion.swing.framework.ui.EntityTablePanel.ColumnSelection.MENU;
 import static is.codion.swing.framework.ui.ReferentialIntegrityErrorHandling.DISPLAY_DEPENDENCIES;
+import static java.util.Objects.requireNonNull;
 import static javax.swing.SwingConstants.LEADING;
-
-// tag::app_panel[]
 
 /**
  * The main application panel, use {@link #start(Supplier)} to launch Llemmy.
@@ -74,6 +73,7 @@ import static javax.swing.SwingConstants.LEADING;
  *}
  * @see #start(Supplier)
  */
+// tag::app_panel[]
 public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicationModel> {
 
 	private LlemmyApp(SwingEntityApplicationModel applicationModel) {
@@ -178,6 +178,7 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 	}
 
 	public static void start(Supplier<List<ChatLanguageModel>> languageModels) {
+		requireNonNull(languageModels, "languageModels is null");
 		// Configure FlatLaf related things, the inspector is not necessary
 		// but very helpful when debugging UI related stuff
 		FlatInspector.install("ctrl shift alt X");
@@ -199,7 +200,7 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 						.user(user("sa"))
 						// We provide a factory for the EntityConnectionProvider,
 						// since we just manually instantiate a Local one,
-						// instead of relying on the ServiceProvider
+						// instead of relying on the ServiceLoader
 						.connectionProvider(LlemmyApp::createConnectionProvider)
 						// We must supply the language models when instatiating
 						// the application model, so here we provide a factory,

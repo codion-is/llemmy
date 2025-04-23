@@ -72,11 +72,11 @@ import static java.util.UUID.randomUUID;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
-// tag::chat_edit_model[]
 /**
  * Manages the state and the business logic for chatting with a language model.
  * @see ChatEditPanel
  */
+// tag::chat_edit_model[]
 public final class ChatEditModel extends SwingEntityEditModel {
 
 	// The mime types available for attachments
