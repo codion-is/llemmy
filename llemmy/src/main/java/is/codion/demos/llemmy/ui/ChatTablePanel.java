@@ -39,7 +39,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.List;
 
-import static is.codion.swing.common.ui.Utilities.linkToEnabledState;
+import static is.codion.swing.common.ui.Utilities.enableComponents;
 import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.layout.Layouts.borderLayout;
 import static java.util.Comparator.comparing;
@@ -166,7 +166,7 @@ public final class ChatTablePanel extends EntityTablePanel {
 		FilterTable<Entity, Attribute<?>> table = table();
 		ChatEditModel editModel = (ChatEditModel) tableModel().editModel();
 		// Disable the table while the model is processing
-		linkToEnabledState(editModel.processing().not(), table);
+		enableComponents(editModel.processing().not(), table);
 		// Set some minimum table column widths
 		table.columnModel().column(Chat.TIMESTAMP).setMinWidth(170);
 		table.columnModel().column(Chat.MESSAGE_TYPE).setMinWidth(100);

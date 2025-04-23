@@ -39,10 +39,7 @@ application {
 // Configure the Jlink plugin
 jlink {
     // Specify the jlink image name
-    imageName = "llemmy"
-    launcher {
-        name = "llemmy"
-    }
+    imageName = "${project.name}-${project.version}"
     // The options for the jlink task
     options = listOf(
         "--strip-debug",
@@ -75,15 +72,14 @@ jlink {
     }
 
     jpackage {
-        installerName = "llemmy"
         if (OperatingSystem.current().isLinux) {
-            icon = "src/main/icons/llemmy.png"
+            icon = "../../../llemmy/src/main/icons/llemmy.png"
             installerOptions = listOf(
                 "--linux-shortcut"
             )
         }
         if (OperatingSystem.current().isWindows) {
-            icon = "src/main/icons/llemmy.ico"
+            icon = "../../../llemmy/src/main/icons/llemmy.ico"
             installerOptions = listOf(
                 "--win-menu",
                 "--win-shortcut"

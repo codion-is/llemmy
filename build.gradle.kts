@@ -6,6 +6,10 @@ plugins {
     id("org.asciidoctor.jvm.convert") version "4.0.4"
 }
 
+allprojects {
+    version = "0.9.0"
+}
+
 java {
     toolchain {
         // Use the latest possible Java version

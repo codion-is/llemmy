@@ -194,7 +194,7 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 		EntityApplicationPanel.builder(SwingEntityApplicationModel.class, LlemmyApp.class)
 						.applicationName(LlemmyAppModel.APPLICATION_NAME)
 						.applicationVersion(LlemmyAppModel.APPLICATION_VERSION)
-						.frameTitle("Llemmy")
+						.frameTitle(LlemmyAppModel.APPLICATION_NAME + " " + LlemmyAppModel.APPLICATION_VERSION)
 						// The H2Database super user
 						.user(user("sa"))
 						// We provide a factory for the EntityConnectionProvider,

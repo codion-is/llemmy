@@ -14,8 +14,9 @@ dependencies {
     // theme based ones, available via the View -> Select Look & Feel menu
     implementation(libs.codion.plugin.flatlaf)
     implementation(libs.codion.plugin.flatlaf.intellij.themes)
-    implementation(libs.flatlaf.extras);
     implementation(libs.flatlaf.fonts.inter)
+    // FlatInspector
+    implementation(libs.flatlaf.extras);
 
     implementation(libs.langchain4j.core)
 
@@ -31,9 +32,6 @@ dependencies {
 }
 
 apply(from = "../langchain4j-module-info.gradle")
-
-// The application version simply follows the Codion framework version used
-version = libs.versions.codion.get().replace("-SNAPSHOT", "")
 
 testing {
     suites {
@@ -72,18 +70,19 @@ tasks.asciidoctor {
     }
 }
 
-// Copies the documentation to the Codion github pages repository, nevermind
 tasks.register<Sync>("copyToGitHubPages") {
     group = "documentation"
+    description = "Copies the documentation to the Codion github pages repository, nevermind"
     from(tasks.asciidoctor)
-    into("../../codion-pages/doc/" + project.version + "/tutorials/llemmy")
+    into("../../codion-pages/doc/" + libs.versions.codion.get()
+        .replace("-SNAPSHOT", "") + "/tutorials/llemmy")
 }
 
 tasks.register<WriteProperties>("writeVersion") {
     group = "build"
     description = "Create a version.properties file containing the application version"
     destinationFile = file("${temporaryDir.absolutePath}/version.properties")
-    property("version", libs.versions.codion.get().replace("-SNAPSHOT", ""))
+    property("version", project.version)
 }
 
 // Include the version.properties file from above in the
