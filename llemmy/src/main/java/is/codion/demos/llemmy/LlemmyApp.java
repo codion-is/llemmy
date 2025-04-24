@@ -179,6 +179,10 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 
 	public static void start(Supplier<List<ChatLanguageModel>> languageModels) {
 		requireNonNull(languageModels, "languageModels is null");
+		// Configure the jdbc URL ('codion.db.url')
+		Database.DATABASE_URL.set("jdbc:h2:mem:h2db");
+		// and the database initialization script
+		Database.DATABASE_INIT_SCRIPTS.set("classpath:create_schema.sql");
 		// Configure FlatLaf related things, the inspector is not necessary
 		// but very helpful when debugging UI related stuff
 		FlatInspector.install("ctrl shift alt X");

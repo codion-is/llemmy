@@ -27,10 +27,6 @@ application {
     applicationDefaultJvmArgs = listOf(
         // This app doesn't require a lot of memory
         "-Xmx64m",
-        // The JDBC url
-        "-Dcodion.db.url=jdbc:h2:mem:h2db",
-        // The database initialization script
-        "-Dcodion.db.initScripts=classpath:create_schema.sql",
         // Just in case we're debugging in Linux, nevermind
         "-Dsun.awt.disablegrab=true"
     )
