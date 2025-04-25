@@ -47,7 +47,7 @@ import java.util.List;
 import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.control.Control.command;
 import static is.codion.swing.common.ui.dialog.Dialogs.fileSelectionDialog;
-import static is.codion.swing.common.ui.dialog.Dialogs.selectionDialog;
+import static is.codion.swing.common.ui.dialog.Dialogs.listSelectionDialog;
 import static is.codion.swing.common.ui.layout.Layouts.borderLayout;
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.KeyEvent.*;
@@ -230,7 +230,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 
 	private void addAttachment() {
 		// Select the file mime type
-		selectionDialog(SUPPORTED_MIME_TYPES)
+		listSelectionDialog(SUPPORTED_MIME_TYPES)
 						.owner(attachmentsList)
 						// Restricts the selection to a single item
 						.selectSingle()

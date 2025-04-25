@@ -228,7 +228,7 @@ public final class ChatEditModel extends SwingEntityEditModel {
 	}
 
 	private Entity setDeleted(Entity entity) {
-		entity.put(Chat.DELETED, true);
+		entity.set(Chat.DELETED, true);
 
 		return entity;
 	}

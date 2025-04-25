@@ -31,7 +31,6 @@ import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.db.local.LocalEntityConnectionProvider;
 import is.codion.framework.i18n.FrameworkMessages;
 import is.codion.plugin.flatlaf.intellij.themes.dracula.Dracula;
-import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.ui.component.table.FilterTableCellRenderer;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.control.Controls;
@@ -51,9 +50,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static is.codion.common.user.User.user;
-import static is.codion.swing.common.ui.component.Components.comboBox;
-import static is.codion.swing.common.ui.component.Components.stringField;
-import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
 import static is.codion.swing.framework.ui.EntityTablePanel.ColumnSelection.MENU;
 import static is.codion.swing.framework.ui.ReferentialIntegrityErrorHandling.DISPLAY_DEPENDENCIES;
 import static java.util.Objects.requireNonNull;
@@ -64,11 +60,15 @@ import static javax.swing.SwingConstants.LEADING;
  * {@snippet :
  * List<String> models = List.of("orca-mini", "llama2", "llama3");
  *
- * String selectedName = LlemmyApp.select(models, "orca-mini", "Select model");
+ * String selectedModel  = Dialogs.comboBoxSelectionDialog(models)
+ *     .defaultSelection("orca-mini")
+ *     .title("Select model")
+ *     .select()
+ *     .orElseThrow(CancelException::new);
  *
  * LlemmyApp.start(() -> List.of(OllamaChatModel.builder()
  *     .baseUrl("http://localhost:12345")
- *     .modelName(selectedName)
+ *     .modelName(selectedModel)
  *     .build()));
  *}
  * @see #start(Supplier)
@@ -86,35 +86,6 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 						applicationPanel -> () ->
 										// Simply return our single panel, initialized
 										applicationPanel.entityPanel(Chat.TYPE).initialize());
-	}
-
-	/**
-	 * A utility method for presenting the user with a selection dialog,
-	 * for selecting a language model name for example.
-	 * @param values the values to present
-	 * @param defaultSelection the default selection
-	 * @return the selected value
-	 * @throws is.codion.common.model.CancelException in case the user cancels the selection
-	 */
-	public static <T> T select(List<T> values, T defaultSelection, String title) {
-		return inputDialog(comboBox(FilterComboBoxModel.builder(values).build())
-						.value(defaultSelection)
-						.preferredWidth(250) //Shouldn't really be hardcoded |:
-						.buildValue())
-						.title(title)
-						.show();
-	}
-
-	/**
-	 * A utility method for presenting the user with text input.
-	 * @return a string input
-	 */
-	public static String string(String title) {
-		return inputDialog(stringField()
-						.columns(25)
-						.buildValue())
-						.title(title)
-						.show();
 	}
 
 	/**

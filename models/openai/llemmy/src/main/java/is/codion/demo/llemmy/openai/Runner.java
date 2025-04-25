@@ -18,6 +18,7 @@
  */
 package is.codion.demo.llemmy.openai;
 
+import is.codion.common.model.CancelException;
 import is.codion.demos.llemmy.LlemmyApp;
 
 import dev.langchain4j.model.openai.OpenAiChatModel;
@@ -28,8 +29,9 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
-import static is.codion.demos.llemmy.LlemmyApp.select;
-import static is.codion.demos.llemmy.LlemmyApp.string;
+import static is.codion.swing.common.ui.component.Components.stringField;
+import static is.codion.swing.common.ui.dialog.Dialogs.comboBoxSelectionDialog;
+import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
 
 // tag::runner[]
 public final class Runner {
@@ -43,8 +45,16 @@ public final class Runner {
 
 	public static void main(String[] args) {
 		LlemmyApp.start(() -> List.of(OpenAiChatModel.builder()
-						.apiKey(string("OpenAI API Key"))
-						.modelName(select(MODELS, GPT_4_O_MINI.toString(), "Select model"))
+						.apiKey(inputDialog(stringField()
+										.columns(25)
+										.buildValue())
+										.title("OpenAI API Key")
+										.show())
+						.modelName(comboBoxSelectionDialog(MODELS)
+										.defaultSelection(GPT_4_O_MINI.toString())
+										.title("Select model")
+										.select()
+										.orElseThrow(CancelException::new))
 						.build()));
 	}
 }
