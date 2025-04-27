@@ -13,7 +13,7 @@ allprojects {
 java {
     toolchain {
         // Use the latest possible Java version
-        languageVersion.set(JavaLanguageVersion.of(23))
+        languageVersion.set(JavaLanguageVersion.of(24))
     }
 }
 
