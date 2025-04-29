@@ -44,6 +44,7 @@ import java.awt.BorderLayout;
 import java.time.Duration;
 import java.util.List;
 
+import static is.codion.demos.llemmy.model.ChatEditModel.MimeType;
 import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.control.Control.command;
 import static is.codion.swing.common.ui.dialog.Dialogs.fileSelectionDialog;
@@ -61,13 +62,6 @@ import static javax.swing.SwingUtilities.invokeLater;
  */
 // tag::chat_edit_panel[]
 public final class ChatEditPanel extends EntityEditPanel {
-
-	// The mime types available for attachments
-	private static final List<String> SUPPORTED_MIME_TYPES = List.of(
-					ChatEditModel.PDF,
-					ChatEditModel.IMAGE_JPEG,
-					ChatEditModel.IMAGE_PNG,
-					ChatEditModel.TEXT_PLAIN);
 
 	private final ChatEditModel model;
 
@@ -230,7 +224,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 
 	private void addAttachment() {
 		// Select the file mime type
-		listSelectionDialog(SUPPORTED_MIME_TYPES)
+		listSelectionDialog(List.of(MimeType.values()))
 						.owner(attachmentsList)
 						// Restricts the selection to a single item
 						.selectSingle()
@@ -258,13 +252,12 @@ public final class ChatEditPanel extends EntityEditPanel {
 						.build();
 	}
 
-	private static FileFilter fileFilter(String mimeType) {
+	private static FileFilter fileFilter(MimeType mimeType) {
 		return switch (mimeType) {
-			case ChatEditModel.IMAGE_PNG -> new FileNameExtensionFilter("PNG", "png");
-			case ChatEditModel.IMAGE_JPEG -> new FileNameExtensionFilter("JPEG", "jpg", "jpeg");
-			case ChatEditModel.TEXT_PLAIN -> new FileNameExtensionFilter("Text", "txt", "csv");
-			case ChatEditModel.PDF -> new FileNameExtensionFilter("PDF", "pdf");
-			default -> throw new IllegalArgumentException("Unsupported mime type: " + mimeType);
+			case IMAGE_PNG -> new FileNameExtensionFilter("PNG", "png");
+			case IMAGE_JPEG -> new FileNameExtensionFilter("JPEG", "jpg", "jpeg");
+			case TEXT_PLAIN -> new FileNameExtensionFilter("Text", "txt", "csv");
+			case PDF -> new FileNameExtensionFilter("PDF", "pdf");
 		};
 	}
 

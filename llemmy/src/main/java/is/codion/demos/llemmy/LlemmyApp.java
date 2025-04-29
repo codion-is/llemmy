@@ -37,7 +37,6 @@ import is.codion.swing.common.ui.control.Controls;
 import is.codion.swing.framework.model.SwingEntityApplicationModel;
 import is.codion.swing.framework.ui.EntityApplicationPanel;
 import is.codion.swing.framework.ui.EntityTablePanel;
-import is.codion.swing.framework.ui.ReferentialIntegrityErrorHandling;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatInspector;
@@ -51,7 +50,6 @@ import java.util.function.Supplier;
 
 import static is.codion.common.user.User.user;
 import static is.codion.swing.framework.ui.EntityTablePanel.ColumnSelection.MENU;
-import static is.codion.swing.framework.ui.ReferentialIntegrityErrorHandling.DISPLAY_DEPENDENCIES;
 import static java.util.Objects.requireNonNull;
 import static javax.swing.SwingConstants.LEADING;
 
@@ -164,7 +162,6 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 		FlatLaf.setPreferredSemiboldFontFamily(FlatInterFont.FAMILY_SEMIBOLD);
 		Locale.setDefault(Locale.of("en", "EN"));
 		FilterTableCellRenderer.TEMPORAL_HORIZONTAL_ALIGNMENT.set(LEADING);
-		ReferentialIntegrityErrorHandling.REFERENTIAL_INTEGRITY_ERROR_HANDLING.set(DISPLAY_DEPENDENCIES);
 		// Display table column selection in a menu, instead of a dialog
 		EntityTablePanel.Config.COLUMN_SELECTION.set(MENU);
 		EntityApplicationPanel.builder(SwingEntityApplicationModel.class, LlemmyApp.class)

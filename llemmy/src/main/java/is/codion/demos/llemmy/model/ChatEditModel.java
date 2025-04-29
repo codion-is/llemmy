@@ -80,10 +80,22 @@ import static java.util.stream.Collectors.joining;
 public final class ChatEditModel extends SwingEntityEditModel {
 
 	// The mime types available for attachments
-	public static final String IMAGE_PNG = "image/png";
-	public static final String TEXT_PLAIN = "text/plain";
-	public static final String IMAGE_JPEG = "image/jpeg";
-	public static final String PDF = "application/pdf";
+	public enum MimeType {
+		PDF("application/pdf"),
+		IMAGE_JPEG("image/jpeg"),
+		IMAGE_PNG("image/png"),
+		TEXT_PLAIN("text/plain");
+
+		private final String type;
+
+		MimeType(String type) {
+			this.type = type;
+		}
+
+		public String type() {
+			return type;
+		}
+	}
 
 	private static final Base64.Encoder BASE64_ENCODER = Base64.getEncoder();
 	private static final String USER = getProperty("user.name");
@@ -155,7 +167,7 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		return attachments;
 	}
 
-	public void addAttachment(Path path, String mimeType) {
+	public void addAttachment(Path path, MimeType mimeType) {
 		attachments.addElement(createAttachment(requireNonNull(path), requireNonNull(mimeType)));
 		attachmentsEmpty.set(false);
 	}
@@ -264,15 +276,14 @@ public final class ChatEditModel extends SwingEntityEditModel {
 						.execute();
 	}
 
-	private static Attachment createAttachment(Path path, String mimeType) {
+	private static Attachment createAttachment(Path path, MimeType mimeType) {
 		return switch (mimeType) {
 			case IMAGE_PNG, IMAGE_JPEG -> new Attachment(path,
-							ImageContent.from(toBase64Bytes(path), mimeType));
+							ImageContent.from(toBase64Bytes(path), mimeType.type()));
 			case TEXT_PLAIN -> new Attachment(path,
-							TextFileContent.from(toBase64Bytes(path), mimeType));
+							TextFileContent.from(toBase64Bytes(path), mimeType.type()));
 			case PDF -> new Attachment(path,
-							PdfFileContent.from(toBase64Bytes(path), mimeType));
-			default -> throw new IllegalArgumentException("Unsupported mime type: " + mimeType);
+							PdfFileContent.from(toBase64Bytes(path), mimeType.type()));
 		};
 	}
 
@@ -366,11 +377,11 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		@Override
 		public Entity execute() {
 			ChatLanguageModel languageModel = languageModel();
-			LocalDateTime started = LocalDateTime.now();
+			LocalDateTime start = LocalDateTime.now();
 			try {
 				return insert(languageModel.provider().name(),
 								languageModel.chat(result.userMessage()),
-								Duration.between(started, LocalDateTime.now()));
+								Duration.between(start, LocalDateTime.now()));
 			}
 			catch (Exception e) {
 				return insert(e);

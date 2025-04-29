@@ -97,7 +97,7 @@ public final class ChatPanel extends EntityPanel {
 		// Set up some global key events for this panel.
 		// Note that calling addKeyEvent() assures that the key event is
 		// added to this base panel and to the edit panel as well,
-		// since that may be displayed in another window.
+		// since that may be displayed in a separate window.
 		ChatEditModel editModel = (ChatEditModel) editModel();
 		ChatEditPanel editPanel = (ChatEditPanel) editPanel();
 		ChatTablePanel tablePanel = (ChatTablePanel) tablePanel();
