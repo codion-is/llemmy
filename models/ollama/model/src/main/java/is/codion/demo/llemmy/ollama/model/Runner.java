@@ -47,7 +47,7 @@ public final class Runner {
 
 	public static void main(String[] args) {
 		findLookAndFeel(FlatDarkLaf.class).ifPresent(LookAndFeelEnabler::enable);
-		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + selected() + ":latest")
+		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + model() + ":latest")
 						.withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(new HostConfig()
 										.withPortBindings(new PortBinding(bindPort(PORT), new ExposedPort(PORT)))))) {
 			ollama.start();
@@ -81,11 +81,10 @@ public final class Runner {
 		}
 	}
 
-	private static String selected() {
+	private static String model() {
 		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
 										.value(ORCA_MINI)
-										.preferredWidth(250)
-										.buildValue())
+										.preferredWidth(250))
 						.title("Select model")
 						.show();
 	}

@@ -38,8 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.BorderLayout;
 import java.time.Duration;
 import java.util.List;
@@ -65,12 +63,12 @@ public final class ChatEditPanel extends EntityEditPanel {
 
 	private final ChatEditModel model;
 
-	private final JPanel languageModelPanel;
 	private final JComboBox<Item<ChatLanguageModel>> languageModelComboBox;
+	private final JPanel languageModelPanel;
 	private final JTextArea promptTextArea;
+	private final JScrollPane promptScrollPane;
 	private final JList<Attachment> attachmentsList;
 	private final JScrollPane attachmentsScrollPane;
-	private final JScrollPane promptScrollPane;
 	private final JProgressBar progressBar;
 	private final JButton clearButton;
 	private final JButton sendButton;
@@ -84,14 +82,14 @@ public final class ChatEditPanel extends EntityEditPanel {
 		this.languageModelPanel = borderLayoutPanel()
 						.centerComponent(languageModelComboBox)
 						.build();
-		this.clearButton = button(createClearControl()).build();
 		Control sendControl = createSendControl();
-		this.sendButton = button(sendControl).build();
 		this.promptTextArea = createPromptTextArea(sendControl);
+		this.promptScrollPane = scrollPane(promptTextArea).build();
 		this.attachmentsList = createAttachmentsList();
 		this.attachmentsScrollPane = scrollPane(attachmentsList).build();
-		this.promptScrollPane = scrollPane(promptTextArea).build();
 		this.progressBar = createProgressBar();
+		this.clearButton = button(createClearControl()).build();
+		this.sendButton = button(sendControl).build();
 		model.processing().addConsumer(this::onProcessingChanged);
 		model.elapsed().addConsumer(this::onElapsedChanged);
 		focus().initial().set(promptTextArea);
@@ -150,8 +148,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 						.border(createTitledBorder("Model"))
 						.centerComponent(languageModelPanel)
 						.eastComponent(gridLayoutPanel(1, 2)
-										.add(clearButton)
-										.add(sendButton)
+										.addAll(clearButton, sendButton)
 										.build())
 						.build();
 	}
@@ -225,14 +222,16 @@ public final class ChatEditPanel extends EntityEditPanel {
 	private void addAttachment() {
 		// Select the file mime type
 		listSelectionDialog(List.of(MimeType.values()))
+						// Set the modal dialog owner
 						.owner(attachmentsList)
 						// Restricts the selection to a single item
 						.selectSingle()
 						// Returns an empty Optional in case the user cancels
 						.ifPresent(mimeType ->
+										// Select the file to attach
 										fileSelectionDialog()
 														// Filter files by the selected mime type
-														.fileFilter(fileFilter(mimeType))
+														.fileFilter(mimeType.fileFilter())
 														// Select one or more files
 														.selectFiles()
 														// Add the attachments
@@ -241,7 +240,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 	}
 
 	private void removeAttachment() {
-		attachmentsList.getSelectedValuesList().forEach(model::removeAttachment);
+		model.attachments().selection().items().get().forEach(model::removeAttachment);
 	}
 
 	private JProgressBar createProgressBar() {
@@ -252,26 +251,16 @@ public final class ChatEditPanel extends EntityEditPanel {
 						.build();
 	}
 
-	private static FileFilter fileFilter(MimeType mimeType) {
-		return switch (mimeType) {
-			case IMAGE_PNG -> new FileNameExtensionFilter("PNG", "png");
-			case IMAGE_JPEG -> new FileNameExtensionFilter("JPEG", "jpg", "jpeg");
-			case TEXT_PLAIN -> new FileNameExtensionFilter("Text", "txt", "csv");
-			case PDF -> new FileNameExtensionFilter("PDF", "pdf");
-		};
-	}
-
 	private void onProcessingChanged(boolean processing) {
-		invokeLater(() -> {
-			languageModelPanel.removeAll();
-			languageModelPanel.add(processing ? progressBar : languageModelComboBox, BorderLayout.CENTER);
-			progressBar.requestFocus();
-			languageModelPanel.revalidate();
-			languageModelPanel.repaint();
-		});
+		languageModelPanel.removeAll();
+		languageModelPanel.add(processing ? progressBar : languageModelComboBox, BorderLayout.CENTER);
+		progressBar.requestFocus();
+		languageModelPanel.revalidate();
+		languageModelPanel.repaint();
 	}
 
 	private void onElapsedChanged(Duration elapsed) {
+		// Use invokeLater() since this gets called in a background thread
 		invokeLater(() -> progressBar.setString(
 						format("%02d:%02d", elapsed.toMinutes(), elapsed.toSecondsPart())));
 	}

@@ -17,13 +17,6 @@ NOTE: For the Gradle build configuration see <<#_build, Build>> section.
 
 This tutorial assumes you have at least skimmed the {doc-url}/manual/manual.html#_domain_model[Domain model] part of the Codion manual.
 
-Each section of the tutorial below is based on a single table and has the following subsections:
-
-SQL:: The underlying table DDL.
-Domain:: The domain model specification for an entity based on the table.
-Model:: The application model components associated with the entity (if any).
-UI:: The application UI components associated with the entity.
-
 == Llemmy
 
 The table the application is based on, **LLEMMY.CHAT**, which records the chats to an in-memory database.
@@ -39,8 +32,8 @@ include::{dir-resources}/create_schema.sql[tags=**]
 
 The domain model is created by extending the *DefaultDomain* class and defining a *DomainType* constant identifying the domain model.
 
-In the constructor we call methods each adding a single Entity definition to the domain model.
-The *Domain* subsections below continue the Llemmy class.
+In the constructor we call a method adding a single Entity definition to the domain model.
+The subsections below continue the Llemmy class.
 
 [source,java,options="nowrap"]
 ----
@@ -58,7 +51,7 @@ include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=**]
 
 ==== API
 
-We start by creating a `Chat` interface and defining the domain API constants for the table and its columns, providing the table and column names as parameters.
+We start by creating a `Chat` interface and defining the domain API constants for the **LLEMMY.CHAT** table and its columns, providing the table and column names as parameters.
 
 [source,java,options="nowrap"]
 ----

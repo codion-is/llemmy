@@ -46,8 +46,7 @@ public final class Runner {
 	public static void main(String[] args) {
 		LlemmyApp.start(() -> List.of(OpenAiChatModel.builder()
 						.apiKey(inputDialog(stringField()
-										.columns(25)
-										.buildValue())
+										.columns(25))
 										.title("OpenAI API Key")
 										.show())
 						.modelName(comboBoxSelectionDialog(MODELS)

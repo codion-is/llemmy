@@ -30,6 +30,7 @@ import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
+import is.codion.swing.common.model.component.list.FilterListModel;
 import is.codion.swing.common.model.worker.ProgressWorker;
 import is.codion.swing.common.model.worker.ProgressWorker.ResultTask;
 import is.codion.swing.framework.model.SwingEntityEditModel;
@@ -45,8 +46,8 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 
-import javax.swing.DefaultListModel;
-import javax.swing.ListModel;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -55,7 +56,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -81,19 +81,25 @@ public final class ChatEditModel extends SwingEntityEditModel {
 
 	// The mime types available for attachments
 	public enum MimeType {
-		PDF("application/pdf"),
-		IMAGE_JPEG("image/jpeg"),
-		IMAGE_PNG("image/png"),
-		TEXT_PLAIN("text/plain");
+		PDF("application/pdf", new FileNameExtensionFilter("PDF", "pdf")),
+		JPEG("image/jpeg", new FileNameExtensionFilter("JPEG", "jpg", "jpeg")),
+		PNG("image/png", new FileNameExtensionFilter("PNG", "png")),
+		PLAIN_TEXT("text/plain", new FileNameExtensionFilter("Text", "txt", "csv"));
 
 		private final String type;
+		private final FileFilter fileFilter;
 
-		MimeType(String type) {
+		MimeType(String type, FileFilter fileFilter) {
 			this.type = type;
+			this.fileFilter = fileFilter;
 		}
 
 		public String type() {
 			return type;
+		}
+
+		public FileFilter fileFilter() {
+			return fileFilter;
 		}
 	}
 
@@ -128,7 +134,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 	// Contains the available language models
 	private final FilterComboBoxModel<Item<ChatLanguageModel>> languageModels;
 	// Contains the file attachments
-	private final DefaultListModel<Attachment> attachments = new DefaultListModel<>();
+	private final FilterListModel<Attachment> attachments =
+					FilterListModel.<Attachment>filterListModel();
 	// Contains the prompt text
 	private final Value<String> prompt = Value.builder()
 					.nonNull("")
@@ -142,7 +149,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 	 * @param connectionProvider the connection provider
 	 * @throws IllegalArgumentException in case {@code languageModels} is empty
 	 */
-	public ChatEditModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
+	public ChatEditModel(List<ChatLanguageModel> languageModels,
+											 EntityConnectionProvider connectionProvider) {
 		super(Chat.TYPE, connectionProvider);
 		if (languageModels.isEmpty()) {
 			throw new IllegalArgumentException("No language model(s) provided");
@@ -163,18 +171,18 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		return prompt;
 	}
 
-	public ListModel<Attachment> attachments() {
+	public FilterListModel<Attachment> attachments() {
 		return attachments;
 	}
 
 	public void addAttachment(Path path, MimeType mimeType) {
-		attachments.addElement(createAttachment(requireNonNull(path), requireNonNull(mimeType)));
+		attachments.items().add(createAttachment(requireNonNull(path), requireNonNull(mimeType)));
 		attachmentsEmpty.set(false);
 	}
 
 	public void removeAttachment(Attachment attachment) {
-		attachments.removeElement(requireNonNull(attachment));
-		attachmentsEmpty.set(attachments.getSize() == 0);
+		attachments.items().remove(requireNonNull(attachment));
+		attachmentsEmpty.set(attachments.items().count() == 0);
 	}
 
 	/**
@@ -278,9 +286,9 @@ public final class ChatEditModel extends SwingEntityEditModel {
 
 	private static Attachment createAttachment(Path path, MimeType mimeType) {
 		return switch (mimeType) {
-			case IMAGE_PNG, IMAGE_JPEG -> new Attachment(path,
+			case PNG, JPEG -> new Attachment(path,
 							ImageContent.from(toBase64Bytes(path), mimeType.type()));
-			case TEXT_PLAIN -> new Attachment(path,
+			case PLAIN_TEXT -> new Attachment(path,
 							TextFileContent.from(toBase64Bytes(path), mimeType.type()));
 			case PDF -> new Attachment(path,
 							PdfFileContent.from(toBase64Bytes(path), mimeType.type()));
@@ -316,12 +324,10 @@ public final class ChatEditModel extends SwingEntityEditModel {
 		private UserMessage createMessage() {
 			UserMessage.Builder builder = UserMessage.builder().name(USER);
 			prompt.optional()
-							.filter(not(String::isEmpty))
+							.filter(not(String::isBlank))
 							.ifPresent(text -> builder.addContent(TextContent.from(text)));
-			Enumeration<Attachment> elements = attachments.elements();
-			while (elements.hasMoreElements()) {
-				builder.addContent(elements.nextElement().content());
-			}
+			attachments.items().get().forEach(attachment ->
+							builder.addContent(attachment.content()));
 
 			return builder.build();
 		}

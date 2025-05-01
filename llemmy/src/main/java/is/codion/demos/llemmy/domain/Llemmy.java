@@ -68,6 +68,7 @@ public final class Llemmy extends DomainModel {
 		Attribute<LocalTime> TIME = TYPE.localTimeAttribute("time");
 		Column<String> MESSAGE = TYPE.stringColumn("message");
 		Column<String> STACK_TRACE = TYPE.stringColumn("stack_trace");
+		// Duration used as custom column type
 		Column<Duration> RESPONSE_TIME = TYPE.column("response_time", Duration.class);
 		Column<Integer> INPUT_TOKENS = TYPE.integerColumn("input_tokens");
 		Column<Integer> OUTPUT_TOKENS = TYPE.integerColumn("output_tokens");
@@ -91,9 +92,10 @@ public final class Llemmy extends DomainModel {
 														.dateTimePattern("yyyy-MM-dd HH:mm:ss")
 														.caption("Time"),
 										Chat.TIME.define()
-														.derived(from -> from.optional(Chat.TIMESTAMP)
+														.derived(Chat.TIMESTAMP)
+														.provider(values -> values.optional(Chat.TIMESTAMP)
 																		.map(LocalDateTime::toLocalTime)
-																		.orElse(null), Chat.TIMESTAMP)
+																		.orElse(null))
 														.dateTimePattern("HH:mm:ss"),
 										Chat.NAME.define()
 														.column()

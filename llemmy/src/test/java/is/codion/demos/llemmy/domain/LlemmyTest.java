@@ -28,7 +28,6 @@ import dev.langchain4j.data.message.ChatMessageType;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.UUID;
 
 // tag::test[]
 final class LlemmyTest extends DomainTest {
@@ -44,8 +43,8 @@ final class LlemmyTest extends DomainTest {
 
 	/**
 	 * We provide a {@link EntityFactory} since we use a few
-	 * column types for which the framework can not create
-	 * the random values required for the unit tests.
+	 * column types for which the framework can not automatically
+	 * create the random values required for the unit tests.
 	 */
 	private static class LlemmyEntityFactory extends DefaultEntityFactory {
 
@@ -57,9 +56,6 @@ final class LlemmyTest extends DomainTest {
 		protected <T> T value(Attribute<T> attribute) {
 			if (attribute.equals(Chat.MESSAGE_TYPE)) {
 				return (T) ChatMessageType.AI;
-			}
-			if (attribute.equals(Chat.SESSION)) {
-				return (T) UUID.randomUUID();
 			}
 			if (attribute.equals(Chat.JSON)) {
 				return null;
