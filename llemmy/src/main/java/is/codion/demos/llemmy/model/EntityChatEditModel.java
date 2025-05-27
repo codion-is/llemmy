@@ -25,7 +25,7 @@ import is.codion.common.state.ObservableState;
 import is.codion.common.state.State;
 import is.codion.common.value.Value;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
-import is.codion.demos.llemmy.ui.ChatEditPanel;
+import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
@@ -40,9 +40,8 @@ import dev.langchain4j.data.message.Content;
 import dev.langchain4j.data.message.ImageContent;
 import dev.langchain4j.data.message.PdfFileContent;
 import dev.langchain4j.data.message.TextContent;
-import dev.langchain4j.data.message.TextFileContent;
 import dev.langchain4j.data.message.UserMessage;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.output.TokenUsage;
 
@@ -51,6 +50,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -74,10 +74,10 @@ import static java.util.stream.Collectors.joining;
 
 /**
  * Manages the state and the business logic for chatting with a language model.
- * @see ChatEditPanel
+ * @see EntityChatEditPanel
  */
 // tag::chat_edit_model[]
-public final class ChatEditModel extends SwingEntityEditModel {
+public final class EntityChatEditModel extends SwingEntityEditModel {
 
 	// The mime types available for attachments
 	public enum MimeType {
@@ -131,8 +131,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 									.interval(1, TimeUnit.SECONDS)
 									.build();
 
-	// Contains the available language models
-	private final FilterComboBoxModel<Item<ChatLanguageModel>> languageModels;
+	// Contains the available chat models
+	private final FilterComboBoxModel<Item<ChatModel>> chatModels;
 	// Contains the file attachments
 	private final FilterListModel<Attachment> attachments =
 					FilterListModel.<Attachment>filterListModel();
@@ -144,22 +144,22 @@ public final class ChatEditModel extends SwingEntityEditModel {
 					.build();
 
 	/**
-	 * Instantiates a new {@link ChatEditModel} instance
-	 * @param languageModels the language models
+	 * Instantiates a new {@link EntityChatEditModel} instance
+	 * @param chatModels the chat models
 	 * @param connectionProvider the connection provider
-	 * @throws IllegalArgumentException in case {@code languageModels} is empty
+	 * @throws IllegalArgumentException in case {@code chatModels} is empty
 	 */
-	public ChatEditModel(List<ChatLanguageModel> languageModels,
-											 EntityConnectionProvider connectionProvider) {
+	public EntityChatEditModel(List<ChatModel> chatModels,
+														 EntityConnectionProvider connectionProvider) {
 		super(Chat.TYPE, connectionProvider);
-		if (languageModels.isEmpty()) {
+		if (chatModels.isEmpty()) {
 			throw new IllegalArgumentException("No language model(s) provided");
 		}
 		// Wrap the language models in Item instances, for a caption to display in the combo box
-		this.languageModels = FilterComboBoxModel.builder(languageModels.stream()
+		this.chatModels = FilterComboBoxModel.builder(chatModels.stream()
 										.map(model -> item(model, model.provider().name()))
 										.toList())
-						.selected(languageModels.getFirst())
+						.selected(chatModels.getFirst())
 						.build();
 	}
 
@@ -218,10 +218,10 @@ public final class ChatEditModel extends SwingEntityEditModel {
 	}
 
 	/**
-	 * @return the available language models
+	 * @return the available chat models
 	 */
-	public FilterComboBoxModel<Item<ChatLanguageModel>> languageModels() {
-		return languageModels;
+	public FilterComboBoxModel<Item<ChatModel>> chatModels() {
+		return chatModels;
 	}
 
 	/**
@@ -269,7 +269,7 @@ public final class ChatEditModel extends SwingEntityEditModel {
 						.onException(task::fail)
 						// Propagate the resulting task
 						// to the next async send method
-						.onResult(ChatEditModel::send)
+						.onResult(EntityChatEditModel::send)
 						.execute();
 	}
 
@@ -289,7 +289,7 @@ public final class ChatEditModel extends SwingEntityEditModel {
 			case PNG, JPEG -> new Attachment(path,
 							ImageContent.from(toBase64Bytes(path), mimeType.type()));
 			case PLAIN_TEXT -> new Attachment(path,
-							TextFileContent.from(toBase64Bytes(path), mimeType.type()));
+							TextContent.from(toString(path)));
 			case PDF -> new Attachment(path,
 							PdfFileContent.from(toBase64Bytes(path), mimeType.type()));
 		};
@@ -298,6 +298,15 @@ public final class ChatEditModel extends SwingEntityEditModel {
 	private static String toBase64Bytes(Path attachment) {
 		try {
 			return BASE64_ENCODER.encodeToString(readAllBytes(attachment));
+		}
+		catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static String toString(Path path) {
+		try {
+			return Files.readString(path);
 		}
 		catch (IOException e) {
 			throw new RuntimeException(e);
@@ -382,11 +391,11 @@ public final class ChatEditModel extends SwingEntityEditModel {
 
 		@Override
 		public Entity execute() {
-			ChatLanguageModel languageModel = languageModel();
+			ChatModel chatModel = chatModel();
 			LocalDateTime start = LocalDateTime.now();
 			try {
-				return insert(languageModel.provider().name(),
-								languageModel.chat(result.userMessage()),
+				return insert(chatModel.provider().name(),
+								chatModel.chat(result.userMessage()),
 								Duration.between(start, LocalDateTime.now()));
 			}
 			catch (Exception e) {
@@ -422,8 +431,8 @@ public final class ChatEditModel extends SwingEntityEditModel {
 							.build());
 		}
 
-		private ChatLanguageModel languageModel() {
-			return languageModels.selection().item().optional()
+		private ChatModel chatModel() {
+			return chatModels.selection().item().optional()
 							.map(Item::value)
 							.orElseThrow();
 		}

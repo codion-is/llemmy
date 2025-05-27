@@ -24,9 +24,9 @@ import is.codion.common.user.User;
 import is.codion.common.version.Version;
 import is.codion.demos.llemmy.domain.Llemmy;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
-import is.codion.demos.llemmy.model.ChatModel;
-import is.codion.demos.llemmy.ui.ChatEditPanel;
-import is.codion.demos.llemmy.ui.ChatPanel;
+import is.codion.demos.llemmy.model.EntityChatModel;
+import is.codion.demos.llemmy.ui.EntityChatEditPanel;
+import is.codion.demos.llemmy.ui.EntityChatPanel;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.db.local.LocalEntityConnectionProvider;
 import is.codion.framework.i18n.FrameworkMessages;
@@ -41,7 +41,7 @@ import is.codion.swing.framework.ui.EntityTablePanel;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatInspector;
 import com.formdev.flatlaf.fonts.inter.FlatInterFont;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 
 import java.util.List;
 import java.util.Locale;
@@ -72,12 +72,12 @@ import static javax.swing.SwingConstants.LEADING;
  * @see #start(Supplier)
  */
 // tag::app_panel[]
-public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicationModel> {
+public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppModel> {
 
-	private LlemmyApp(SwingEntityApplicationModel applicationModel) {
+	private LlemmyApp(LlemmyAppModel applicationModel) {
 		super(applicationModel,
 						// See LlemmyAppModel at the bottom of this class
-						List.of(new ChatPanel(((LlemmyAppModel) applicationModel).chatModel())), List.of(),
+						List.of(new EntityChatPanel(applicationModel.chatModel())), List.of(),
 						// We replace the default application layout factory, which
 						// produces a layout arranging the main panels in a tabbed pane,
 						// but here we only have a single panel, no need for tabs
@@ -88,7 +88,7 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 
 	/**
 	 * Override the default View menu, to exclude the Look & Feel selection
-	 * menu item, since {@link ChatEditPanel} contains a Look & Feel combo box.
+	 * menu item, since {@link EntityChatEditPanel} contains a Look & Feel combo box.
 	 * @return the {@link Controls} on which to base the main view menu
 	 */
 	@Override
@@ -109,7 +109,7 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 	 */
 	@Override
 	protected Optional<Controls> createHelpMenuControls() {
-		State help = ((ChatPanel) entityPanel(Chat.TYPE)).help();
+		State help = ((EntityChatPanel) entityPanel(Chat.TYPE)).help();
 
 		return Optional.of(Controls.builder()
 						.caption("Help")
@@ -146,8 +146,8 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 						.build();
 	}
 
-	public static void start(Supplier<List<ChatLanguageModel>> languageModels) {
-		requireNonNull(languageModels, "languageModels is null");
+	public static void start(Supplier<List<ChatModel>> chatModels) {
+		requireNonNull(chatModels, "chatModels is null");
 		// Configure the jdbc URL ('codion.db.url')
 		Database.DATABASE_URL.set("jdbc:h2:mem:h2db");
 		// and the database initialization script
@@ -164,11 +164,11 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 		FilterTableCellRenderer.TEMPORAL_HORIZONTAL_ALIGNMENT.set(LEADING);
 		// Display table column selection in a menu, instead of a dialog
 		EntityTablePanel.Config.COLUMN_SELECTION.set(MENU);
-		EntityApplicationPanel.builder(SwingEntityApplicationModel.class, LlemmyApp.class)
+		EntityApplicationPanel.builder(LlemmyAppModel.class, LlemmyApp.class)
 						.applicationName(LlemmyAppModel.APPLICATION_NAME)
 						.applicationVersion(LlemmyAppModel.APPLICATION_VERSION)
 						.frameTitle(LlemmyAppModel.APPLICATION_NAME + " " + LlemmyAppModel.APPLICATION_VERSION)
-						// The H2Database super user
+						// The H2Database super-user
 						.user(user("sa"))
 						// We provide a factory for the EntityConnectionProvider,
 						// since we just manually instantiate a Local one,
@@ -178,7 +178,7 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 						// the application model, so here we provide a factory,
 						// which receives the EntityConnectionProvider from above
 						.applicationModel(connectionProvider ->
-										new LlemmyAppModel(languageModels.get(), connectionProvider))
+										new LlemmyAppModel(chatModels.get(), connectionProvider))
 						// We provide a factory for the panel instantiation,
 						// which receives the LlemmyAppModel from above,
 						// allowing us to keep the constructor private
@@ -189,21 +189,21 @@ public final class LlemmyApp extends EntityApplicationPanel<SwingEntityApplicati
 						.start();
 	}
 
-	private static final class LlemmyAppModel extends SwingEntityApplicationModel {
+	static final class LlemmyAppModel extends SwingEntityApplicationModel {
 
 		private static final String APPLICATION_NAME = "Llemmy";
 		private static final Version APPLICATION_VERSION =
 						Version.parse(LlemmyAppModel.class, "/version.properties");
 
-		private LlemmyAppModel(List<ChatLanguageModel> languageModels,
+		private LlemmyAppModel(List<ChatModel> chatModels,
 													 EntityConnectionProvider connectionProvider) {
 			super(connectionProvider,
-							List.of(new ChatModel(languageModels, connectionProvider)),
+							List.of(new EntityChatModel(chatModels, connectionProvider)),
 							APPLICATION_VERSION);
 		}
 
-		private ChatModel chatModel() {
-			return (ChatModel) entityModels().get(Chat.TYPE);
+		private EntityChatModel chatModel() {
+			return (EntityChatModel) entityModels().get(Chat.TYPE);
 		}
 	}
 }

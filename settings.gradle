@@ -20,7 +20,8 @@ dependencyResolutionManagement {
     versionCatalogs {
         libs {
             version("codion", "0.18.34")
-            version("langchain4j", "1.0.0-beta3")
+            version("langchain4j", "1.0.1")
+            version("langchain4j-ollama", "1.0.1-beta6")
             version("flatlaf", "3.6")
             version("flatlaf.inter", "4.1")
             version("h2", "2.3.232")
@@ -41,7 +42,7 @@ dependencyResolutionManagement {
             library("langchain4j", "dev.langchain4j", "langchain4j").versionRef("langchain4j")
             library("langchain4j-core", "dev.langchain4j", "langchain4j-core").versionRef("langchain4j")
 
-            library("langchain4j-ollama", "dev.langchain4j", "langchain4j-ollama").versionRef("langchain4j")
+            library("langchain4j-ollama", "dev.langchain4j", "langchain4j-ollama").versionRef("langchain4j-ollama")
             library("langchain4j-open-ai", "dev.langchain4j", "langchain4j-open-ai").versionRef("langchain4j")
             library("langchain4j-http-client", "dev.langchain4j", "langchain4j-http-client").versionRef("langchain4j")
             library("langchain4j-http-client-jdk", "dev.langchain4j", "langchain4j-http-client-jdk").versionRef("langchain4j")

@@ -21,20 +21,20 @@ package is.codion.demos.llemmy.model;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.swing.framework.model.SwingEntityModel;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 
 import java.util.List;
 
 // tag::chat_model[]
-public final class ChatModel extends SwingEntityModel {
+public final class EntityChatModel extends SwingEntityModel {
 
 	/**
-	 * Instantiates a new {@link ChatModel} instance
-	 * @param languageModels the language models
+	 * Instantiates a new {@link EntityChatModel} instance
+	 * @param chatModels the chat models
 	 * @param connectionProvider the connection provider
 	 */
-	public ChatModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
-		super(new ChatTableModel(languageModels, connectionProvider));
+	public EntityChatModel(List<ChatModel> chatModels, EntityConnectionProvider connectionProvider) {
+		super(new EntityChatTableModel(chatModels, connectionProvider));
 	}
 }
 // end::chat_model[]

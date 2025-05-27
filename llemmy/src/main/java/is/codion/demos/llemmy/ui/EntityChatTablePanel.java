@@ -19,8 +19,8 @@
 package is.codion.demos.llemmy.ui;
 
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
-import is.codion.demos.llemmy.model.ChatEditModel;
-import is.codion.demos.llemmy.model.ChatTableModel;
+import is.codion.demos.llemmy.model.EntityChatEditModel;
+import is.codion.demos.llemmy.model.EntityChatTableModel;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.framework.domain.entity.attribute.Attribute;
 import is.codion.swing.common.ui.component.table.FilterTable;
@@ -47,10 +47,10 @@ import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.UIManager.getColor;
 
 /**
- * @see ChatTableModel
+ * @see EntityChatTableModel
  */
 // tag::chat_table_panel[]
-public final class ChatTablePanel extends EntityTablePanel {
+public final class EntityChatTablePanel extends EntityTablePanel {
 
 	private final JTextPane chatPane = textPane()
 					.editable(false)
@@ -60,10 +60,10 @@ public final class ChatTablePanel extends EntityTablePanel {
 	private final Style systemStyle = document.addStyle("system", null);
 
 	/**
-	 * Instantiates a new {@link ChatTablePanel}
-	 * @param tableModel the {@link ChatTableModel} on which to base the panel
+	 * Instantiates a new {@link EntityChatTablePanel}
+	 * @param tableModel the {@link EntityChatTableModel} on which to base the panel
 	 */
-	public ChatTablePanel(ChatTableModel tableModel) {
+	public EntityChatTablePanel(EntityChatTableModel tableModel) {
 		super(tableModel, config -> config
 						// Lets skip the query conditions
 						.includeConditions(false)
@@ -164,7 +164,7 @@ public final class ChatTablePanel extends EntityTablePanel {
 
 	private void configureTable() {
 		FilterTable<Entity, Attribute<?>> table = table();
-		ChatEditModel editModel = (ChatEditModel) tableModel().editModel();
+		EntityChatEditModel editModel = (EntityChatEditModel) tableModel().editModel();
 		// Disable the table while the model is processing
 		enableComponents(editModel.processing().not(), table);
 		// Set some minimum table column widths

@@ -19,8 +19,8 @@
 package is.codion.demos.llemmy.ui;
 
 import is.codion.common.item.Item;
-import is.codion.demos.llemmy.model.ChatEditModel;
-import is.codion.demos.llemmy.model.ChatEditModel.Attachment;
+import is.codion.demos.llemmy.model.EntityChatEditModel;
+import is.codion.demos.llemmy.model.EntityChatEditModel.Attachment;
 import is.codion.swing.common.ui.Utilities;
 import is.codion.swing.common.ui.component.Components;
 import is.codion.swing.common.ui.control.Control;
@@ -29,7 +29,7 @@ import is.codion.swing.common.ui.laf.LookAndFeelComboBox;
 import is.codion.swing.common.ui.laf.LookAndFeelEnabler;
 import is.codion.swing.framework.ui.EntityEditPanel;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -42,7 +42,7 @@ import java.awt.BorderLayout;
 import java.time.Duration;
 import java.util.List;
 
-import static is.codion.demos.llemmy.model.ChatEditModel.MimeType;
+import static is.codion.demos.llemmy.model.EntityChatEditModel.MimeType;
 import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.control.Control.command;
 import static is.codion.swing.common.ui.dialog.Dialogs.fileSelectionDialog;
@@ -55,16 +55,16 @@ import static javax.swing.BorderFactory.createTitledBorder;
 import static javax.swing.SwingUtilities.invokeLater;
 
 /**
- * Manages the UI for chatting with a language model.
- * @see ChatEditModel
+ * Manages the UI for chatting with a large language model.
+ * @see EntityChatEditModel
  */
 // tag::chat_edit_panel[]
-public final class ChatEditPanel extends EntityEditPanel {
+public final class EntityChatEditPanel extends EntityEditPanel {
 
-	private final ChatEditModel model;
+	private final EntityChatEditModel model;
 
-	private final JComboBox<Item<ChatLanguageModel>> languageModelComboBox;
-	private final JPanel languageModelPanel;
+	private final JComboBox<Item<ChatModel>> chatModelComboBox;
+	private final JPanel chatModelPanel;
 	private final JTextArea promptTextArea;
 	private final JScrollPane promptScrollPane;
 	private final JList<Attachment> attachmentsList;
@@ -75,12 +75,12 @@ public final class ChatEditPanel extends EntityEditPanel {
 	private final JComboBox<Item<LookAndFeelEnabler>> lookAndFeelComboBox =
 					LookAndFeelComboBox.builder().build();
 
-	public ChatEditPanel(ChatEditModel model) {
+	public EntityChatEditPanel(EntityChatEditModel model) {
 		super(model);
 		this.model = model;
-		this.languageModelComboBox = createLanguageModelComboBox();
-		this.languageModelPanel = borderLayoutPanel()
-						.centerComponent(languageModelComboBox)
+		this.chatModelComboBox = createChatModelComboBox();
+		this.chatModelPanel = borderLayoutPanel()
+						.centerComponent(chatModelComboBox)
 						.build();
 		Control sendControl = createSendControl();
 		this.promptTextArea = createPromptTextArea(sendControl);
@@ -100,11 +100,11 @@ public final class ChatEditPanel extends EntityEditPanel {
 		super.updateUI();
 		// Here we update the UI of components that may
 		// not be visible during Look & Feel selection
-		Utilities.updateUI(progressBar, languageModelComboBox);
+		Utilities.updateUI(progressBar, chatModelComboBox);
 	}
 
 	void requestModelFocus() {
-		languageModelComboBox.requestFocus();
+		chatModelComboBox.requestFocus();
 	}
 
 	void requestPromptFocus() {
@@ -146,7 +146,7 @@ public final class ChatEditPanel extends EntityEditPanel {
 	private JPanel createModelPanel() {
 		return borderLayoutPanel()
 						.border(createTitledBorder("Model"))
-						.centerComponent(languageModelPanel)
+						.centerComponent(chatModelPanel)
 						.eastComponent(gridLayoutPanel(1, 2)
 										.addAll(clearButton, sendButton)
 										.build())
@@ -180,8 +180,8 @@ public final class ChatEditPanel extends EntityEditPanel {
 						.build();
 	}
 
-	private JComboBox<Item<ChatLanguageModel>> createLanguageModelComboBox() {
-		return comboBox(model.languageModels())
+	private JComboBox<Item<ChatModel>> createChatModelComboBox() {
+		return comboBox(model.chatModels())
 						// Only enabled when the model is not processing
 						.enabled(model.processing().not())
 						.preferredWidth(200)
@@ -252,11 +252,11 @@ public final class ChatEditPanel extends EntityEditPanel {
 	}
 
 	private void onProcessingChanged(boolean processing) {
-		languageModelPanel.removeAll();
-		languageModelPanel.add(processing ? progressBar : languageModelComboBox, BorderLayout.CENTER);
+		chatModelPanel.removeAll();
+		chatModelPanel.add(processing ? progressBar : chatModelComboBox, BorderLayout.CENTER);
 		progressBar.requestFocus();
-		languageModelPanel.revalidate();
-		languageModelPanel.repaint();
+		chatModelPanel.revalidate();
+		chatModelPanel.repaint();
 	}
 
 	private void onElapsedChanged(Duration elapsed) {

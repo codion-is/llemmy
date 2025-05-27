@@ -20,9 +20,9 @@ package is.codion.demos.llemmy.ui;
 
 import is.codion.common.state.State;
 import is.codion.demos.llemmy.LlemmyApp;
-import is.codion.demos.llemmy.model.ChatEditModel;
-import is.codion.demos.llemmy.model.ChatModel;
-import is.codion.demos.llemmy.model.ChatTableModel;
+import is.codion.demos.llemmy.model.EntityChatEditModel;
+import is.codion.demos.llemmy.model.EntityChatModel;
+import is.codion.demos.llemmy.model.EntityChatTableModel;
 import is.codion.swing.common.ui.Utilities;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.key.KeyEvents;
@@ -49,12 +49,12 @@ import static java.util.stream.Collectors.joining;
 import static javax.swing.BorderFactory.createTitledBorder;
 
 /**
- * Combines the {@link ChatEditPanel} for the chat prompt interface
- * and {@link ChatTablePanel} for the chat text and history.
- * @see ChatModel
+ * Combines the {@link EntityChatEditPanel} for the chat prompt interface
+ * and {@link EntityChatTablePanel} for the chat text and history.
+ * @see EntityChatModel
  */
 // tag::chat_panel[]
-public final class ChatPanel extends EntityPanel {
+public final class EntityChatPanel extends EntityPanel {
 
 	private final HelpPanel helpPanel = new HelpPanel();
 	private final State help = State.builder()
@@ -62,13 +62,13 @@ public final class ChatPanel extends EntityPanel {
 					.build();
 
 	/**
-	 * Instantiates a new {@link ChatPanel}
-	 * @param model the {@link ChatModel} on which to base the panel
+	 * Instantiates a new {@link EntityChatPanel}
+	 * @param model the {@link EntityChatModel} on which to base the panel
 	 */
-	public ChatPanel(ChatModel model) {
+	public EntityChatPanel(EntityChatModel model) {
 		super(model,
-						new ChatEditPanel((ChatEditModel) model.editModel()),
-						new ChatTablePanel((ChatTableModel) model.tableModel()),
+						new EntityChatEditPanel((EntityChatEditModel) model.editModel()),
+						new EntityChatTablePanel((EntityChatTableModel) model.tableModel()),
 						config -> config
 										// Skip the default CRUD operation controls
 										.includeControls(false)
@@ -98,9 +98,9 @@ public final class ChatPanel extends EntityPanel {
 		// Note that calling addKeyEvent() assures that the key event is
 		// added to this base panel and to the edit panel as well,
 		// since that may be displayed in a separate window.
-		ChatEditModel editModel = (ChatEditModel) editModel();
-		ChatEditPanel editPanel = (ChatEditPanel) editPanel();
-		ChatTablePanel tablePanel = (ChatTablePanel) tablePanel();
+		EntityChatEditModel editModel = (EntityChatEditModel) editModel();
+		EntityChatEditPanel editPanel = (EntityChatEditPanel) editPanel();
+		EntityChatTablePanel tablePanel = (EntityChatTablePanel) tablePanel();
 		// Set the base parameters, the modifier and the condition
 		KeyEvents.Builder keyEvent = KeyEvents.builder()
 						.modifiers(ALT_DOWN_MASK)
@@ -123,14 +123,14 @@ public final class ChatPanel extends EntityPanel {
 		addKeyEvent(keyEvent.keyCode(VK_UP)
 						.modifiers(CTRL_DOWN_MASK)
 						.action(Control.builder()
-										// Use the built in method to decrement the selected table model indexes
+										// Use the built-in method to decrement the selected table model indexes
 										.command(tablePanel.tableModel().selection().indexes()::decrement)
 										// Only enabled while the model is not processing
 										.enabled(editModel.processing().not())
 										.build()));
 		addKeyEvent(keyEvent.keyCode(VK_DOWN)
 						.action(Control.builder()
-										// Use the built in method to increment the selected table model indexes
+										// Use the built-in method to increment the selected table model indexes
 										.command(tablePanel.tableModel().selection().indexes()::increment)
 										// Only enabled while the model is not processing
 										.enabled(editModel.processing().not())

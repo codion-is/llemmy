@@ -85,50 +85,50 @@ include::{dir-source-test}/is/codion/demos/llemmy/domain/LlemmyTest.java[tags=te
 include::{dir-source}/is/codion/demos/llemmy/LlemmyApp.java[tags=app_panel]
 ----
 
-=== ChatModel
+=== EntityChatModel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatModel.java[tags=chat_model]
+include::{dir-source}/is/codion/demos/llemmy/model/EntityChatModel.java[tags=chat_model]
 ----
 
-=== ChatPanel
-
-[source,java,options="nowrap"]
-----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatPanel.java[tags=chat_panel]
-----
-
-=== ChatEditModel
+=== EntityChatPanel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatEditModel.java[tags=chat_edit_model]
+include::{dir-source}/is/codion/demos/llemmy/ui/EntityChatPanel.java[tags=chat_panel]
 ----
 
-=== ChatEditPanel
+=== EntityChatEditModel
+
+[source,java,options="nowrap"]
+----
+include::{dir-source}/is/codion/demos/llemmy/model/EntityChatEditModel.java[tags=chat_edit_model]
+----
+
+=== EntityChatEditPanel
 
 image::chat_edit_panel.png[]
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatEditPanel.java[tags=chat_edit_panel]
+include::{dir-source}/is/codion/demos/llemmy/ui/EntityChatEditPanel.java[tags=chat_edit_panel]
 ----
 
-=== ChatTableModel
+=== EntityChatTableModel
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/model/ChatTableModel.java[tags=chat_table_model]
+include::{dir-source}/is/codion/demos/llemmy/model/EntityChatTableModel.java[tags=chat_table_model]
 ----
 
-=== ChatTablePanel
+=== EntityChatTablePanel
 
 image::chat_table_panel.png[]
 
 [source,java,options="nowrap"]
 ----
-include::{dir-source}/is/codion/demos/llemmy/ui/ChatTablePanel.java[tags=chat_table_panel]
+include::{dir-source}/is/codion/demos/llemmy/ui/EntityChatTablePanel.java[tags=chat_table_panel]
 ----
 
 == Ollama

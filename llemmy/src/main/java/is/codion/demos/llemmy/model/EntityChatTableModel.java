@@ -23,7 +23,7 @@ import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.swing.framework.model.SwingEntityTableModel;
 
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 
 import java.util.List;
 
@@ -33,16 +33,16 @@ import static dev.langchain4j.data.message.ChatMessageType.USER;
  * Manages the chat log history.
  */
 // tag::chat_table_model[]
-public final class ChatTableModel extends SwingEntityTableModel {
+public final class EntityChatTableModel extends SwingEntityTableModel {
 
 	/**
-	 * Instantiates a new {@link ChatTableModel} instance
-	 * @param languageModels the language models
+	 * Instantiates a new {@link EntityChatTableModel} instance
+	 * @param chatModels the chat models
 	 * @param connectionProvider the connection provider
 	 */
-	public ChatTableModel(List<ChatLanguageModel> languageModels, EntityConnectionProvider connectionProvider) {
-		super(new ChatEditModel(languageModels, connectionProvider));
-		ChatEditModel editModel = (ChatEditModel) editModel();
+	public EntityChatTableModel(List<ChatModel> chatModels, EntityConnectionProvider connectionProvider) {
+		super(new EntityChatEditModel(chatModels, connectionProvider));
+		EntityChatEditModel editModel = (EntityChatEditModel) editModel();
 		// Include only chat logs from our session
 		queryModel().condition().get(Chat.SESSION).set().equalTo(editModel.session());
 		// We implement soft delete (see ChatEditModel), so include
@@ -55,7 +55,7 @@ public final class ChatTableModel extends SwingEntityTableModel {
 	}
 
 	private void onSelection(Entity chat) {
-		ChatEditModel model = (ChatEditModel) editModel();
+		EntityChatEditModel model = (EntityChatEditModel) editModel();
 		if (chat == null) {
 			model.prompt().clear();
 		}
