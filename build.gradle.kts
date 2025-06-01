@@ -7,7 +7,7 @@ plugins {
 }
 
 allprojects {
-    version = "0.9.1"
+    version = "1.0.0"
 }
 
 java {
