@@ -1,0 +1,33 @@
+[versions]
+codion = "0.18.39"
+langchain4j = "1.1.0"
+flatlaf = "3.6"
+flatlaf-inter = "4.1"
+h2 = "2.3.232"
+jackson = "2.17.3"
+
+[libraries]
+codion-framework-bom = { module = "is.codion:codion-framework-bom", version.ref = "codion" }
+codion-dbms-h2 = { module = "is.codion:codion-dbms-h2" }
+codion-swing-common-ui = { module = "is.codion:codion-swing-common-ui" }
+codion-framework-domain-test = { module = "is.codion:codion-framework-domain-test" }
+codion-framework-db-local = { module = "is.codion:codion-framework-db-local" }
+codion-swing-framework-ui = { module = "is.codion:codion-swing-framework-ui" }
+codion-plugin-logback-proxy = { module = "is.codion:codion-plugin-logback-proxy" }
+codion-plugin-flatlaf = { module = "is.codion:codion-plugin-flatlaf" }
+codion-plugin-flatlaf-intellij-themes = { module = "is.codion:codion-plugin-flatlaf-intellij-themes" }
+
+flatlaf-extras = { module = "com.formdev:flatlaf-extras", version.ref = "flatlaf" }
+flatlaf-fonts-inter = { module = "com.formdev:flatlaf-fonts-inter", version.ref = "flatlaf-inter" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+
+langchain4j-bom = { module = "dev.langchain4j:langchain4j-bom", version.ref = "langchain4j" }
+
+langchain4j = { module = "dev.langchain4j:langchain4j"}
+langchain4j-core = { module = "dev.langchain4j:langchain4j-core"}
+langchain4j-ollama = { module = "dev.langchain4j:langchain4j-ollama"}
+langchain4j-open-ai = { module = "dev.langchain4j:langchain4j-open-ai"}
+langchain4j-http-client = { module = "dev.langchain4j:langchain4j-http-client"}
+langchain4j-http-client-jdk = { module = "dev.langchain4j:langchain4j-http-client-jdk"}
+
+h2 = { module = "com.h2database:h2", version.ref = "h2" }

@@ -176,7 +176,7 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 		// and the column auto resize mode
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		// We hardcoded the sorting in ChatTableModel
-		table.sortingEnabled().set(false);
+		table.sortable().set(false);
 	}
 }
 // end::chat_table_panel[]

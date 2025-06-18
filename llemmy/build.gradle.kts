@@ -16,7 +16,7 @@ dependencies {
     implementation(libs.codion.plugin.flatlaf.intellij.themes)
     implementation(libs.flatlaf.fonts.inter)
     // FlatInspector
-    implementation(libs.flatlaf.extras);
+    implementation(libs.flatlaf.extras)
 
     implementation(libs.langchain4j.core)
 

@@ -106,7 +106,7 @@ public final class Llemmy extends DomainModel {
 														// Specify that the enum is represented by an underlying
 														// String column and provide a converter for converting
 														// between the enum and the underlying column value
-														.columnClass(String.class, new MessageTypeConverter())
+														.converter(String.class, new MessageTypeConverter())
 														.caption("Type"),
 										Chat.MESSAGE.define()
 														.column()
@@ -116,7 +116,7 @@ public final class Llemmy extends DomainModel {
 														.caption("Stack trace"),
 										Chat.RESPONSE_TIME.define()
 														.column()
-														.columnClass(Integer.class, new DurationConverter())
+														.converter(Integer.class, new DurationConverter())
 														.caption("Duration"),
 										Chat.INPUT_TOKENS.define()
 														.column()
@@ -135,7 +135,7 @@ public final class Llemmy extends DomainModel {
 														.nullable(false)
 														.caption("Deleted")
 														.defaultValue(false)
-														.columnHasDefaultValue(true))
+														.hasDatabaseDefault(true))
 						.keyGenerator(identity())
 						.stringFactory(StringFactory.builder()
 										// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?

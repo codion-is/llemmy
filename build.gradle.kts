@@ -7,7 +7,7 @@ plugins {
 }
 
 allprojects {
-    version = "1.0.0"
+    version = "1.0.2"
 }
 
 java {
@@ -18,7 +18,14 @@ java {
 }
 
 configure(allprojects) {
+    apply(plugin = "java")
     apply(plugin = "com.diffplug.spotless")
+
+    dependencies {
+        implementation(platform(rootProject.libs.codion.framework.bom))
+        implementation(platform(rootProject.libs.langchain4j.bom))
+    }
+
     spotless {
         // Just the license headers
         java {
