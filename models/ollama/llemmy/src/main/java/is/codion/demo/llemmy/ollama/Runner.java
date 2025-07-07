@@ -20,12 +20,11 @@ package is.codion.demo.llemmy.ollama;
 
 import is.codion.common.model.CancelException;
 import is.codion.demos.llemmy.LlemmyApp;
+import is.codion.swing.common.ui.dialog.Dialogs;
 
 import dev.langchain4j.model.ollama.OllamaChatModel;
 
 import java.util.List;
-
-import static is.codion.swing.common.ui.dialog.Dialogs.comboBoxSelectionDialog;
 
 // tag::runner[]
 public final class Runner {
@@ -47,7 +46,8 @@ public final class Runner {
 	public static void main(String[] args) {
 		LlemmyApp.start(() -> List.of(OllamaChatModel.builder()
 						.baseUrl("http://localhost:" + PORT)
-						.modelName(comboBoxSelectionDialog(MODELS)
+						.modelName(Dialogs.select()
+										.comboBox(MODELS)
 										.defaultSelection(ORCA_MINI)
 										.title("Select model")
 										.select()

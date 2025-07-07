@@ -24,6 +24,7 @@ import is.codion.demos.llemmy.model.EntityChatEditModel.Attachment;
 import is.codion.swing.common.ui.Utilities;
 import is.codion.swing.common.ui.component.Components;
 import is.codion.swing.common.ui.control.Control;
+import is.codion.swing.common.ui.dialog.Dialogs;
 import is.codion.swing.common.ui.key.KeyEvents;
 import is.codion.swing.common.ui.laf.LookAndFeelComboBox;
 import is.codion.swing.common.ui.laf.LookAndFeelEnabler;
@@ -45,8 +46,6 @@ import java.util.List;
 import static is.codion.demos.llemmy.model.EntityChatEditModel.MimeType;
 import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.control.Control.command;
-import static is.codion.swing.common.ui.dialog.Dialogs.fileSelectionDialog;
-import static is.codion.swing.common.ui.dialog.Dialogs.listSelectionDialog;
 import static is.codion.swing.common.ui.layout.Layouts.borderLayout;
 import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.KeyEvent.*;
@@ -84,12 +83,20 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 						.build();
 		Control sendControl = createSendControl();
 		this.promptTextArea = createPromptTextArea(sendControl);
-		this.promptScrollPane = scrollPane(promptTextArea).build();
+		this.promptScrollPane = scrollPane()
+						.view(promptTextArea)
+						.build();
 		this.attachmentsList = createAttachmentsList();
-		this.attachmentsScrollPane = scrollPane(attachmentsList).build();
+		this.attachmentsScrollPane = scrollPane()
+						.view(attachmentsList)
+						.build();
 		this.progressBar = createProgressBar();
-		this.clearButton = button(createClearControl()).build();
-		this.sendButton = button(sendControl).build();
+		this.clearButton = button()
+						.control(createClearControl())
+						.build();
+		this.sendButton = button()
+						.control(sendControl)
+						.build();
 		model.processing().addConsumer(this::onProcessingChanged);
 		model.elapsed().addConsumer(this::onElapsedChanged);
 		focus().initial().set(promptTextArea);
@@ -181,7 +188,8 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 	}
 
 	private JComboBox<Item<ChatModel>> createChatModelComboBox() {
-		return comboBox(model.chatModels())
+		return comboBox()
+						.model(model.chatModels())
 						// Only enabled when the model is not processing
 						.enabled(model.processing().not())
 						.preferredWidth(200)
@@ -189,7 +197,8 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 	}
 
 	private JTextArea createPromptTextArea(Control sendControl) {
-		return textArea(model.prompt())
+		return textArea()
+						.link(model.prompt())
 						.rowsColumns(5, 40)
 						.lineWrap(true)
 						.wrapStyleWord(true)
@@ -197,31 +206,36 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 						.enabled(model.processing().not())
 						.validIndicator(model.error().not())
 						// Ctrl-Enter sends the prompt
-						.keyEvent(KeyEvents.builder(VK_ENTER)
+						.keyEvent(KeyEvents.builder()
+										.keyCode(VK_ENTER)
 										.modifiers(CTRL_DOWN_MASK)
 										.action(sendControl))
 						.build();
 	}
 
 	private JList<Attachment> createAttachmentsList() {
-		return Components.list(model.attachments())
+		return Components.list()
+						.model(model.attachments())
 						// The List value is based on the items in
 						// the list, as opposed to the selected items.
 						.items()
 						// Only enabled when the model is not processing
 						.enabled(model.processing().not())
 						// Insert to add attachment
-						.keyEvent(KeyEvents.builder(VK_INSERT)
+						.keyEvent(KeyEvents.builder()
+										.keyCode(VK_INSERT)
 										.action(command(this::addAttachment)))
 						// Delete to remove the selected attachment
-						.keyEvent(KeyEvents.builder(VK_DELETE)
+						.keyEvent(KeyEvents.builder()
+										.keyCode(VK_DELETE)
 										.action(command(this::removeAttachment)))
 						.build();
 	}
 
 	private void addAttachment() {
 		// Select the file mime type
-		listSelectionDialog(List.of(MimeType.values()))
+		Dialogs.select()
+						.list(List.of(MimeType.values()))
 						// Set the modal dialog owner
 						.owner(attachmentsList)
 						// Restricts the selection to a single item
@@ -229,9 +243,10 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 						// Returns an empty Optional in case the user cancels
 						.ifPresent(mimeType ->
 										// Select the file to attach
-										fileSelectionDialog()
+										Dialogs.select()
+														.files()
 														// Filter files by the selected mime type
-														.fileFilter(mimeType.fileFilter())
+														.filter(mimeType.fileFilter())
 														// Select one or more files
 														.selectFiles()
 														// Add the attachments

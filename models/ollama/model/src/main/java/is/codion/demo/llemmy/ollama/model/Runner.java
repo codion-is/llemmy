@@ -20,6 +20,7 @@ package is.codion.demo.llemmy.ollama.model;
 
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.ui.control.Control;
+import is.codion.swing.common.ui.dialog.Dialogs;
 import is.codion.swing.common.ui.laf.LookAndFeelEnabler;
 
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -34,8 +35,6 @@ import static is.codion.swing.common.ui.Utilities.parentWindow;
 import static is.codion.swing.common.ui.Utilities.setClipboard;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
 import static is.codion.swing.common.ui.component.Components.*;
-import static is.codion.swing.common.ui.dialog.Dialogs.actionDialog;
-import static is.codion.swing.common.ui.dialog.Dialogs.inputDialog;
 import static is.codion.swing.common.ui.laf.LookAndFeelProvider.findLookAndFeel;
 import static java.lang.String.format;
 import static javax.swing.SwingConstants.CENTER;
@@ -58,13 +57,15 @@ public final class Runner {
 							.editable(false)
 							.horizontalAlignment(CENTER)
 							.build();
-			actionDialog(borderLayoutPanel()
-							.border(emptyBorder())
-							.northComponent(label(ollama.getDockerImageName())
-											.horizontalAlignment(CENTER)
+			Dialogs.action()
+							.component(borderLayoutPanel()
+											.border(emptyBorder())
+											.northComponent(label()
+															.text(ollama.getDockerImageName())
+															.horizontalAlignment(CENTER)
+															.build())
+											.centerComponent(baseUrlField)
 											.build())
-							.centerComponent(baseUrlField)
-							.build())
 							.title("Ollama")
 							.defaultAction(Control.builder()
 											.command(() -> setClipboard(baseUrlField.getText()))
@@ -82,7 +83,11 @@ public final class Runner {
 	}
 
 	private static String model() {
-		return inputDialog(comboBox(FilterComboBoxModel.builder(MODELS).build())
+		return Dialogs.input()
+						.component(comboBox()
+										.model(FilterComboBoxModel.builder()
+										.items(MODELS)
+										.build())
 										.value(ORCA_MINI)
 										.preferredWidth(250))
 						.title("Select model")

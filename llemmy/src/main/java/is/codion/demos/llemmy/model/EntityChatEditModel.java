@@ -56,6 +56,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -127,7 +128,8 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	private final Value<Duration> elapsed = Value.nonNull(ZERO);
 	// Updates the elapsed time every second during processing
 	private final TaskScheduler elapsedUpdater =
-					TaskScheduler.builder(this::updateElapsed)
+					TaskScheduler.builder()
+									.task(this::updateElapsed)
 									.interval(1, TimeUnit.SECONDS)
 									.build();
 
@@ -135,7 +137,9 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	private final FilterComboBoxModel<Item<ChatModel>> chatModels;
 	// Contains the file attachments
 	private final FilterListModel<Attachment> attachments =
-					FilterListModel.<Attachment>filterListModel();
+					FilterListModel.builder()
+									.items(Collections.<Attachment>emptyList())
+									.build();
 	// Contains the prompt text
 	private final Value<String> prompt = Value.builder()
 					.nonNull("")
@@ -156,7 +160,8 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			throw new IllegalArgumentException("No language model(s) provided");
 		}
 		// Wrap the language models in Item instances, for a caption to display in the combo box
-		this.chatModels = FilterComboBoxModel.builder(chatModels.stream()
+		this.chatModels = FilterComboBoxModel.builder()
+						.items(chatModels.stream()
 										.map(model -> item(model, model.provider().name()))
 										.toList())
 						.selected(chatModels.getFirst())
@@ -264,7 +269,8 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		task.prepare();
 		// The user message is created and inserted
 		// into the database in a background thread
-		ProgressWorker.builder(task)
+		ProgressWorker.builder()
+						.task(task)
 						// On the Event Dispatch Thread
 						.onException(task::fail)
 						// Propagate the resulting task
@@ -278,7 +284,8 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		task.prepare();
 		// The language model is prompted and the result
 		// inserted into the database in a background thread
-		ProgressWorker.builder(task)
+		ProgressWorker.builder()
+						.task(task)
 						// On the Event Dispatch Thread
 						.onResult(task::finish)
 						.execute();

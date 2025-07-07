@@ -70,14 +70,6 @@ tasks.asciidoctor {
     }
 }
 
-tasks.register<Sync>("copyToGitHubPages") {
-    group = "documentation"
-    description = "Copies the documentation to the Codion github pages repository, nevermind"
-    from(tasks.asciidoctor)
-    into("../../codion-pages/doc/" + libs.versions.codion.get()
-        .replace("-SNAPSHOT", "") + "/tutorials/llemmy")
-}
-
 tasks.register<WriteProperties>("writeVersion") {
     group = "build"
     description = "Create a version.properties file containing the application version"

@@ -159,7 +159,9 @@ public final class EntityChatPanel extends EntityPanel {
 		private HelpPanel() {
 			super(borderLayout());
 			setBorder(createTitledBorder("Help"));
-			add(scrollPane(shortcuts).build(), BorderLayout.CENTER);
+			add(scrollPane()
+							.view(shortcuts)
+							.build(), BorderLayout.CENTER);
 		}
 
 		@Override

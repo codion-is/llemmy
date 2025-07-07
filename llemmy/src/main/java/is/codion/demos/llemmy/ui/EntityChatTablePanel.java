@@ -39,7 +39,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.List;
 
-import static is.codion.swing.common.ui.Utilities.enableComponents;
+import static is.codion.swing.common.ui.Utilities.enabled;
 import static is.codion.swing.common.ui.component.Components.*;
 import static is.codion.swing.common.ui.layout.Layouts.borderLayout;
 import static java.util.Comparator.comparing;
@@ -101,7 +101,9 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 						.resizeWeight(0.75)
 						.leftComponent(borderLayoutPanel()
 										.border(createTitledBorder("Chat"))
-										.centerComponent(scrollPane(chatPane).build())
+										.centerComponent(scrollPane()
+														.view(chatPane)
+														.build())
 										.build())
 						.rightComponent(borderLayoutPanel()
 										.border(createTitledBorder("History"))
@@ -166,7 +168,7 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 		FilterTable<Entity, Attribute<?>> table = table();
 		EntityChatEditModel editModel = (EntityChatEditModel) tableModel().editModel();
 		// Disable the table while the model is processing
-		enableComponents(editModel.processing().not(), table);
+		enabled(editModel.processing().not(), table);
 		// Set some minimum table column widths
 		table.columnModel().column(Chat.TIMESTAMP).setMinWidth(160);
 		table.columnModel().column(Chat.MESSAGE_TYPE).setMinWidth(80);
