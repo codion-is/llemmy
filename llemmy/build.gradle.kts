@@ -56,8 +56,15 @@ testing {
 
 // Configure the docs generation
 tasks.asciidoctor {
-    inputs.dir("src")
+    dependsOn(rootProject.subprojects.map { it.tasks.build })
+    rootProject.subprojects.forEach { subproject ->
+        inputs.file(subproject.buildFile)
+        inputs.files(subproject.sourceSets.main.get().allSource)
+        inputs.files(subproject.sourceSets.test.get().allSource)
+    }
+
     baseDirFollowsSourceFile()
+
     attributes(
         mapOf(
             "codion-version" to project.version,
