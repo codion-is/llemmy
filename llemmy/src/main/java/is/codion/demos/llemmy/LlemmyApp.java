@@ -184,7 +184,7 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						// allowing us to keep the constructor private
 						.applicationPanel(LlemmyApp::new)
 						// No need, startup should be pretty quick
-						.displayStartupDialog(false)
+						.startupDialog(false)
 						.defaultLookAndFeel(Dracula.class)
 						.start();
 	}
