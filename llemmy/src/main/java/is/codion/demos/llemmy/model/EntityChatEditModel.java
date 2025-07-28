@@ -349,7 +349,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		}
 
 		private Entity insert(UserMessage message) {
-			return connection().insertSelect(entities().builder(Chat.TYPE)
+			return connection().insertSelect(entities().entity(Chat.TYPE)
 							.with(Chat.MESSAGE_TYPE, ChatMessageType.USER)
 							.with(Chat.SESSION, session)
 							.with(Chat.NAME, USER)
@@ -413,7 +413,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		private Entity insert(String name, ChatResponse response, Duration responseTime) {
 			TokenUsage tokenUsage = response.metadata().tokenUsage();
 
-			return connection().insertSelect(entities().builder(Chat.TYPE)
+			return connection().insertSelect(entities().entity(Chat.TYPE)
 							.with(Chat.MESSAGE_TYPE, ChatMessageType.AI)
 							.with(Chat.SESSION, session)
 							.with(Chat.NAME, name)
@@ -428,7 +428,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		}
 
 		private Entity insert(Exception exception) {
-			return connection().insertSelect(entities().builder(Chat.TYPE)
+			return connection().insertSelect(entities().entity(Chat.TYPE)
 							.with(Chat.MESSAGE_TYPE, ChatMessageType.SYSTEM)
 							.with(Chat.SESSION, session)
 							.with(Chat.NAME, SYSTEM)
