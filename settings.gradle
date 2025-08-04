@@ -15,5 +15,6 @@ project(":llemmy-openai").projectDir = file("models/openai/llemmy")
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        mavenLocal()
     }
 }

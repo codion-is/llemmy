@@ -138,7 +138,7 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 		configureUserStyle();
 		// We display all the chat history if the selection is empty,
 		// otherwise only the selected history
-		List<Entity> chats = tableModel().selection().empty().get() ?
+		List<Entity> chats = tableModel().selection().empty().is() ?
 						tableModel().items().visible().get() :
 						tableModel().selection().items().get();
 		chatPane.setText("");

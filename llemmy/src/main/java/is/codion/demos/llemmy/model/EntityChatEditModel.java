@@ -19,7 +19,7 @@
 package is.codion.demos.llemmy.model;
 
 import is.codion.common.item.Item;
-import is.codion.common.observable.Observable;
+import is.codion.common.observer.Observable;
 import is.codion.common.scheduler.TaskScheduler;
 import is.codion.common.state.ObservableState;
 import is.codion.common.state.State;
@@ -440,7 +440,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 
 		private ChatModel chatModel() {
 			return chatModels.selection().item().optional()
-							.map(Item::value)
+							.map(Item::get)
 							.orElseThrow();
 		}
 

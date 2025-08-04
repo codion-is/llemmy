@@ -238,8 +238,9 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 						.list(List.of(MimeType.values()))
 						// Set the modal dialog owner
 						.owner(attachmentsList)
+						.select()
 						// Restricts the selection to a single item
-						.selectSingle()
+						.single()
 						// Returns an empty Optional in case the user cancels
 						.ifPresent(mimeType ->
 										// Select the file to attach
