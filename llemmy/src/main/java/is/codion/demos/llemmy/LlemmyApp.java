@@ -118,8 +118,7 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						// presented as a check box in the menu
 						.control(Control.builder()
 										.toggle(help)
-										.caption("Help")
-										.build())
+										.caption("Help"))
 						.separator()
 						// Include the default log and about controls, separated
 						.control(createLogControls())

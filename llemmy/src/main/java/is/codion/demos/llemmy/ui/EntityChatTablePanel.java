@@ -101,14 +101,11 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 						.resizeWeight(0.75)
 						.leftComponent(borderLayoutPanel()
 										.border(createTitledBorder("Chat"))
-										.centerComponent(scrollPane()
-														.view(chatPane)
-														.build())
-										.build())
+										.center(scrollPane()
+														.view(chatPane)))
 						.rightComponent(borderLayoutPanel()
 										.border(createTitledBorder("History"))
-										.centerComponent(tableComponent)
-										.build())
+										.center(tableComponent))
 						.build(), BorderLayout.CENTER);
 	}
 

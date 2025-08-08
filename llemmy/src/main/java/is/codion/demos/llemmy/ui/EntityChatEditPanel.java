@@ -79,7 +79,7 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 		this.model = model;
 		this.chatModelComboBox = createChatModelComboBox();
 		this.chatModelPanel = borderLayoutPanel()
-						.centerComponent(chatModelComboBox)
+						.center(chatModelComboBox)
 						.build();
 		Control sendControl = createSendControl();
 		this.promptTextArea = createPromptTextArea(sendControl);
@@ -134,36 +134,31 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 						.oneTouchExpandable(true)
 						.resizeWeight(0.75)
 						.leftComponent(borderLayoutPanel()
-										.northComponent(createModelPanel())
-										.centerComponent(borderLayoutPanel()
+										.north(createModelPanel())
+										.center(borderLayoutPanel()
 														.border(createTitledBorder("Prompt"))
-														.centerComponent(promptScrollPane)
-														.build())
-										.build())
+														.center(promptScrollPane)))
 						.rightComponent(borderLayoutPanel()
-										.northComponent(createLookAndFeelPanel())
-										.centerComponent(borderLayoutPanel()
+										.north(createLookAndFeelPanel())
+										.center(borderLayoutPanel()
 														.border(createTitledBorder("Attachments"))
-														.centerComponent(attachmentsScrollPane)
-														.build())
-										.build())
+														.center(attachmentsScrollPane)))
 						.build(), BorderLayout.CENTER);
 	}
 
 	private JPanel createModelPanel() {
 		return borderLayoutPanel()
 						.border(createTitledBorder("Model"))
-						.centerComponent(chatModelPanel)
-						.eastComponent(gridLayoutPanel(1, 2)
-										.addAll(clearButton, sendButton)
-										.build())
+						.center(chatModelPanel)
+						.east(gridLayoutPanel(1, 2)
+										.addAll(clearButton, sendButton))
 						.build();
 	}
 
 	private JPanel createLookAndFeelPanel() {
 		return borderLayoutPanel()
 						.border(createTitledBorder("Look & Feel"))
-						.centerComponent(lookAndFeelComboBox)
+						.center(lookAndFeelComboBox)
 						.build();
 	}
 
