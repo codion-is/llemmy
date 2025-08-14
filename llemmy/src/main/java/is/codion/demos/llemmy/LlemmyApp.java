@@ -148,9 +148,9 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 	public static void start(Supplier<List<ChatModel>> chatModels) {
 		requireNonNull(chatModels, "chatModels is null");
 		// Configure the jdbc URL ('codion.db.url')
-		Database.DATABASE_URL.set("jdbc:h2:mem:h2db");
+		Database.URL.set("jdbc:h2:mem:h2db");
 		// and the database initialization script
-		Database.DATABASE_INIT_SCRIPTS.set("classpath:create_schema.sql");
+		Database.INIT_SCRIPTS.set("classpath:create_schema.sql");
 		// Configure FlatLaf related things, the inspector is not necessary
 		// but very helpful when debugging UI related stuff
 		FlatInspector.install("ctrl shift alt X");
