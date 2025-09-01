@@ -75,8 +75,8 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 						// to be edited via the table popup menu
 						.editable(attributes ->
 										attributes.remove(Chat.SESSION)));
-		// Refresh the chat each time the visible items or selection changes
-		tableModel.items().visible().addListener(this::refreshChat);
+		// Refresh the chat each time the included items or selection changes
+		tableModel.items().included().addListener(this::refreshChat);
 		tableModel.selection().items().addListener(this::refreshChat);
 		configureTable();
 		configureStyles();
@@ -136,7 +136,7 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 		// We display all the chat history if the selection is empty,
 		// otherwise only the selected history
 		List<Entity> chats = tableModel().selection().empty().is() ?
-						tableModel().items().visible().get() :
+						tableModel().items().included().get() :
 						tableModel().selection().items().get();
 		chatPane.setText("");
 		chats.stream()
