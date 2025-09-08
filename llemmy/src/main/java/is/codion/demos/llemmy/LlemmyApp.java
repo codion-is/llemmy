@@ -35,6 +35,7 @@ import is.codion.swing.common.ui.component.table.FilterTableCellRenderer;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.control.Controls;
 import is.codion.swing.framework.model.SwingEntityApplicationModel;
+import is.codion.swing.framework.ui.EntityApplication;
 import is.codion.swing.framework.ui.EntityApplicationPanel;
 import is.codion.swing.framework.ui.EntityTablePanel;
 
@@ -163,9 +164,9 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 		FilterTableCellRenderer.TEMPORAL_HORIZONTAL_ALIGNMENT.set(LEADING);
 		// Display table column selection in a menu, instead of a dialog
 		EntityTablePanel.Config.COLUMN_SELECTION.set(MENU);
-		EntityApplicationPanel.builder(LlemmyAppModel.class, LlemmyApp.class)
-						.applicationName(LlemmyAppModel.APPLICATION_NAME)
-						.applicationVersion(LlemmyAppModel.APPLICATION_VERSION)
+		EntityApplication.builder(LlemmyAppModel.class, LlemmyApp.class)
+						.name(LlemmyAppModel.APPLICATION_NAME)
+						.version(LlemmyAppModel.APPLICATION_VERSION)
 						.frameTitle(LlemmyAppModel.APPLICATION_NAME + " " + LlemmyAppModel.APPLICATION_VERSION)
 						// The H2Database super-user
 						.user(user("sa"))
@@ -176,12 +177,12 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						// We must supply the language models when instatiating
 						// the application model, so here we provide a factory,
 						// which receives the EntityConnectionProvider from above
-						.applicationModel(connectionProvider ->
+						.model(connectionProvider ->
 										new LlemmyAppModel(chatModels.get(), connectionProvider))
 						// We provide a factory for the panel instantiation,
 						// which receives the LlemmyAppModel from above,
 						// allowing us to keep the constructor private
-						.applicationPanel(LlemmyApp::new)
+						.panel(LlemmyApp::new)
 						// No need, startup should be pretty quick
 						.startupDialog(false)
 						.defaultLookAndFeel(Dracula.class)

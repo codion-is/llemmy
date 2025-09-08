@@ -20,8 +20,8 @@ package is.codion.demos.llemmy.domain;
 
 import is.codion.framework.domain.DomainModel;
 import is.codion.framework.domain.DomainType;
+import is.codion.framework.domain.entity.EntityFormatter;
 import is.codion.framework.domain.entity.EntityType;
-import is.codion.framework.domain.entity.StringFactory;
 import is.codion.framework.domain.entity.attribute.Attribute;
 import is.codion.framework.domain.entity.attribute.Column;
 import is.codion.framework.domain.entity.attribute.Column.Converter;
@@ -137,7 +137,7 @@ public final class Llemmy extends DomainModel {
 														.defaultValue(false)
 														.hasDatabaseDefault(true))
 						.keyGenerator(identity())
-						.stringFactory(StringFactory.builder()
+						.formatter(EntityFormatter.builder()
 										// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
 										.value(Chat.TIME)
 										.text(" @ ")
