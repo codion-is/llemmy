@@ -187,7 +187,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 
 	public void removeAttachment(Attachment attachment) {
 		attachments.items().remove(requireNonNull(attachment));
-		attachmentsEmpty.set(attachments.items().count() == 0);
+		attachmentsEmpty.set(attachments.items().size() == 0);
 	}
 
 	/**
