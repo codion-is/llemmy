@@ -135,7 +135,7 @@ public final class Llemmy extends DomainModel {
 														.nullable(false)
 														.caption("Deleted")
 														.defaultValue(false)
-														.hasDatabaseDefault(true))
+														.withDefault(true))
 						.keyGenerator(identity())
 						.formatter(EntityFormatter.builder()
 										// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
