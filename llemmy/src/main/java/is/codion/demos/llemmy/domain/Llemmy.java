@@ -92,7 +92,8 @@ public final class Llemmy extends DomainModel {
 														.dateTimePattern("yyyy-MM-dd HH:mm:ss")
 														.caption("Time"),
 										Chat.TIME.define()
-														.derived(Chat.TIMESTAMP)
+														.derived()
+														.from(Chat.TIMESTAMP)
 														.value(source -> source.optional(Chat.TIMESTAMP)
 																		.map(LocalDateTime::toLocalTime)
 																		.orElse(null))
