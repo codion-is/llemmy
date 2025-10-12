@@ -36,7 +36,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 import static is.codion.framework.domain.DomainType.domainType;
-import static is.codion.framework.domain.entity.KeyGenerator.identity;
+import static is.codion.framework.domain.entity.attribute.Column.Generator.identity;
 import static is.codion.framework.domain.entity.OrderBy.descending;
 
 // tag::llemmy[]
@@ -83,7 +83,8 @@ public final class Llemmy extends DomainModel {
 	private void chat() {
 		add(Chat.TYPE.define(
 										Chat.ID.define()
-														.primaryKey(),
+														.primaryKey()
+														.generator(identity()),
 										Chat.SESSION.define()
 														.column(),
 										Chat.TIMESTAMP.define()
@@ -137,7 +138,6 @@ public final class Llemmy extends DomainModel {
 														.caption("Deleted")
 														.defaultValue(false)
 														.withDefault(true))
-						.keyGenerator(identity())
 						.formatter(EntityFormatter.builder()
 										// 12:38:12 @ OPEN_AI: Hello! How can I assist you today?
 										.value(Chat.TIME)
