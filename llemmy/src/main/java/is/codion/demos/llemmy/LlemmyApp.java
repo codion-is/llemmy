@@ -19,9 +19,9 @@
 package is.codion.demos.llemmy;
 
 import is.codion.common.db.database.Database;
-import is.codion.common.state.State;
-import is.codion.common.user.User;
-import is.codion.common.version.Version;
+import is.codion.common.reactive.state.State;
+import is.codion.common.utilities.user.User;
+import is.codion.common.utilities.version.Version;
 import is.codion.demos.llemmy.domain.Llemmy;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.demos.llemmy.model.EntityChatModel;
@@ -49,7 +49,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static is.codion.common.user.User.user;
+import static is.codion.common.utilities.user.User.user;
 import static is.codion.swing.framework.ui.EntityTablePanel.SelectionMode.MENU;
 import static java.util.Objects.requireNonNull;
 import static javax.swing.SwingConstants.LEADING;

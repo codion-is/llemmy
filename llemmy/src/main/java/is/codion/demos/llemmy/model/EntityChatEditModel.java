@@ -18,12 +18,12 @@
  */
 package is.codion.demos.llemmy.model;
 
-import is.codion.common.item.Item;
-import is.codion.common.observer.Observable;
-import is.codion.common.scheduler.TaskScheduler;
-import is.codion.common.state.ObservableState;
-import is.codion.common.state.State;
-import is.codion.common.value.Value;
+import is.codion.common.reactive.observer.Observable;
+import is.codion.common.reactive.state.ObservableState;
+import is.codion.common.reactive.state.State;
+import is.codion.common.reactive.value.Value;
+import is.codion.common.utilities.item.Item;
+import is.codion.common.utilities.scheduler.TaskScheduler;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.framework.db.EntityConnection;
@@ -62,8 +62,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static dev.langchain4j.data.message.ChatMessageSerializer.messageToJson;
-import static is.codion.common.item.Item.item;
-import static is.codion.common.state.State.and;
+import static is.codion.common.reactive.state.State.and;
+import static is.codion.common.utilities.item.Item.item;
 import static java.lang.System.getProperty;
 import static java.nio.file.Files.readAllBytes;
 import static java.time.Duration.ZERO;

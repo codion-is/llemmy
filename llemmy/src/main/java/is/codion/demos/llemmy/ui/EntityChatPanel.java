@@ -18,7 +18,7 @@
  */
 package is.codion.demos.llemmy.ui;
 
-import is.codion.common.state.State;
+import is.codion.common.reactive.state.State;
 import is.codion.demos.llemmy.LlemmyApp;
 import is.codion.demos.llemmy.model.EntityChatEditModel;
 import is.codion.demos.llemmy.model.EntityChatModel;

@@ -18,7 +18,7 @@
  */
 package is.codion.demos.llemmy.ui;
 
-import is.codion.common.item.Item;
+import is.codion.common.utilities.item.Item;
 import is.codion.demos.llemmy.model.EntityChatEditModel;
 import is.codion.demos.llemmy.model.EntityChatEditModel.Attachment;
 import is.codion.swing.common.ui.Utilities;
