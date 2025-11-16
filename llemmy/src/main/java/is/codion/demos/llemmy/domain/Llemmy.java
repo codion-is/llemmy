@@ -95,7 +95,7 @@ public final class Llemmy extends DomainModel {
 										Chat.TIME.define()
 														.derived()
 														.from(Chat.TIMESTAMP)
-														.value(source -> source.optional(Chat.TIMESTAMP)
+														.with(source -> source.optional(Chat.TIMESTAMP)
 																		.map(LocalDateTime::toLocalTime)
 																		.orElse(null))
 														.dateTimePattern("HH:mm:ss"),
@@ -154,25 +154,25 @@ public final class Llemmy extends DomainModel {
 	private static final class MessageTypeConverter implements Converter<ChatMessageType, String> {
 
 		@Override
-		public String toColumnValue(ChatMessageType chatMessageType, Statement statement) throws SQLException {
+		public String toColumn(ChatMessageType chatMessageType, Statement statement) throws SQLException {
 			return chatMessageType.toString();
 		}
 
 		@Override
-		public ChatMessageType fromColumnValue(String columnValue) throws SQLException {
-			return ChatMessageType.valueOf(columnValue);
+		public ChatMessageType fromColumn(String value) throws SQLException {
+			return ChatMessageType.valueOf(value);
 		}
 	}
 
 	private static class DurationConverter implements Converter<Duration, Integer> {
 
 		@Override
-		public Integer toColumnValue(Duration duration, Statement statement) throws SQLException {
+		public Integer toColumn(Duration duration, Statement statement) throws SQLException {
 			return (int) duration.toMillis();
 		}
 
 		@Override
-		public Duration fromColumnValue(Integer millis) throws SQLException {
+		public Duration fromColumn(Integer millis) throws SQLException {
 			return Duration.ofMillis(millis);
 		}
 	}
