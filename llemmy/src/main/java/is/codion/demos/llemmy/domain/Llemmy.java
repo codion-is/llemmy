@@ -81,58 +81,58 @@ public final class Llemmy extends DomainModel {
 
 	// tag::chat_impl[]
 	private void chat() {
-		add(Chat.TYPE.define(
-										Chat.ID.define()
+		add(Chat.TYPE.as(
+										Chat.ID.as()
 														.primaryKey()
 														.generator(identity()),
-										Chat.SESSION.define()
+										Chat.SESSION.as()
 														.column(),
-										Chat.TIMESTAMP.define()
+										Chat.TIMESTAMP.as()
 														.column()
 														.nullable(false)
 														.dateTimePattern("yyyy-MM-dd HH:mm:ss")
 														.caption("Time"),
-										Chat.TIME.define()
+										Chat.TIME.as()
 														.derived()
 														.from(Chat.TIMESTAMP)
 														.with(source -> source.optional(Chat.TIMESTAMP)
 																		.map(LocalDateTime::toLocalTime)
 																		.orElse(null))
 														.dateTimePattern("HH:mm:ss"),
-										Chat.NAME.define()
+										Chat.NAME.as()
 														.column()
 														.nullable(false)
 														.caption("Name"),
-										Chat.MESSAGE_TYPE.define()
+										Chat.MESSAGE_TYPE.as()
 														.column()
 														// Specify that the enum is represented by an underlying
 														// String column and provide a converter for converting
 														// between the enum and the underlying column value
 														.converter(String.class, new MessageTypeConverter())
 														.caption("Type"),
-										Chat.MESSAGE.define()
+										Chat.MESSAGE.as()
 														.column()
 														.caption("Message"),
-										Chat.STACK_TRACE.define()
+										Chat.STACK_TRACE.as()
 														.column()
 														.caption("Stack trace"),
-										Chat.RESPONSE_TIME.define()
+										Chat.RESPONSE_TIME.as()
 														.column()
 														.converter(Integer.class, new DurationConverter())
 														.caption("Duration"),
-										Chat.INPUT_TOKENS.define()
+										Chat.INPUT_TOKENS.as()
 														.column()
 														.caption("Input tokens"),
-										Chat.OUTPUT_TOKENS.define()
+										Chat.OUTPUT_TOKENS.as()
 														.column()
 														.caption("Output tokens"),
-										Chat.TOTAL_TOKENS.define()
+										Chat.TOTAL_TOKENS.as()
 														.column()
 														.caption("Total tokens"),
-										Chat.JSON.define()
+										Chat.JSON.as()
 														.column()
 														.caption("JSON"),
-										Chat.DELETED.define()
+										Chat.DELETED.as()
 														.column()
 														.nullable(false)
 														.caption("Deleted")

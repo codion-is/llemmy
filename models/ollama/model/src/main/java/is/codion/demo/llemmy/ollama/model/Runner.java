@@ -19,6 +19,7 @@
 package is.codion.demo.llemmy.ollama.model;
 
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
+import is.codion.swing.common.ui.ancestor.Ancestor;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.dialog.Dialogs;
 import is.codion.swing.common.ui.laf.LookAndFeelEnabler;
@@ -31,7 +32,6 @@ import org.testcontainers.containers.GenericContainer;
 
 import static com.github.dockerjava.api.model.Ports.Binding.bindPort;
 import static is.codion.demo.llemmy.ollama.Runner.*;
-import static is.codion.swing.common.ui.Utilities.parentWindow;
 import static is.codion.swing.common.ui.Utilities.setClipboard;
 import static is.codion.swing.common.ui.border.Borders.emptyBorder;
 import static is.codion.swing.common.ui.component.Components.*;
@@ -70,7 +70,7 @@ public final class Runner {
 											.mnemonic('C')
 											.build())
 							.escapeAction(Control.builder()
-											.command(() -> parentWindow(baseUrlField).dispose())
+											.command(() -> Ancestor.window().of(baseUrlField).dispose())
 											.caption("Stop")
 											.mnemonic('S')
 											.build())

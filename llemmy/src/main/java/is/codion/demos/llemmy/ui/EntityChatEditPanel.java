@@ -23,6 +23,7 @@ import is.codion.demos.llemmy.model.EntityChatEditModel;
 import is.codion.demos.llemmy.model.EntityChatEditModel.Attachment;
 import is.codion.swing.common.ui.Utilities;
 import is.codion.swing.common.ui.component.Components;
+import is.codion.swing.common.ui.component.list.FilterList;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.dialog.Dialogs;
 import is.codion.swing.common.ui.key.KeyEvents;
@@ -209,7 +210,7 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 	}
 
 	private JList<Attachment> createAttachmentsList() {
-		return Components.list()
+		return FilterList.builder()
 						.model(model.attachments())
 						// The List value is based on the items in
 						// the list, as opposed to the selected items.
