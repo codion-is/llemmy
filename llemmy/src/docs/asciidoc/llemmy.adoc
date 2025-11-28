@@ -62,7 +62,7 @@ include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_api]
 
 We then define an Entity along with its columns based on the domain API constants, configuring each for persistance and presentation.
 
-We use the `StringFactory.builder()` method to build a `Function<Entity, String>` instance which provides the `toString()` implementation for entities of this type.
+We use the `EntityFormatter.builder()` method to build a `Function<Entity, String>` instance which provides the `toString()` implementation for entities of this type.
 
 We also specify a default `OrderBy` clause to use when selecting entities of this type.
 
