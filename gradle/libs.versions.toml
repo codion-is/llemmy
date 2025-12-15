@@ -1,5 +1,5 @@
 [versions]
-codion = "0.18.61"
+codion = "0.18.62"
 langchain4j = "1.9.1"
 flatlaf = "3.6.2"
 flatlaf-inter = "4.1"
