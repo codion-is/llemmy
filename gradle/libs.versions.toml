@@ -1,7 +1,7 @@
 [versions]
-codion = "0.18.62"
-langchain4j = "1.9.1"
-flatlaf = "3.6.2"
+codion = "0.18.63"
+langchain4j = "1.10.0"
+flatlaf = "3.7"
 flatlaf-inter = "4.1"
 h2 = "2.3.232"
 jackson = "2.17.3"
