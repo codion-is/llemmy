@@ -1,5 +1,5 @@
 [versions]
-codion = "0.18.63"
+codion = "0.18.64"
 langchain4j = "1.10.0"
 flatlaf = "3.7"
 flatlaf-inter = "4.1"
@@ -14,7 +14,7 @@ codion-framework-domain-test = { module = "is.codion:codion-framework-domain-tes
 codion-framework-db-local = { module = "is.codion:codion-framework-db-local" }
 codion-swing-framework-ui = { module = "is.codion:codion-swing-framework-ui" }
 codion-plugin-logback-proxy = { module = "is.codion:codion-plugin-logback-proxy" }
-codion-plugin-flatlaf = { module = "is.codion:codion-plugin-flatlaf" }
+codion-plugin-flatlaf-lookandfeels = { group = "is.codion", name = "codion-plugin-flatlaf-lookandfeels" }
 codion-plugin-flatlaf-intellij-themes = { module = "is.codion:codion-plugin-flatlaf-intellij-themes" }
 
 flatlaf-extras = { module = "com.formdev:flatlaf-extras", version.ref = "flatlaf" }

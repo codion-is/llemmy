@@ -12,7 +12,7 @@ dependencies {
     implementation(libs.codion.framework.db.local)
     // Include all the standard Flat Look and Feels and a bunch of IntelliJ
     // theme based ones, available via the View -> Select Look & Feel menu
-    implementation(libs.codion.plugin.flatlaf)
+    implementation(libs.codion.plugin.flatlaf.lookandfeels)
     implementation(libs.codion.plugin.flatlaf.intellij.themes)
     implementation(libs.flatlaf.fonts.inter)
     // FlatInspector
