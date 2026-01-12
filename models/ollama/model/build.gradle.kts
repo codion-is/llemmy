@@ -5,7 +5,7 @@ plugins {
 dependencies {
     implementation(project(":llemmy-ollama"))
     implementation(libs.codion.swing.common.ui)
-    implementation(libs.codion.plugin.flatlaf.lookandfeels)
+    implementation(libs.codion.plugin.flatlaf.themes)
 
     implementation("org.testcontainers:testcontainers:1.20.6")
 }
