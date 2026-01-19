@@ -165,6 +165,7 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 		// Display table column selection in a menu, instead of a dialog
 		EntityTablePanel.Config.COLUMN_SELECTION.set(MENU);
 		EntityApplication.builder(LlemmyAppModel.class, LlemmyApp.class)
+						.domain(Llemmy.DOMAIN)
 						.name(LlemmyAppModel.APPLICATION_NAME)
 						.version(LlemmyAppModel.APPLICATION_VERSION)
 						.frameTitle(LlemmyAppModel.APPLICATION_NAME + " " + LlemmyAppModel.APPLICATION_VERSION)
@@ -197,9 +198,7 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 
 		private LlemmyAppModel(List<ChatModel> chatModels,
 													 EntityConnectionProvider connectionProvider) {
-			super(connectionProvider,
-							List.of(new EntityChatModel(chatModels, connectionProvider)),
-							APPLICATION_VERSION);
+			super(connectionProvider, List.of(new EntityChatModel(chatModels, connectionProvider)));
 		}
 
 		private EntityChatModel chatModel() {
