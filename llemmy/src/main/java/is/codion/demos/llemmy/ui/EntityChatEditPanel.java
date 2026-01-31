@@ -200,7 +200,7 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 						.wrapStyleWord(true)
 						// Only enabled when the model is not processing
 						.enabled(model.processing().not())
-						.validIndicator(model.error().not())
+						.valid(model.error().not())
 						// Ctrl-Enter sends the prompt
 						.keyEvent(KeyEvents.builder()
 										.keyCode(VK_ENTER)

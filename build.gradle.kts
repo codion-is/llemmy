@@ -1,7 +1,7 @@
 plugins {
     id("java")
     // Just for managing the license headers
-    id("com.diffplug.spotless") version "7.0.1"
+    id("com.diffplug.spotless") version "8.2.1"
     // For the asciidoctor docs
     id("org.asciidoctor.jvm.convert") version "4.0.4"
 }

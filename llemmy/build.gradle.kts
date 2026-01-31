@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("org.gradlex.extra-java-module-info") version "1.13.1"
+    id("org.gradlex.extra-java-module-info") version "1.14"
     id("org.asciidoctor.jvm.convert") version "4.0.4"
 }
 

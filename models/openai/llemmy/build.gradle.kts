@@ -5,7 +5,7 @@ plugins {
     // functionality and applies the java application plugin
     // https://badass-jlink-plugin.beryx.org
     id("org.beryx.jlink") version "3.1.2"
-    id("org.gradlex.extra-java-module-info") version "1.13.1"
+    id("org.gradlex.extra-java-module-info") version "1.14"
 }
 
 dependencies {
