@@ -29,6 +29,7 @@ import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
+import is.codion.framework.model.EntityPersistence;
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.model.component.list.FilterListModel;
 import is.codion.swing.common.model.worker.ProgressWorker;
@@ -156,6 +157,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	public EntityChatEditModel(List<ChatModel> chatModels,
 														 EntityConnectionProvider connectionProvider) {
 		super(Chat.TYPE, connectionProvider);
+		persistence().set(new ChatPersistence());
 		if (chatModels.isEmpty()) {
 			throw new IllegalArgumentException("No language model(s) provided");
 		}
@@ -233,29 +235,43 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	 * Sends the current prompt along with all attachments.
 	 */
 	public void send() {
-		// Here we perform a couple of async operations, calling the
-		// model and inserting the results in a background thread.
-		// We assume this method gets called on the EDT.
-		UserMessageTask task = new UserMessageTask();
-		// UserMessageTask splits the task into a couple of
-		// background tasks and some extra methods
-		// that must be performed on the EDT.
-		send(task);
+		// Here we start by inserting the user message in a
+		// background thread, after which we prompt the model
+		UserMessage userMessage = userMessage();
+		ProgressWorker.builder()
+						.task(tasks().insert(entity(userMessage)).prepare()::perform)
+						.onResult(result -> prompt(new ChatResponseTask(userMessage, result)))
+						.execute();
 	}
 
-	@Override
-	protected void delete(Collection<Entity> entities, EntityConnection connection) {
-		// We override the default delete implementation, in order to implement soft delete
-		connection.update(entities.stream()
-						.map(this::setDeleted)
-						.filter(Entity::modified)
-						.toList());
+	private UserMessage userMessage() {
+		UserMessage.Builder builder = UserMessage.builder().name(USER);
+		prompt.optional()
+						.filter(not(String::isBlank))
+						.ifPresent(text -> builder.addContent(TextContent.from(text)));
+		attachments.items().get().forEach(attachment ->
+						builder.addContent(attachment.content()));
+
+		return builder.build();
 	}
 
-	private Entity setDeleted(Entity entity) {
-		entity.set(Chat.DELETED, true);
+	private Entity entity(UserMessage message) {
+		return entities().entity(Chat.TYPE)
+						.with(Chat.MESSAGE_TYPE, ChatMessageType.USER)
+						.with(Chat.SESSION, session)
+						.with(Chat.NAME, USER)
+						.with(Chat.TIMESTAMP, LocalDateTime.now())
+						.with(Chat.MESSAGE, messageText(message))
+						.with(Chat.JSON, messageToJson(message))
+						.build();
+	}
 
-		return entity;
+	private static String messageText(UserMessage message) {
+		return message.contents().stream()
+						.filter(TextContent.class::isInstance)
+						.map(TextContent.class::cast)
+						.map(TextContent::text)
+						.collect(joining("\n"));
 	}
 
 	private void updateElapsed() {
@@ -264,30 +280,13 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 						.orElse(ZERO));
 	}
 
-	private static void send(UserMessageTask task) {
-		// On the Event Dispatch Thread
-		task.prepare();
-		// The user message is created and inserted
-		// into the database in a background thread
-		ProgressWorker.builder()
-						.task(task)
-						// On the Event Dispatch Thread
-						.onException(task::fail)
-						// Propagate the resulting task
-						// to the next async send method
-						.onResult(EntityChatEditModel::send)
-						.execute();
-	}
-
-	private static void send(ChatResponseTask task) {
-		// On the Event Dispatch Thread
-		task.prepare();
+	private void prompt(ChatResponseTask responseTask) {
 		// The language model is prompted and the result
 		// inserted into the database in a background thread
 		ProgressWorker.builder()
-						.task(task)
+						.task(responseTask)
 						// On the Event Dispatch Thread
-						.onResult(task::finish)
+						.onResult(responseTask::finish)
 						.execute();
 	}
 
@@ -328,72 +327,17 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		}
 	}
 
-	private final class UserMessageTask implements ResultTask<ChatResponseTask> {
-
-		@Override
-		public ChatResponseTask execute() {
-			UserMessage userMessage = createMessage();
-
-			return new ChatResponseTask(new Result(insert(userMessage), userMessage));
-		}
-
-		private UserMessage createMessage() {
-			UserMessage.Builder builder = UserMessage.builder().name(USER);
-			prompt.optional()
-							.filter(not(String::isBlank))
-							.ifPresent(text -> builder.addContent(TextContent.from(text)));
-			attachments.items().get().forEach(attachment ->
-							builder.addContent(attachment.content()));
-
-			return builder.build();
-		}
-
-		private Entity insert(UserMessage message) {
-			return connection().insertSelect(entities().entity(Chat.TYPE)
-							.with(Chat.MESSAGE_TYPE, ChatMessageType.USER)
-							.with(Chat.SESSION, session)
-							.with(Chat.NAME, USER)
-							.with(Chat.TIMESTAMP, LocalDateTime.now())
-							.with(Chat.MESSAGE, messageText(message))
-							.with(Chat.JSON, messageToJson(message))
-							.build());
-		}
-
-		private static String messageText(UserMessage message) {
-			return message.contents().stream()
-							.filter(TextContent.class::isInstance)
-							.map(TextContent.class::cast)
-							.map(TextContent::text)
-							.collect(joining("\n"));
-		}
-
-		// Must be called on the Event Dispatch Thread
-		// since this affects one or more UI components
-		private void prepare() {
-			elapsed.clear();
-			started.set(LocalDateTime.now());
-			processing.set(true);
-			elapsedUpdater.start();
-		}
-
-		// Must be called on the Event Dispatch Thread
-		// since this affects one or more UI components
-		private void fail(Exception exception) {
-			elapsedUpdater.stop();
-			processing.set(false);
-			elapsed.clear();
-			started.clear();
-		}
-
-		private record Result(Entity entity, UserMessage userMessage) {}
-	}
-
 	private final class ChatResponseTask implements ResultTask<Entity> {
 
-		private final UserMessageTask.Result result;
+		private final UserMessage userMessage;
 
-		private ChatResponseTask(UserMessageTask.Result result) {
-			this.result = result;
+		private ChatResponseTask(UserMessage userMessage, PersistTask.Result insertResult) {
+			this.userMessage = userMessage;
+			// Finish the user message insert by handling
+			// the result, which must happen on the EDT
+			insertResult.handle();
+			prompt.clear();
+			started();
 		}
 
 		@Override
@@ -401,19 +345,19 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			ChatModel chatModel = chatModel();
 			LocalDateTime start = LocalDateTime.now();
 			try {
-				return insert(chatModel.provider().name(),
-								chatModel.chat(result.userMessage()),
+				return entity(chatModel.provider().name(),
+								chatModel.chat(userMessage),
 								Duration.between(start, LocalDateTime.now()));
 			}
 			catch (Exception e) {
-				return insert(e);
+				return entity(e);
 			}
 		}
 
-		private Entity insert(String name, ChatResponse response, Duration responseTime) {
+		private Entity entity(String name, ChatResponse response, Duration responseTime) {
 			TokenUsage tokenUsage = response.metadata().tokenUsage();
 
-			return connection().insertSelect(entities().entity(Chat.TYPE)
+			return entities().entity(Chat.TYPE)
 							.with(Chat.MESSAGE_TYPE, ChatMessageType.AI)
 							.with(Chat.SESSION, session)
 							.with(Chat.NAME, name)
@@ -424,18 +368,18 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 							.with(Chat.INPUT_TOKENS, tokenUsage.inputTokenCount())
 							.with(Chat.OUTPUT_TOKENS, tokenUsage.outputTokenCount())
 							.with(Chat.TOTAL_TOKENS, tokenUsage.totalTokenCount())
-							.build());
+							.build();
 		}
 
-		private Entity insert(Exception exception) {
-			return connection().insertSelect(entities().entity(Chat.TYPE)
+		private Entity entity(Exception exception) {
+			return entities().entity(Chat.TYPE)
 							.with(Chat.MESSAGE_TYPE, ChatMessageType.SYSTEM)
 							.with(Chat.SESSION, session)
 							.with(Chat.NAME, SYSTEM)
 							.with(Chat.TIMESTAMP, LocalDateTime.now())
 							.with(Chat.MESSAGE, exception.getMessage())
 							.with(Chat.STACK_TRACE, stackTrace(exception))
-							.build());
+							.build();
 		}
 
 		private ChatModel chatModel() {
@@ -446,20 +390,46 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 
 		// Must be called on the Event Dispatch Thread
 		// since this affects one or more UI components
-		private void prepare() {
-			prompt.clear();
-			notifyAfterInsert(List.of(result.entity()));
+		private void finish(Entity entity) {
+			stopped(SYSTEM.equals(entity.get(Chat.NAME)));
+			// insert the chat response
+			ProgressWorker.builder()
+							.task(tasks().insert(entity).prepare()::perform)
+							.onResult(PersistTask.Result::handle)
+							.execute();
 		}
 
-		// Must be called on the Event Dispatch Thread
-		// since this affects one or more UI components
-		private void finish(Entity entity) {
+		private void started() {
+			elapsed.clear();
+			started.set(LocalDateTime.now());
+			processing.set(true);
+			elapsedUpdater.start();
+		}
+
+		private void stopped(boolean isError) {
+			error.set(isError);
 			elapsedUpdater.stop();
 			processing.set(false);
 			elapsed.clear();
 			started.clear();
-			error.set(SYSTEM.equals(entity.get(Chat.NAME)));
-			notifyAfterInsert(List.of(entity));
+		}
+	}
+
+	private static final class ChatPersistence implements EntityPersistence {
+
+		@Override
+		public void delete(Collection<Entity> entities, EntityConnection connection) {
+			// We override the default delete implementation, in order to implement soft delete
+			connection.update(entities.stream()
+							.map(this::setDeleted)
+							.filter(Entity::modified)
+							.toList());
+		}
+
+		private Entity setDeleted(Entity entity) {
+			entity.set(Chat.DELETED, true);
+
+			return entity;
 		}
 	}
 

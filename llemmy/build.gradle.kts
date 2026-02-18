@@ -70,7 +70,7 @@ tasks.asciidoctor {
     attributes(
         mapOf(
             "codion-version" to project.version,
-            "source-highlighter" to "prettify",
+            "source-highlighter" to "rouge",
             "tabsize" to "2"
         )
     )

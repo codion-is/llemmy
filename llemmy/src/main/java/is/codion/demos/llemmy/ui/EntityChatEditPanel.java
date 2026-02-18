@@ -266,9 +266,14 @@ public final class EntityChatEditPanel extends EntityEditPanel {
 	private void onProcessingChanged(boolean processing) {
 		chatModelPanel.removeAll();
 		chatModelPanel.add(processing ? progressBar : chatModelComboBox, BorderLayout.CENTER);
-		progressBar.requestFocus();
 		chatModelPanel.revalidate();
 		chatModelPanel.repaint();
+		if (processing) {
+			progressBar.requestFocusInWindow();
+		}
+		else {
+			promptTextArea.requestFocusInWindow();
+		}
 	}
 
 	private void onElapsedChanged(Duration elapsed) {
