@@ -29,6 +29,8 @@ import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
+import is.codion.framework.domain.entity.exception.EntityValidationException;
+import is.codion.framework.model.EntityEditor.PersistTask;
 import is.codion.framework.model.EntityPersistence;
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.model.component.list.FilterListModel;
@@ -157,7 +159,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	public EntityChatEditModel(List<ChatModel> chatModels,
 														 EntityConnectionProvider connectionProvider) {
 		super(Chat.TYPE, connectionProvider);
-		persistence().set(new ChatPersistence());
+		editor().persistence().set(new ChatPersistence());
 		if (chatModels.isEmpty()) {
 			throw new IllegalArgumentException("No language model(s) provided");
 		}
@@ -234,7 +236,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	/**
 	 * Sends the current prompt along with all attachments.
 	 */
-	public void send() {
+	public void send() throws EntityValidationException {
 		// Here we start by inserting the user message in a
 		// background thread, after which we prompt the model
 		UserMessage userMessage = userMessage();
@@ -393,10 +395,15 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		private void finish(Entity entity) {
 			stopped(SYSTEM.equals(entity.get(Chat.NAME)));
 			// insert the chat response
-			ProgressWorker.builder()
-							.task(tasks().insert(entity).prepare()::perform)
-							.onResult(PersistTask.Result::handle)
-							.execute();
+			try {
+				ProgressWorker.builder()
+								.task(tasks().insert(entity).prepare()::perform)
+								.onResult(PersistTask.Result::handle)
+								.execute();
+			}
+			catch (EntityValidationException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 		private void started() {
