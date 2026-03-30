@@ -35,7 +35,7 @@ import is.codion.framework.model.EntityPersistence;
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.model.component.list.FilterListModel;
 import is.codion.swing.common.model.worker.ProgressWorker;
-import is.codion.swing.common.model.worker.ProgressWorker.ResultTask;
+import is.codion.swing.common.model.worker.ProgressWorker.ResultTaskHandler;
 import is.codion.swing.framework.model.SwingEntityEditModel;
 
 import dev.langchain4j.data.message.ChatMessageType;
@@ -241,7 +241,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		// background thread, after which we prompt the model
 		UserMessage userMessage = userMessage();
 		ProgressWorker.builder()
-						.task(tasks().insert(entity(userMessage)).prepare()::perform)
+						.task(editor().tasks().insert(entity(userMessage)).prepare()::perform)
 						.onResult(result -> prompt(new ChatResponseTask(userMessage, result)))
 						.execute();
 	}
@@ -287,8 +287,6 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		// inserted into the database in a background thread
 		ProgressWorker.builder()
 						.task(responseTask)
-						// On the Event Dispatch Thread
-						.onResult(responseTask::finish)
 						.execute();
 	}
 
@@ -329,7 +327,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		}
 	}
 
-	private final class ChatResponseTask implements ResultTask<Entity> {
+	private final class ChatResponseTask implements ResultTaskHandler<Entity> {
 
 		private final UserMessage userMessage;
 
@@ -339,7 +337,6 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			// the result, which must happen on the EDT
 			insertResult.handle();
 			prompt.clear();
-			started();
 		}
 
 		@Override
@@ -354,6 +351,39 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			catch (Exception e) {
 				return entity(e);
 			}
+		}
+
+		// Must be called on the Event Dispatch Thread
+		// since this affects one or more UI components
+		@Override
+		public void onResult(Entity entity) {
+			stopped(SYSTEM.equals(entity.get(Chat.NAME)));
+			// insert the chat response
+			try {
+				ProgressWorker.builder()
+								.task(editor().tasks().insert(entity).prepare()::perform)
+								.onResult(PersistTask.Result::handle)
+								.execute();
+			}
+			catch (EntityValidationException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		@Override
+		public void onStarted() {
+			elapsed.clear();
+			started.set(LocalDateTime.now());
+			processing.set(true);
+			elapsedUpdater.start();
+		}
+
+		private void stopped(boolean isError) {
+			error.set(isError);
+			elapsedUpdater.stop();
+			processing.set(false);
+			elapsed.clear();
+			started.clear();
 		}
 
 		private Entity entity(String name, ChatResponse response, Duration responseTime) {
@@ -388,37 +418,6 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			return chatModels.selection().item().optional()
 							.map(Item::get)
 							.orElseThrow();
-		}
-
-		// Must be called on the Event Dispatch Thread
-		// since this affects one or more UI components
-		private void finish(Entity entity) {
-			stopped(SYSTEM.equals(entity.get(Chat.NAME)));
-			// insert the chat response
-			try {
-				ProgressWorker.builder()
-								.task(tasks().insert(entity).prepare()::perform)
-								.onResult(PersistTask.Result::handle)
-								.execute();
-			}
-			catch (EntityValidationException e) {
-				throw new RuntimeException(e);
-			}
-		}
-
-		private void started() {
-			elapsed.clear();
-			started.set(LocalDateTime.now());
-			processing.set(true);
-			elapsedUpdater.start();
-		}
-
-		private void stopped(boolean isError) {
-			error.set(isError);
-			elapsedUpdater.stop();
-			processing.set(false);
-			elapsed.clear();
-			started.clear();
 		}
 	}
 
