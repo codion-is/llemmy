@@ -241,7 +241,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		// background thread, after which we prompt the model
 		UserMessage userMessage = userMessage();
 		ProgressWorker.builder()
-						.task(editor().tasks().insert(entity(userMessage)).prepare()::perform)
+						.task(editor().tasks().insert(entity(userMessage))::perform)
 						.onResult(result -> prompt(new ChatResponseTask(userMessage, result)))
 						.execute();
 	}
@@ -331,7 +331,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 
 		private final UserMessage userMessage;
 
-		private ChatResponseTask(UserMessage userMessage, PersistTask.Result insertResult) {
+		private ChatResponseTask(UserMessage userMessage, PersistTask.Result<Entity> insertResult) {
 			this.userMessage = userMessage;
 			// Finish the user message insert by handling
 			// the result, which must happen on the EDT
@@ -361,7 +361,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			// insert the chat response
 			try {
 				ProgressWorker.builder()
-								.task(editor().tasks().insert(entity).prepare()::perform)
+								.task(editor().tasks().insert(entity)::perform)
 								.onResult(PersistTask.Result::handle)
 								.execute();
 			}

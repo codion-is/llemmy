@@ -202,7 +202,7 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 		}
 
 		private EntityChatModel chatModel() {
-			return (EntityChatModel) entityModels().get(Chat.TYPE);
+			return (EntityChatModel) models().get(Chat.TYPE);
 		}
 	}
 }
