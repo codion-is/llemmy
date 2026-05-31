@@ -4,7 +4,7 @@ plugins {
     // The Badass Jlink Plugin provides jlink and jpackage
     // functionality and applies the java application plugin
     // https://badass-jlink-plugin.beryx.org
-    id("org.beryx.jlink") version "4.0.0"
+    id("org.beryx.jlink") version "4.0.2"
     id("org.gradlex.extra-java-module-info") version "1.14"
 }
 
