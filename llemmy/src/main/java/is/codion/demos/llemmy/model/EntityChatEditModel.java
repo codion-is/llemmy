@@ -30,7 +30,7 @@ import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.framework.domain.entity.exception.EntityValidationException;
-import is.codion.framework.model.EntityEditor.PersistTask;
+import is.codion.framework.model.EntityEditor.EditorTask.Result;
 import is.codion.framework.model.EntityPersistence;
 import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
 import is.codion.swing.common.model.component.list.FilterListModel;
@@ -331,7 +331,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 
 		private final UserMessage userMessage;
 
-		private ChatResponseTask(UserMessage userMessage, PersistTask.Result<Entity> insertResult) {
+		private ChatResponseTask(UserMessage userMessage, Result<Entity> insertResult) {
 			this.userMessage = userMessage;
 			// Finish the user message insert by handling
 			// the result, which must happen on the EDT
@@ -362,7 +362,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			try {
 				ProgressWorker.builder()
 								.task(editor().tasks().insert(entity)::perform)
-								.onResult(PersistTask.Result::handle)
+								.onResult(Result::handle)
 								.execute();
 			}
 			catch (EntityValidationException e) {
