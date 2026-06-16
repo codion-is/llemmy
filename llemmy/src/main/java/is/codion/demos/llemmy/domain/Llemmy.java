@@ -36,8 +36,8 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 import static is.codion.framework.domain.DomainType.domainType;
-import static is.codion.framework.domain.entity.attribute.Column.Generator.identity;
 import static is.codion.framework.domain.entity.OrderBy.descending;
+import static is.codion.framework.domain.entity.attribute.Column.Generator.identity;
 
 // tag::llemmy[]
 public final class Llemmy extends DomainModel {
@@ -81,7 +81,8 @@ public final class Llemmy extends DomainModel {
 
 	// tag::chat_impl[]
 	private void chat() {
-		add(Chat.TYPE.as(
+		add(Chat.TYPE.as()
+						.attributes(
 										Chat.ID.as()
 														.primaryKey()
 														.generator(identity()),
