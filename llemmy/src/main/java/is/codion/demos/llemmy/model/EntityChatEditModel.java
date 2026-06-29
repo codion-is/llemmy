@@ -32,8 +32,8 @@ import is.codion.framework.domain.entity.Entity;
 import is.codion.framework.domain.entity.exception.EntityValidationException;
 import is.codion.framework.model.EntityEditor.EditorTask.Result;
 import is.codion.framework.model.EntityPersistence;
-import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
-import is.codion.swing.common.model.component.list.FilterListModel;
+import is.codion.swing.common.model.component.combobox.SwingFilterComboBoxModel;
+import is.codion.swing.common.model.component.list.SwingFilterListModel;
 import is.codion.swing.common.model.worker.ProgressWorker;
 import is.codion.swing.common.model.worker.ProgressWorker.ResultTaskHandler;
 import is.codion.swing.framework.model.SwingEntityEditModel;
@@ -137,10 +137,10 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 									.build();
 
 	// Contains the available chat models
-	private final FilterComboBoxModel<Item<ChatModel>> chatModels;
+	private final SwingFilterComboBoxModel<Item<ChatModel>> chatModels;
 	// Contains the file attachments
-	private final FilterListModel<Attachment> attachments =
-					FilterListModel.builder()
+	private final SwingFilterListModel<Attachment> attachments =
+					SwingFilterListModel.builder()
 									.items(Collections.<Attachment>emptyList())
 									.build();
 	// Contains the prompt text
@@ -164,7 +164,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 			throw new IllegalArgumentException("No language model(s) provided");
 		}
 		// Wrap the language models in Item instances, for a caption to display in the combo box
-		this.chatModels = FilterComboBoxModel.builder()
+		this.chatModels = SwingFilterComboBoxModel.builder()
 						.items(chatModels.stream()
 										.map(model -> item(model, model.provider().name()))
 										.toList())
@@ -180,7 +180,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 		return prompt;
 	}
 
-	public FilterListModel<Attachment> attachments() {
+	public SwingFilterListModel<Attachment> attachments() {
 		return attachments;
 	}
 
@@ -229,7 +229,7 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	/**
 	 * @return the available chat models
 	 */
-	public FilterComboBoxModel<Item<ChatModel>> chatModels() {
+	public SwingFilterComboBoxModel<Item<ChatModel>> chatModels() {
 		return chatModels;
 	}
 

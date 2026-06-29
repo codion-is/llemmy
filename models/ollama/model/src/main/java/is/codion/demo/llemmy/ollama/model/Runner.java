@@ -18,7 +18,7 @@
  */
 package is.codion.demo.llemmy.ollama.model;
 
-import is.codion.swing.common.model.component.combobox.FilterComboBoxModel;
+import is.codion.swing.common.model.component.combobox.SwingFilterComboBoxModel;
 import is.codion.swing.common.ui.ancestor.Ancestor;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.dialog.Dialogs;
@@ -82,7 +82,7 @@ public final class Runner {
 	private static String model() {
 		return Dialogs.input()
 						.component(comboBox()
-										.model(FilterComboBoxModel.builder()
+										.model(SwingFilterComboBoxModel.builder()
 										.items(MODELS)
 										.build())
 										.value(ORCA_MINI)
