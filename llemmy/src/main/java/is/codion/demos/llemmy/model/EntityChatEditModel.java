@@ -18,6 +18,8 @@
  */
 package is.codion.demos.llemmy.model;
 
+import is.codion.common.model.worker.ProgressWorker;
+import is.codion.common.model.worker.ProgressWorker.ResultTaskHandler;
 import is.codion.common.reactive.observer.Observable;
 import is.codion.common.reactive.state.ObservableState;
 import is.codion.common.reactive.state.State;
@@ -34,8 +36,6 @@ import is.codion.framework.model.EntityEditor.EditorTask.Result;
 import is.codion.framework.model.EntityPersistence;
 import is.codion.swing.common.model.component.combobox.SwingFilterComboBoxModel;
 import is.codion.swing.common.model.component.list.SwingFilterListModel;
-import is.codion.swing.common.model.worker.ProgressWorker;
-import is.codion.swing.common.model.worker.ProgressWorker.ResultTaskHandler;
 import is.codion.swing.framework.model.SwingEntityEditModel;
 
 import dev.langchain4j.data.message.ChatMessageType;
