@@ -37,6 +37,7 @@ import is.codion.swing.common.ui.control.Controls;
 import is.codion.swing.framework.model.SwingEntityApplicationModel;
 import is.codion.swing.framework.ui.EntityApplication;
 import is.codion.swing.framework.ui.EntityApplicationPanel;
+import is.codion.swing.framework.ui.EntityPanel;
 import is.codion.swing.framework.ui.EntityTablePanel;
 
 import com.formdev.flatlaf.FlatLaf;
@@ -44,6 +45,7 @@ import com.formdev.flatlaf.extras.FlatInspector;
 import com.formdev.flatlaf.fonts.inter.FlatInterFont;
 import dev.langchain4j.model.chat.ChatModel;
 
+import javax.swing.JComponent;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -82,9 +84,7 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						// We replace the default application layout factory, which
 						// produces a layout arranging the main panels in a tabbed pane,
 						// but here we only have a single panel, no need for tabs
-						applicationPanel -> () ->
-										// Simply return our single panel, initialized
-										applicationPanel.entityPanel(Chat.TYPE).initialize());
+						LlemmyLayout::new);
 	}
 
 	/**
@@ -204,6 +204,24 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 		private EntityChatModel chatModel() {
 			return (EntityChatModel) models().get(Chat.TYPE);
 		}
+	}
+
+	private static final class LlemmyLayout implements ApplicationLayout {
+
+		private final EntityApplicationPanel<?> applicationPanel;
+
+		private LlemmyLayout(EntityApplicationPanel<?> applicationPanel) {
+			this.applicationPanel = applicationPanel;
+		}
+
+		@Override
+		public JComponent layout() {
+			// Simply return our single panel, initialized
+			return applicationPanel.entityPanel(Chat.TYPE).initialize();
+		}
+
+		@Override
+		public void display(EntityPanel entityPanel) {/*Always visible*/}
 	}
 }
 // end::app_panel[]
