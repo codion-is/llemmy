@@ -24,6 +24,7 @@ module is.codion.demos.llemmy.ui {
 
 	requires is.codion.framework.db.local;
 	requires is.codion.swing.framework.ui;
+	requires is.codion.plugin.flatlaf.themes;
 	requires is.codion.plugin.flatlaf.intellij.themes;
 
 	requires dev.langchain4j.core;

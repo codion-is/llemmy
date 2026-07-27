@@ -30,7 +30,9 @@ import is.codion.demos.llemmy.ui.EntityChatPanel;
 import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.db.local.LocalEntityConnectionProvider;
 import is.codion.framework.i18n.FrameworkMessages;
+import is.codion.plugin.flatlaf.intellij.FlatLookAndFeelIntelliJThemes;
 import is.codion.plugin.flatlaf.intellij.themes.dracula.Dracula;
+import is.codion.plugin.flatlaf.themes.FlatLookAndFeelThemes;
 import is.codion.swing.common.ui.component.table.FilterTableCellRenderer;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.control.Controls;
@@ -152,6 +154,8 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 		Database.URL.set("jdbc:h2:mem:h2db");
 		// and the database initialization script
 		Database.INIT_SCRIPTS.set("classpath:create_schema.sql");
+		FlatLookAndFeelThemes.addAll();
+		FlatLookAndFeelIntelliJThemes.addAll();
 		// Configure FlatLaf related things, the inspector is not necessary
 		// but very helpful when debugging UI related stuff
 		FlatInspector.install("ctrl shift alt X");

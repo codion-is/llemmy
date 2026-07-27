@@ -20,6 +20,7 @@ package is.codion.demos.llemmy.domain;
 
 import is.codion.framework.domain.DomainModel;
 import is.codion.framework.domain.DomainType;
+import is.codion.framework.domain.entity.EntityDefinition;
 import is.codion.framework.domain.entity.EntityFormatter;
 import is.codion.framework.domain.entity.EntityType;
 import is.codion.framework.domain.entity.attribute.Attribute;
@@ -47,7 +48,7 @@ public final class Llemmy extends DomainModel {
 
 	public Llemmy() {
 		super(DOMAIN);
-		chat();
+		add(chat());
 	}
 	// end::llemmy[]
 
@@ -80,8 +81,8 @@ public final class Llemmy extends DomainModel {
 	// end::chat_api[]
 
 	// tag::chat_impl[]
-	private void chat() {
-		add(Chat.TYPE.as()
+	EntityDefinition chat() {
+		return Chat.TYPE.as()
 						.attributes(
 										Chat.ID.as()
 														.primaryKey()
@@ -149,7 +150,7 @@ public final class Llemmy extends DomainModel {
 										.build())
 						.orderBy(descending(Chat.TIMESTAMP))
 						.caption("Chat Log")
-						.build());
+						.build();
 	}
 
 	private static final class MessageTypeConverter implements Converter<ChatMessageType, String> {

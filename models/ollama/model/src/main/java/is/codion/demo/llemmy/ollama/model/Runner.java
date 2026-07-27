@@ -23,6 +23,7 @@ import is.codion.swing.common.ui.ancestor.Ancestor;
 import is.codion.swing.common.ui.control.Control;
 import is.codion.swing.common.ui.dialog.Dialogs;
 import is.codion.swing.common.ui.laf.LookAndFeelEnabler;
+import is.codion.plugin.flatlaf.themes.FlatLookAndFeelThemes;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.github.dockerjava.api.model.ExposedPort;
@@ -45,6 +46,7 @@ public final class Runner {
 	private Runner() {}
 
 	public static void main(String[] args) {
+		FlatLookAndFeelThemes.addAll();
 		findLookAndFeel(FlatDarkLaf.class).ifPresent(LookAndFeelEnabler::enable);
 		try (var ollama = new GenericContainer<>("langchain4j/ollama-" + model() + ":latest")
 						.withCreateContainerCmdModifier(cmd -> cmd.withHostConfig(new HostConfig()
