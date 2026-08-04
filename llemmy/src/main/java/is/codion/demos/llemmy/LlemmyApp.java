@@ -27,8 +27,8 @@ import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.demos.llemmy.model.EntityChatModel;
 import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.demos.llemmy.ui.EntityChatPanel;
-import is.codion.framework.db.EntityConnectionProvider;
-import is.codion.framework.db.local.LocalEntityConnectionProvider;
+import is.codion.framework.db.EntityConnection;
+import is.codion.framework.db.local.LocalEntityConnection;
 import is.codion.framework.i18n.FrameworkMessages;
 import is.codion.plugin.flatlaf.intellij.FlatLookAndFeelIntelliJThemes;
 import is.codion.plugin.flatlaf.intellij.themes.dracula.Dracula;
@@ -131,13 +131,13 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 	}
 
 	/**
-	 * Manually instantiate a new {@link LocalEntityConnectionProvider} instance,
+	 * Manually instantiate a new {@link LocalEntityConnection} instance,
 	 * since we are always running with a in-memory H2 database
 	 * @param user the user
-	 * @return a new {@link EntityConnectionProvider} instance
+	 * @return a new {@link EntityConnection} instance
 	 */
-	private static EntityConnectionProvider createConnectionProvider(User user) {
-		return LocalEntityConnectionProvider.builder()
+	private static EntityConnection createConnection(User user) {
+		return LocalEntityConnection.builder()
 						// Returns a Database based on the
 						// 'codion.db.url' system property
 						.database(Database.instance())
@@ -175,15 +175,15 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						.frameTitle(LlemmyAppModel.APPLICATION_NAME + " " + LlemmyAppModel.APPLICATION_VERSION)
 						// The H2Database super-user
 						.user(user("sa"))
-						// We provide a factory for the EntityConnectionProvider,
+						// We provide a factory for the EntityConnection,
 						// since we just manually instantiate a Local one,
 						// instead of relying on the ServiceLoader
-						.connectionProvider(LlemmyApp::createConnectionProvider)
+						.connection(LlemmyApp::createConnection)
 						// We must supply the language models when instatiating
 						// the application model, so here we provide a factory,
-						// which receives the EntityConnectionProvider from above
-						.model(connectionProvider ->
-										new LlemmyAppModel(chatModels.get(), connectionProvider))
+						// which receives the EntityConnection from above
+						.model(connection ->
+										new LlemmyAppModel(chatModels.get(), connection))
 						// We provide a factory for the panel instantiation,
 						// which receives the LlemmyAppModel from above,
 						// allowing us to keep the constructor private
@@ -201,8 +201,8 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						Version.parse(LlemmyAppModel.class, "/version.properties");
 
 		private LlemmyAppModel(List<ChatModel> chatModels,
-													 EntityConnectionProvider connectionProvider) {
-			super(connectionProvider, List.of(new EntityChatModel(chatModels, connectionProvider)));
+													 EntityConnection connection) {
+			super(connection, List.of(new EntityChatModel(chatModels, connection)));
 		}
 
 		private EntityChatModel chatModel() {

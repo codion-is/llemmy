@@ -30,7 +30,7 @@ include::{dir-resources}/create_schema.sql[tags=**]
 
 === Domain model
 
-The domain model is created by extending the *DefaultDomain* class and defining a *DomainType* constant identifying the domain model.
+The domain model is created by extending the *DomainModel* class and defining a *DomainType* constant identifying the domain model.
 
 In the constructor we call a method adding a single Entity definition to the domain model.
 The subsections below continue the Llemmy class.
@@ -62,7 +62,7 @@ include::{dir-source}/is/codion/demos/llemmy/domain/Llemmy.java[tags=chat_api]
 
 We then define an Entity along with its columns based on the domain API constants, configuring each for persistance and presentation.
 
-We use the `EntityFormatter.builder()` method to build a `Function<Entity, String>` instance which provides the `toString()` implementation for entities of this type.
+We use the `EntityFormatter.builder()` method to build a formatter providing the `toString()` implementation for entities of this type.
 
 We also specify a default `OrderBy` clause to use when selecting entities of this type.
 

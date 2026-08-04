@@ -29,7 +29,6 @@ import is.codion.common.utilities.scheduler.TaskScheduler;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.framework.db.EntityConnection;
-import is.codion.framework.db.EntityConnectionProvider;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.framework.domain.entity.exception.EntityValidationException;
 import is.codion.framework.model.EntityEditor.EditorTask.Result;
@@ -153,12 +152,12 @@ public final class EntityChatEditModel extends SwingEntityEditModel {
 	/**
 	 * Instantiates a new {@link EntityChatEditModel} instance
 	 * @param chatModels the chat models
-	 * @param connectionProvider the connection provider
+	 * @param connection the connection
 	 * @throws IllegalArgumentException in case {@code chatModels} is empty
 	 */
 	public EntityChatEditModel(List<ChatModel> chatModels,
-														 EntityConnectionProvider connectionProvider) {
-		super(Chat.TYPE, connectionProvider);
+														 EntityConnection connection) {
+		super(Chat.TYPE, connection);
 		editor().persistence().set(new ChatPersistence());
 		if (chatModels.isEmpty()) {
 			throw new IllegalArgumentException("No language model(s) provided");

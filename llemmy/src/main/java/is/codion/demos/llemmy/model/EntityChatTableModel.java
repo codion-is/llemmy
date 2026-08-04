@@ -19,7 +19,7 @@
 package is.codion.demos.llemmy.model;
 
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
-import is.codion.framework.db.EntityConnectionProvider;
+import is.codion.framework.db.EntityConnection;
 import is.codion.framework.domain.entity.Entity;
 import is.codion.swing.framework.model.SwingEntityTableModel;
 
@@ -38,10 +38,10 @@ public final class EntityChatTableModel extends SwingEntityTableModel {
 	/**
 	 * Instantiates a new {@link EntityChatTableModel} instance
 	 * @param chatModels the chat models
-	 * @param connectionProvider the connection provider
+	 * @param connection the connection
 	 */
-	public EntityChatTableModel(List<ChatModel> chatModels, EntityConnectionProvider connectionProvider) {
-		super(new EntityChatEditModel(chatModels, connectionProvider));
+	public EntityChatTableModel(List<ChatModel> chatModels, EntityConnection connection) {
+		super(new EntityChatEditModel(chatModels, connection));
 		EntityChatEditModel editModel = (EntityChatEditModel) editModel();
 		// Include only chat logs from our session
 		query().condition().get(Chat.SESSION).set().equalTo(editModel.session());
