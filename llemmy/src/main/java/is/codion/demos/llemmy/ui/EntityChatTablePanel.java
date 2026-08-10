@@ -135,9 +135,9 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 		configureUserStyle();
 		// We display all the chat history if the selection is empty,
 		// otherwise only the selected history
-		List<Entity> chats = tableModel().selection().empty().is() ?
-						tableModel().items().included().get() :
-						tableModel().selection().items().get();
+		List<Entity> chats = model().selection().empty().is() ?
+						model().items().included().get() :
+						model().selection().items().get();
 		chatPane.setText("");
 		chats.stream()
 						.sorted(comparing(chat -> chat.get(Chat.TIMESTAMP)))
@@ -163,15 +163,15 @@ public final class EntityChatTablePanel extends EntityTablePanel {
 
 	private void configureTable() {
 		FilterTable<Entity, Attribute<?>> table = table();
-		EntityChatEditModel editModel = (EntityChatEditModel) tableModel().editModel();
+		EntityChatEditModel editModel = (EntityChatEditModel) model().editModel();
 		// Disable the table while the model is processing
 		enabled(editModel.processing().not(), table);
 		// Set some minimum table column widths
-		table.columnModel().column(Chat.TIMESTAMP).setMinWidth(160);
-		table.columnModel().column(Chat.MESSAGE_TYPE).setMinWidth(80);
-		table.columnModel().column(Chat.NAME).setMinWidth(80);
+		table.columns().get(Chat.TIMESTAMP).setMinWidth(160);
+		table.columns().get(Chat.MESSAGE_TYPE).setMinWidth(80);
+		table.columns().get(Chat.NAME).setMinWidth(80);
 		// Set the default visible columns
-		table.columnModel().visible().set(Chat.TIMESTAMP, Chat.MESSAGE_TYPE, Chat.NAME);
+		table.columns().visible().set(Chat.TIMESTAMP, Chat.MESSAGE_TYPE, Chat.NAME);
 		// and the column auto resize mode
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		// We hardcoded the sorting in ChatTableModel

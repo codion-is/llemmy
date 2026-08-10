@@ -98,9 +98,9 @@ public final class EntityChatPanel extends EntityPanel {
 		// Note that calling addKeyEvent() assures that the key event is
 		// added to this base panel and to the edit panel as well,
 		// since that may be displayed in a separate window.
-		EntityChatEditModel editModel = (EntityChatEditModel) editModel();
 		EntityChatEditPanel editPanel = (EntityChatEditPanel) editPanel();
 		EntityChatTablePanel tablePanel = (EntityChatTablePanel) tablePanel();
+		EntityChatEditModel editModel = (EntityChatEditModel) editPanel.model();
 		// Set the base parameters, the modifier and the condition
 		KeyEvents.Builder keyEvent = KeyEvents.builder()
 						.modifiers(ALT_DOWN_MASK)
@@ -124,14 +124,14 @@ public final class EntityChatPanel extends EntityPanel {
 						.modifiers(CTRL_DOWN_MASK)
 						.action(Control.builder()
 										// Use the built-in method to decrement the selected table model indexes
-										.command(tablePanel.tableModel().selection().indexes()::decrement)
+										.command(tablePanel.model().selection().indexes()::decrement)
 										// Only enabled while the model is not processing
 										.enabled(editModel.processing().not())
 										.build()));
 		addKeyEvent(keyEvent.keyCode(VK_DOWN)
 						.action(Control.builder()
 										// Use the built-in method to increment the selected table model indexes
-										.command(tablePanel.tableModel().selection().indexes()::increment)
+										.command(tablePanel.model().selection().indexes()::increment)
 										// Only enabled while the model is not processing
 										.enabled(editModel.processing().not())
 										.build()));
