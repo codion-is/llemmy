@@ -44,10 +44,10 @@ public final class EntityChatTableModel extends SwingEntityTableModel {
 		super(new EntityChatEditModel(chatModels, connection));
 		EntityChatEditModel editModel = (EntityChatEditModel) editModel();
 		// Include only chat logs from our session
-		query().condition().get(Chat.SESSION).set().equalTo(editModel.session());
+		query().conditions().get(Chat.SESSION).set().equalTo(editModel.session());
 		// We implement soft delete (see ChatEditModel), so include
 		// only chat log history records not marked as deleted
-		query().condition().get(Chat.DELETED).set().equalTo(false);
+		query().conditions().get(Chat.DELETED).set().equalTo(false);
 		// Hardcode the history sorting to the latest at top
 		sort().descending(Chat.TIMESTAMP);
 		// Display the message in the prompt when a history record is selected
