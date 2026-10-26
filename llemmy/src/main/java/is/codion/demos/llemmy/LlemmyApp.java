@@ -19,23 +19,19 @@
 package is.codion.demos.llemmy;
 
 import is.codion.common.db.database.Database;
-import is.codion.common.reactive.state.State;
 import is.codion.common.utilities.user.User;
 import is.codion.common.utilities.version.Version;
 import is.codion.demos.llemmy.domain.Llemmy;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.demos.llemmy.model.EntityChatModel;
-import is.codion.demos.llemmy.ui.EntityChatEditPanel;
 import is.codion.demos.llemmy.ui.EntityChatPanel;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.db.local.LocalEntityConnection;
-import is.codion.framework.i18n.FrameworkMessages;
 import is.codion.plugin.flatlaf.intellij.FlatLookAndFeelIntelliJThemes;
 import is.codion.plugin.flatlaf.intellij.themes.dracula.Dracula;
 import is.codion.plugin.flatlaf.themes.FlatLookAndFeelThemes;
 import is.codion.swing.common.ui.component.table.FilterTableCellRenderer;
 import is.codion.swing.common.ui.control.Control;
-import is.codion.swing.common.ui.control.Controls;
 import is.codion.swing.framework.model.SwingEntityApplicationModel;
 import is.codion.swing.framework.ui.EntityApplication;
 import is.codion.swing.framework.ui.EntityApplicationPanel;
@@ -50,7 +46,6 @@ import dev.langchain4j.model.chat.ChatModel;
 import javax.swing.JComponent;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static is.codion.common.utilities.user.User.user;
@@ -87,47 +82,21 @@ public final class LlemmyApp extends EntityApplicationPanel<LlemmyApp.LlemmyAppM
 						// produces a layout arranging the main panels in a tabbed pane,
 						// but here we only have a single panel, no need for tabs
 						LlemmyLayout::new);
-	}
-
-	/**
-	 * Override the default View menu, to exclude the Look & Feel selection
-	 * menu item, since {@link EntityChatEditPanel} contains a Look & Feel combo box.
-	 * @return the {@link Controls} on which to base the main view menu
-	 */
-	@Override
-	protected Optional<Controls> createViewMenuControls() {
-		return Optional.of(Controls.builder()
-						.caption(FrameworkMessages.view())
-						.mnemonic(FrameworkMessages.viewMnemonic())
-						// Just include the Always on top control
-						.control(createAlwaysOnTopControl())
-						.build());
-	}
-
-	/**
-	 * Override the default Help menu, to replace the default
-	 * Help menu item with a control toggling the help state,
-	 * showing/hiding the help panel.
-	 * @return the {@link Controls} on which to base the main Help menu
-	 */
-	@Override
-	protected Optional<Controls> createHelpMenuControls() {
-		State help = ((EntityChatPanel) entityPanel(Chat.TYPE)).help();
-
-		return Optional.of(Controls.builder()
-						.caption("Help")
-						.mnemonic('H')
-						// A Control for toggling the help state
-						// presented as a check box in the menu
-						.control(Control.builder()
-										.toggle(help)
+		configureMainMenu(main -> main
+						// Override the default View menu, to exclude the Look & Feel selection
+						// menu item, since {@link EntityChatEditPanel} contains a Look & Feel combo box.
+						.controls(ControlKeys.VIEW_MENU, view -> view.remove(ControlKeys.SELECT_LOOK_AND_FEEL))
+						// Override the default Help menu, to replace the default
+						//  Help menu item with a control toggling the help state,
+						//  showing/hiding the help panel.
+						.controls(ControlKeys.HELP_MENU, help -> help.clear()
+										.control(Control.builder()
+										.toggle(((EntityChatPanel) entityPanel(Chat.TYPE)).help())
 										.caption("Help"))
-						.separator()
-						// Include the default log and about controls, separated
-						.control(createLogControls())
-						.separator()
-						.control(createAboutControl())
-						.build());
+										.separator()
+										.control(ControlKeys.LOG_CONTROLS)
+										.separator()
+										.control(ControlKeys.ABOUT)));
 	}
 
 	/**
