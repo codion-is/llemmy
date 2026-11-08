@@ -21,7 +21,7 @@ package is.codion.demos.llemmy.domain;
 import is.codion.demos.llemmy.domain.Llemmy.Chat;
 import is.codion.framework.db.EntityConnection;
 import is.codion.framework.domain.entity.attribute.Attribute;
-import is.codion.framework.domain.test.DefaultEntityFactory;
+import is.codion.framework.domain.test.AbstractEntityFactory;
 import is.codion.framework.domain.test.DomainTest;
 
 import dev.langchain4j.data.message.ChatMessageType;
@@ -46,7 +46,7 @@ final class LlemmyTest extends DomainTest {
 	 * column types for which the framework can not automatically
 	 * create the random values required for the unit tests.
 	 */
-	private static class LlemmyEntityFactory extends DefaultEntityFactory {
+	private static class LlemmyEntityFactory extends AbstractEntityFactory {
 
 		private LlemmyEntityFactory(EntityConnection connection) {
 			super(connection);

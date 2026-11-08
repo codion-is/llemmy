@@ -20,7 +20,7 @@ package is.codion.demos.llemmy.model;
 
 import is.codion.common.model.worker.ProgressWorker;
 import is.codion.common.model.worker.ProgressWorker.ResultTaskHandler;
-import is.codion.common.reactive.observer.Observable;
+import is.codion.common.reactive.observable.Observable;
 import is.codion.common.reactive.state.ObservableState;
 import is.codion.common.reactive.state.State;
 import is.codion.common.reactive.value.Value;

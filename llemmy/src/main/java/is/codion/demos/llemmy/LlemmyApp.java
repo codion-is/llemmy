@@ -49,7 +49,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 import static is.codion.common.utilities.user.User.user;
-import static is.codion.swing.framework.ui.EntityTablePanel.SelectionMode.MENU;
+import static is.codion.swing.framework.ui.EntityTablePanel.SelectionView.MENU;
 import static java.util.Objects.requireNonNull;
 import static javax.swing.SwingConstants.LEADING;
 
